@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem.Dto
 {
-    //Create Model Dto Code About OpenAttemp
-    public class CreateOpenAttempInput : IInputDto
+    //Create Model Dto Code About HomeOwerUser
+    public class CreateHomeOwerUserInput : IInputDto
     {
-
-        public long HomeOwerId;
+        public string Token;
 
         public string UserName;
 
-        public bool IsSuccess;
     }
 }

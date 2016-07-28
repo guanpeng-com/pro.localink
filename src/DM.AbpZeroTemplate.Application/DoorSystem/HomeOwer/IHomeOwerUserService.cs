@@ -10,36 +10,43 @@ using Abp.AutoMapper;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
-    //Domain Service Code About OpenAttemp
-    [AutoMapFrom(typeof(OpenAttemp))]
-    public interface IOpenAttempService : IApplicationService
+    //Domain Service Code About HomeOwerUser
+    [AutoMapFrom(typeof(HomeOwerUser))]
+    public interface IHomeOwerUserService : IApplicationService
     {
         /// <summary>
         /// 获取
         /// </summary>
         /// <returns></returns>
-        Task<PagedResultOutput<OpenAttempDto>> GetOpenAttemps(GetOpenAttempsInput input);
+        Task<PagedResultOutput<HomeOwerUserDto>> GetHomeOwerUsers(GetHomeOwerUsersInput input);
 
         /// <summary>
         /// 创建
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOpenAttemp(CreateOpenAttempInput input);
+        Task CreateHomeOwerUser(CreateHomeOwerUserInput input);
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateHomeOwerUser(UpdateHomeOwerUserInput input);
 
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteOpenAttemp(IdInput<long> input);
+        Task DeleteHomeOwerUser(IdInput<long> input);
 
         /// <summary>
         /// 根据Id获取详情
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<OpenAttempDto> GetOpenAttemp(IdInput<long> input);
+        Task<HomeOwerUserDto> GetHomeOwerUser(IdInput<long> input);
 
     }
 }

@@ -141,6 +141,8 @@
     <Compile Include="DoorSystem\HomeOwer\HomeOwer.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerDoor.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerManager.cs" />
+    <Compile Include="DoorSystem\HomeOwer\HomeOwerUserManager.cs" />
+    <Compile Include="DoorSystem\OpenAttemp\OpenAttempManager.cs" />
     <Compile Include="DoorSystem\OpenAttemp\OpenAttemp.cs" />
     <Compile Include="Editions\EditionManager.cs" />
     <Compile Include="Editions\FeatureValueStore.cs" />

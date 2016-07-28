@@ -7,6 +7,8 @@ using DM.AbpZeroTemplate.DoorSystem.Dto;
 using Abp.AutoMapper;
 using System.Data.Entity;
 using Abp.Linq.Extensions;
+using Abp.Auditing;
+using AutoMapper;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -14,11 +16,17 @@ namespace DM.AbpZeroTemplate.DoorSystem
     [AutoMapFrom(typeof(OpenAttemp))]
     public class OpenAttempService : AbpZeroTemplateServiceBase, IOpenAttempService
     {
-        private readonly OpenAttempManager _manager;
 
-        public OpenAttempService(OpenAttempManager manager)
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
+
+        private readonly OpenAttempManager _manager;
+        private readonly HomeOwerManager _homeOwerManager;
+
+        public OpenAttempService(OpenAttempManager manager,
+            HomeOwerManager homeOwerManager)
         {
             _manager = manager;
+            _homeOwerManager = homeOwerManager;
         }
 
         public async Task CreateOpenAttemp(CreateOpenAttempInput input)
@@ -26,6 +34,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
             var entity = new OpenAttemp();
             entity.HomeOwerId = input.HomeOwerId;
             entity.UserName = input.UserName;
+            entity.IsSuccess = input.IsSuccess;
+
             await _manager.CreateAsync(entity);
         }
 
@@ -52,9 +62,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 );
         }
 
-        public async Task<OpenAttemp> GetOpenAttemp(IdInput<long> input)
+        public async Task<OpenAttempDto> GetOpenAttemp(IdInput<long> input)
         {
-            return await _manager.OpenAttempRepository.GetAsync(input.Id);
+            return Mapper.Map<OpenAttempDto>(await _manager.OpenAttempRepository.GetAsync(input.Id));
         }
 
     }

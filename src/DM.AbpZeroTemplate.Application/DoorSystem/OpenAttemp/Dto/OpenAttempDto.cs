@@ -15,6 +15,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public long HomeOwerId;
 
+        public string HomeOwerName;
+
         public string UserName;
 
         public string BowserInfo;
@@ -26,6 +28,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public bool IsSuccess;
 
         public int TenantId;
+        
 
     }
 }

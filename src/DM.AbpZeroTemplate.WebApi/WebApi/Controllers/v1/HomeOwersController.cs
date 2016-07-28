@@ -26,54 +26,145 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         private readonly HomeOwerManager _homeOwerManager;
         private readonly DoorManager _doorManager;
         private readonly TenantManager _tenantManager;
+        private readonly HomeOwerUserManager _homeOwerUserManager;
 
         public HomeOwersController(
             CommunityManager communityManager,
             AccessKeyManager accessKeyManager,
             HomeOwerManager homeOwerManager,
             DoorManager doorManager,
-            TenantManager tenantManager)
+            TenantManager tenantManager,
+            HomeOwerUserManager homeOwerUserManager)
+            : base(homeOwerUserManager)
         {
             _communityManager = communityManager;
             _accessKeyManager = accessKeyManager;
             _homeOwerManager = homeOwerManager;
             _tenantManager = tenantManager;
             _doorManager = doorManager;
+            _homeOwerUserManager = homeOwerUserManager;
         }
 
         /// <summary>
         ///  获取业主的钥匙
         /// </summary>
-        /// <param name="tenancyName">公司名称</param>
+        /// <param name="tenantId">公司Id</param>
         /// <param name="id">业主Id</param>
         /// <returns></returns>
         [HttpGet]
         [UnitOfWork]
         [Route("/{id:long}/AccessKeys")]
-        public async virtual Task<IHttpActionResult> GetAccessKeys(string tenancyName, long id)
+        public virtual async Task<IHttpActionResult> GetAccessKeys(int? tenantId, long id, string userName, string token)
         {
-            var tenant = await _tenantManager.FindByTenancyNameAsync(tenancyName);
-            int? tenantId = tenant == null ? (int?)null : tenant.Id;
-            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            if (!base.AuthUser()) return Unauthorized();
+            try
             {
-                var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == id);
-                if (homeOwer == null)
+                //var tenant = await _tenantManager.FindByTenancyNameAsync(tenancyName);
+                //int? tenantId = tenant == null ? (int?)null : tenant.Id;
+                using (CurrentUnitOfWork.SetTenantId(tenantId))
                 {
-                    return NotFound();
+                    var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == id);
+                    if (homeOwer == null)
+                    {
+                        return NotFound();
+                    }
+                    var homeOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(hu => hu.HomeOwerId == homeOwer.Id);
+                    if (homeOwerUser == null)
+                    {
+                        throw new Exception("User is Unauthorized. HomeOwerUser is not exists.");
+                    }
+
+                    var query = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
+                                 join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
+                                 where a.HomeOwerId == homeOwer.Id && a.IsAuth && d.IsAuth
+                                 select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name }
+                                ).ToList();
+
+                    return Ok(new
+                    {
+                        AppKey = DM.DoorSystem.Sdk.DoorSystem.AppKey,
+                        UserId = homeOwer.Phone,
+                        AccessKeys = query
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// 注册用户
+        /// </summary>
+        /// <param name="tenantId">公司Id</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/{id:long}/RegisterUserToHomeOwer")]
+        public async virtual Task<IHttpActionResult> RegisterUserToHomeOwer(int? tenantId, string userName, string token)
+        {
+            try
+            {
+                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                {
+                    var homeOwerUser = new HomeOwerUser(tenantId, userName, token);
+
+                    await _homeOwerUserManager.CreateAsync(homeOwerUser);
+
+                    return Ok();
                 }
 
-                var query = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
-                             join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
-                             where a.HomeOwerId == homeOwer.Id && a.IsAuth && d.IsAuth
-                             select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name }
-                            ).ToList();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
 
-                return Ok(new
+        /// <summary>
+        /// 认证用户为业主
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="userName"></param>
+        /// <param name="homeOwerName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/{id:long}/AuthUserToHomeOwer")]
+        public async virtual Task<IHttpActionResult> AuthUserToHomeOwer(int? tenantId, string userName, long communityId, string homeOwerName, string phone, string token)
+        {
+            if (!base.AuthUser()) return Unauthorized();
+            try
+            {
+                using (CurrentUnitOfWork.SetTenantId(tenantId))
                 {
-                    AppKey = DM.DoorSystem.Sdk.DoorSystem.AppKey,
-                    UserId = homeOwer.Phone,
-                    AccessKeys = query
-                });
+                    var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
+                    var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, homeOwerName, phone);
+                    if (homeOwerUser == null)
+                    {
+                        return NotFound();
+                    }
+                    if (homeOwer == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        homeOwerUser.HomeOwerId = homeOwer.Id;
+                        await _homeOwerUserManager.UpdateAsync(homeOwerUser);
+                    }
+
+                    return Ok();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
         }
     }

@@ -5,6 +5,7 @@ using Castle.Core.Logging;
 using DM.AbpZeroTemplate.Authorization.Users;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -82,5 +83,28 @@ namespace DM.AbpZeroTemplate.DoorSystem
             return query;
         }
 
+        /// <summary>
+        /// 根据名称和手机号获取业主
+        /// </summary>
+        /// <param name="homeOwerName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public virtual async Task<HomeOwer> GetHomeOwerByNameAndPhone(string homeOwerName, string phone)
+        {
+            var homeOwer = await HomeOwerRepository.FirstOrDefaultAsync(h => h.Name == homeOwerName && h.Phone == phone);
+            return homeOwer;
+        }
+
+        /// <summary>
+        /// 根据名称和手机号获取业主
+        /// </summary>
+        /// <param name="homeOwerName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public virtual async Task<HomeOwer> GetHomeOwerByNameAndPhoneAndCommunityId(long communityId, string homeOwerName, string phone)
+        {
+            var homeOwer = await HomeOwerRepository.FirstOrDefaultAsync(h => h.Name == homeOwerName && h.Phone == phone && h.CommunityId == communityId);
+            return homeOwer;
+        }
     }
 }

@@ -111,6 +111,15 @@
         public const string Pages_DoorSystem_AccessKeys_Delete = "Pages.DoorSystem.AccessKeys.Delete";
         public const string Pages_DoorSystem_AccessKeys_Auth = "Pages.DoorSystem.AccessKeys.Auth";
 
+        public const string Pages_DoorSystem_OpenAttemps = "Pages.DoorSystem.OpenAttemps";
+        public const string Pages_DoorSystem_OpenAttemps_Delete = "Pages.DoorSystem.OpenAttemps.Delete";
+
+        public const string Pages_DoorSystem_HomeOwerUsers = "Pages.DoorSystem.HomeOwerUsers";
+        public const string Pages_DoorSystem_HomeOwerUsers_Create = "Pages.DoorSystem.HomeOwerUsers.Create";
+        public const string Pages_DoorSystem_HomeOwerUsers_Edit = "Pages.DoorSystem.HomeOwerUsers.Edit";
+        public const string Pages_DoorSystem_HomeOwerUsers_Delete = "Pages.DoorSystem.HomeOwerUsers.Delete";
+        public const string Pages_DoorSystem_HomeOwerUsers_Auth = "Pages.DoorSystem.HomeOwerUsers.Auth";
+
 
         public const string Pages_DoorSystem_Notices = "Pages.DoorSystem.Notices";
         public const string Pages_DoorSystem_Delivers = "Pages.DoorSystem.Delivers";

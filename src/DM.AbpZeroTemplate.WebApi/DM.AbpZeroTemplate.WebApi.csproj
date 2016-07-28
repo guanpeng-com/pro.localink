@@ -169,6 +169,8 @@
     <Compile Include="WebApi\AbpZeroTemplateWebApiModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Controllers\AccountController.cs" />
+    <Compile Include="WebApi\Controllers\v1\CommunitiesController.cs" />
+    <Compile Include="WebApi\Controllers\v1\OpenAttempsController.cs" />
     <Compile Include="WebApi\Controllers\v1\HomeOwersController.cs" />
     <Compile Include="WebApi\Controllers\OData\AccessKeysODataController.cs" />
     <Compile Include="WebApi\Controllers\OData\HomeOwersODataController.cs" />

@@ -44,6 +44,8 @@ namespace DM.AbpZeroTemplate.Web.Navigation
                 public const string Doors = "DoorSystem.Doors";
                 public const string HomeOwners = "DoorSystem.HomeOwners";
                 public const string AccessKeys = "DoorSystem.AccessKeys";
+                public const string OpenAttemps = "DoorSystem.OpenAttemps";
+                public const string HomeOwerUsers = "DoorSystem.HomeOwerUsers";
                 public const string Notices = "DoorSystem.Notices";
                 public const string Delivers = "DoorSystem.Delivers";
                 public const string Reports = "DoorSystem.Reports";

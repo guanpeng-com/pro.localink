@@ -169,6 +169,22 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                                 icon: "icon-manage",
                                 requiredPermissionName: AppPermissions.Pages_DoorSystem_AccessKeys
                              )
+                         ).AddItem(
+                            new MenuItemDefinition(
+                                PageNames.App.DoorSystem.OpenAttemps,
+                                L("OpenAttemps"),
+                                url: "doorSystem.openAttemps",
+                                icon: "icon-manage",
+                                requiredPermissionName: AppPermissions.Pages_DoorSystem_OpenAttemps
+                             )
+                         ).AddItem(
+                            new MenuItemDefinition(
+                                PageNames.App.DoorSystem.HomeOwerUsers,
+                                L("HomeOwerUsers"),
+                                url: "doorSystem.homeOwerUsers",
+                                icon: "icon-manage",
+                                requiredPermissionName: AppPermissions.Pages_DoorSystem_HomeOwerUsers
+                             )
                          )
                          .AddItem(
                             new MenuItemDefinition(

@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -14,12 +15,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
     {
         public IRepository<OpenAttemp, long> OpenAttempRepository { get; set; }
 
+
+        private readonly HomeOwerManager _homeOwerManager;
+        public IAuditInfoProvider AuditInfoProvider { get; set; }
+
         public OpenAttempManager(
-         IRepository<OpenAttemp, long> _OpenAttempRepository
+         IRepository<OpenAttemp, long> _OpenAttempRepository,
+            HomeOwerManager homeOwerManager
         )
         {
 
             OpenAttempRepository = _OpenAttempRepository;
+            _homeOwerManager = homeOwerManager;
         }
 
         /// <summary>
@@ -29,6 +36,23 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         public virtual async Task CreateAsync(OpenAttemp entity)
         {
+            entity.TenantId = CurrentUnitOfWork.GetTenantId();
+
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(entity.HomeOwerId);
+            if (homeOwer != null)
+            {
+                entity.HomeOwerName = homeOwer.Name;
+            }
+
+            if (AuditInfoProvider != null)
+            {
+                var auditInfo = new AuditInfo();
+                AuditInfoProvider.Fill(auditInfo);
+                entity.BrowserInfo = auditInfo.BrowserInfo;
+                entity.ClientIpAddress = auditInfo.ClientIpAddress;
+                entity.ClientName = auditInfo.ClientName;
+            }
+
             await OpenAttempRepository.InsertAsync(entity);
         }
 

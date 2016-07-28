@@ -289,6 +289,20 @@ appModule.config([
                 menu: 'DoorSystem.AccessKeys'
             });
         }
+        if (abp.auth.hasPermission('Pages.DoorSystem.OpenAttemps')) {
+            $stateProvider.state('doorSystem.openAttemps', {
+                url: '/openAttemps',
+                templateUrl: '~/App/doorSystem/views/openAttemps/index.cshtml',
+                menu: 'DoorSystem.OpenAttemps'
+            });
+        }
+        if (abp.auth.hasPermission('Pages.DoorSystem.HomeOwerUsers')) {
+            $stateProvider.state('doorSystem.homeOwerUsers', {
+                url: '/homeOwerUsers',
+                templateUrl: '~/App/doorSystem/views/homeOwerUsers/index.cshtml',
+                menu: 'DoorSystem.HomeOwerUsers'
+            });
+        }
         if (abp.auth.hasPermission('Pages.DoorSystem.Notices')) {
             $stateProvider.state('doorSystem.notices', {
                 url: '/notices',

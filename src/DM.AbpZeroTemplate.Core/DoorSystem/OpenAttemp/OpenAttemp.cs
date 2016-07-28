@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 using DM.DoorSystem.Sdk.Clients;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
     {
         public OpenAttemp()
         {
-
+            CreationTime = Clock.Now;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -28,11 +29,14 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual long HomeOwerId { get; set; }
 
         [Required]
+        public virtual string HomeOwerName { get; set; }
+
+        [Required]
         [StringLength(MaxDefaultStringLength)]
         public virtual string UserName { get; set; }
 
         [StringLength(MaxBrowserInfoLength)]
-        public virtual string BowserInfo { get; set; }
+        public virtual string BrowserInfo { get; set; }
 
         [StringLength(MaxClientIpAddressLength)]
         public virtual string ClientIpAddress { get; set; }

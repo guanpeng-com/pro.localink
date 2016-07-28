@@ -118,6 +118,13 @@ namespace DM.AbpZeroTemplate.Authorization
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_AccessKeys_Delete, L("AccessKeysDelete"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_AccessKeys_Auth, L("AccessKeysAuth"));
 
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_OpenAttemps, L("OpenAttemps"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_OpenAttemps_Delete, L("OpenAttempsDelete"));
+
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwerUsers, L("HomeOwerUsers"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwerUsers_Create, L("HomeOwerUsersCreate"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwerUsers_Edit, L("HomeOwerUsersEdit"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwerUsers_Delete, L("HomeOwerUsersDelete"));
 
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Notices, L("Notices"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Delivers, L("Delivers"));

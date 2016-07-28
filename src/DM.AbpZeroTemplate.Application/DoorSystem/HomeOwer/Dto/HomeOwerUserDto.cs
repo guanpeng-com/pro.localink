@@ -1,21 +1,23 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem.Dto
 {
-    //Create Model Dto Code About OpenAttemp
-    public class CreateOpenAttempInput : IInputDto
+    //Model Dto Code About HomeOwerUser
+    [AutoMapFrom(typeof(HomeOwerUser))]
+    public class HomeOwerUserDto : AuditedEntityDto<long>
     {
-
         public long HomeOwerId;
+
+        public string HomeOwerName;
 
         public string UserName;
 
-        public bool IsSuccess;
+        public string Token;
     }
 }
