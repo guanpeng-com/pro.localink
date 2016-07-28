@@ -1,0 +1,69 @@
+﻿<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span>@L("HomeOwerDetail")</span>
+        </h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal audit-log-detail-view" role="form">
+            <div class="form-body">
+                <h3 class="form-section">@L("HomeOwerDetail")</h3>
+                <div class="row">
+                    <div class="col-md-12">
+			
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("HomeOwerCommunityId"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.homeOwer.communityid}}
+                                </p>
+                            </div>
+                        </div>
+			
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("HomeOwerName"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.homeOwer.name}}
+                                </p>
+                            </div>
+                        </div>
+			
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("HomeOwerPhone"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.homeOwer.phone}}
+                                </p>
+                            </div>
+                        </div>
+			
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("HomeOwerEmail"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.homeOwer.email}}
+                                </p>
+                            </div>
+                        </div>
+			
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("HomeOwerGender"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.homeOwer.gender}}
+                                </p>
+                            </div>
+                        </div>
+																					
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="vm.close()">@L("Close")</button>
+    </div>
+</div>
+
+

@@ -1,0 +1,64 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="doorsForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.door.Id">@L("Edit"):{{vm.doors.name}}</span>
+                <span ng-if="!vm.door.Id">@L("AddDoor")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.door.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.door.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("DoorType")</label>
+                <select id="doorTypeSelectedCombox"
+                        class="form-control"
+                        required
+                        ng-model="vm.door.doorType"
+                        ng-class="{'edited':vm.door.doorType}"
+                        name="DoorType"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="doorType.key as doorType.value for doorType in vm.doorTypes"></select>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Name" ng-class="{'edited':vm.door.name}" ng-model="vm.door.name" maxlength="@Door.MaxDefaultStringLength" required/>
+                <label>@L("DoorName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="PId" ng-class="{'edited':vm.door.pId}" ng-model="vm.door.pId" maxlength="@Door.MaxDefaultStringLength" required/>
+                <label>@L("DoorPId")</label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="doorsForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>
+

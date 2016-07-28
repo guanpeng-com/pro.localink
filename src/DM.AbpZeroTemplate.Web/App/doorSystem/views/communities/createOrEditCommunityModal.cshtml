@@ -1,0 +1,47 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem.Community
+
+<div>
+    <form name="communityForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.community.Id">@L("Edit"):{{vm.community.name}}</span>
+                <span ng-if="!vm.community.Id">@L("AddCommunity")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Name" ng-class="{'edited':vm.community.name}" ng-model="vm.community.name" 
+                  required
+                  maxlength="@Community.MaxDefaultStringLength" />
+                <label>@L("CommunityName")</label>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Address" ng-class="{'edited':vm.community.address}" ng-model="vm.community.address" maxlength="@Community.MaxAddressStringLength" />
+                <label>@L("CommunityAddress")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <label>@L("DoorType")</label>
+            <div class="md-checkbox-list" ng-repeat="type in vm.doorTypes">
+                <div class="md-checkbox">
+                    <input id="{{type.key}}" class="md-check" type="checkbox" name="{{type.key}}" ng-model="type.isSelected">
+                    <label for="{{type.key}}">
+                        <span class="inc"></span>
+                        <span class="check"></span>
+                        <span class="box"></span>
+                        {{type.value}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="communityForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>

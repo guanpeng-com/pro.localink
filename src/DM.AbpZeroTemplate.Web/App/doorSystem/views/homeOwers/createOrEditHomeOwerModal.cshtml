@@ -1,0 +1,78 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="homeOwersForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.homeOwers.Id">@L("Edit"):{{vm.homeOwers.name}}</span>
+                <span ng-if="!vm.homeOwers.Id">@L("AddHomeOwer")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.homeOwer.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.homeOwer.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Name" ng-class="{'edited':vm.homeOwer.name}" ng-model="vm.homeOwer.name" maxlength="@HomeOwer.MaxDefaultStringLength"
+                       required />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Phone" ng-class="{'edited':vm.homeOwer.phone}" ng-model="vm.homeOwer.phone" maxlength="@HomeOwer.MaxDefaultStringLength" required ng-minlength="5" ng-maxlength="20" />
+                <label>@L("HomeOwerPhone")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="email" name="Email" ng-class="{'edited':vm.homeOwer.email}" ng-model="vm.homeOwer.email" maxlength="@HomeOwer.MaxDefaultStringLength" />
+                <label>@L("HomeOwerEmail")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerGender")</label>
+                <select id="genderSelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.homeOwer.gender}"
+                        name="Gender"
+                        ng-model="vm.homeOwer.gender"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true">
+                    <option value="GenderSecrecy" selected="selected">@L("GenderSecrecy")</option>
+                    <option value="Male">@L("Male")</option>
+                    <option value="Female">@L("Female")</option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="homeOwersForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>
+
+

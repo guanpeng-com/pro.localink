@@ -1,0 +1,49 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="accessKeysForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.accessKeys.Id">@L("Edit"):{{vm.accessKeys.name}}</span>
+                <span ng-if="!vm.accessKeys.Id">@L("AddAccessKey")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("Door")</label>
+                <select id="doorSelectedCombox"
+                        ng-disabled="vm.accessKey.isAuth"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.accessKey.doorId}"
+                        name="CommunityId"
+                        ng-model="vm.accessKey.doorId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="door.id as door.name for door in vm.doors"></select>
+            </div>
+        </div>
+
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label">@L("AccessKeyValidity")</label>
+                <input datetimepicker type="text"
+                       ng-disabled="vm.accessKey.isAuth"
+                       class="form-control date-picker"
+                       name="Validity"
+                       ng-class="{'edited':vm.accessKey.validity}"
+                       ng-model="vm.accessKey.validity" />
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="accessKeysForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>
+
+

@@ -1,0 +1,53 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span ng-if="!vm.user.id">@L("TemplateDetail")</span>
+        </h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal audit-log-detail-view" role="form">
+            <div class="form-body">
+                <h3 class="form-section">@L("TemplateDetail")</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("TemplateTitle"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.template.title}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("TemplateName"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.template.name}}.{{vm.template.extension}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("TemplateType"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.getTypeText()}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">@L("TemplateContent"):</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{vm.template.templateContent}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="vm.close()">@L("Close")</button>
+    </div>
+</div>
