@@ -189,10 +189,10 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                          .AddItem(
                             new MenuItemDefinition(
                                 PageNames.App.DoorSystem.Notices,
-                                L("Notices"),
-                                url: "doorSystem.notices",
+                                L("Messages"),
+                                url: "doorSystem.messages",
                                 icon: "icon-manage",
-                                requiredPermissionName: AppPermissions.Pages_DoorSystem_Notices
+                                requiredPermissionName: AppPermissions.Pages_DoorSystem_Messages
                             )
                          ).AddItem(
                             new MenuItemDefinition(

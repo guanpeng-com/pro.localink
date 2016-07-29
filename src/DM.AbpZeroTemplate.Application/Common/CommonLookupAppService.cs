@@ -9,6 +9,9 @@ using Abp.Linq.Extensions;
 using Abp.MultiTenancy;
 using DM.AbpZeroTemplate.Common.Dto;
 using DM.AbpZeroTemplate.Editions;
+using DM.AbpZeroTemplate.DoorSystem.Dto;
+using AutoMapper;
+using DM.AbpZeroTemplate.DoorSystem;
 
 namespace DM.AbpZeroTemplate.Common
 {
@@ -16,10 +19,13 @@ namespace DM.AbpZeroTemplate.Common
     public class CommonLookupAppService : AbpZeroTemplateAppServiceBase, ICommonLookupAppService
     {
         private readonly EditionManager _editionManager;
+        private readonly HomeOwerManager _homeOwerManager;
 
-        public CommonLookupAppService(EditionManager editionManager)
+        public CommonLookupAppService(EditionManager editionManager,
+            HomeOwerManager homeOwerManager)
         {
             _editionManager = editionManager;
+            _homeOwerManager = homeOwerManager;
         }
 
         public async Task<ListResultOutput<ComboboxItemDto>> GetEditionsForCombobox()
@@ -67,6 +73,36 @@ namespace DM.AbpZeroTemplate.Common
                     );
 
             }
+        }
+
+        public async Task<PagedResultOutput<NameValueDto>> FindHomeOwers(FindHomeOwersInput input)
+        {
+
+            var query = _homeOwerManager.HomeOwerRepository.GetAll()
+                .WhereIf(
+                    !input.Filter.IsNullOrWhiteSpace(),
+                    u =>
+                        u.Name.Contains(input.Filter) ||
+                        u.Phone.Contains(input.Filter) ||
+                        u.Email.Contains(input.Filter)
+                );
+
+            var homeOwerCount = await query.CountAsync();
+            var homeOwers = await query
+                .OrderBy(u => u.Name)
+                .PageBy(input)
+                .ToListAsync();
+
+            return new PagedResultOutput<NameValueDto>(
+                homeOwerCount,
+                homeOwers.Select(u =>
+                    new NameValueDto(
+                        u.Name + " (" + u.Phone + " | " + u.Email + ")",
+                        u.Id.ToString()
+                        )
+                    ).ToList()
+                );
+
         }
     }
 }

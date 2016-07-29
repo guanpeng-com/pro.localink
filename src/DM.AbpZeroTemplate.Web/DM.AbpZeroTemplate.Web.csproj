@@ -430,6 +430,9 @@
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\detailModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\index.js" />
+    <Content Include="App\doorSystem\views\Messages\createOrEditMessageModal.js" />
+    <Content Include="App\doorSystem\views\Messages\detailModal.js" />
+    <Content Include="App\doorSystem\views\Messages\index.js" />
     <Content Include="App\doorSystem\views\openAttemps\index.js" />
     <Content Include="App\host\directives\featureTree.css">
       <DependentUpon>featureTree.less</DependentUpon>
@@ -2067,6 +2070,9 @@
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.cshtml" />
     <Content Include="App\doorSystem\views\homeOwerUsers\detailModal.cshtml" />
     <Content Include="App\doorSystem\views\homeOwerUsers\index.cshtml" />
+    <Content Include="App\doorSystem\views\Messages\createOrEditMessageModal.cshtml" />
+    <Content Include="App\doorSystem\views\Messages\detailModal.cshtml" />
+    <Content Include="App\doorSystem\views\Messages\index.cshtml" />
     <None Include="Properties\PublishProfiles\dm.pubxml" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />

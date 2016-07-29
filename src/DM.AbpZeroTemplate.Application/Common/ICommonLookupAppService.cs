@@ -2,6 +2,7 @@
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using DM.AbpZeroTemplate.Common.Dto;
+using DM.AbpZeroTemplate.DoorSystem.Dto;
 
 namespace DM.AbpZeroTemplate.Common
 {
@@ -10,5 +11,7 @@ namespace DM.AbpZeroTemplate.Common
         Task<ListResultOutput<ComboboxItemDto>> GetEditionsForCombobox();
 
         Task<PagedResultOutput<NameValueDto>> FindUsers(FindUsersInput input);
+
+        Task<PagedResultOutput<NameValueDto>> FindHomeOwers(FindHomeOwersInput input);
     }
 }

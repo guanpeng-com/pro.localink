@@ -157,6 +157,10 @@
     <Compile Include="Migrations\201607280342402_Delete_HomeOwer_With_HomeOwerUser.Designer.cs">
       <DependentUpon>201607280342402_Delete_HomeOwer_With_HomeOwerUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607290805452_Added_Messages.cs" />
+    <Compile Include="Migrations\201607290805452_Added_Messages.Designer.cs">
+      <DependentUpon>201607290805452_Added_Messages.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -209,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607280342402_Delete_HomeOwer_With_HomeOwerUser.resx">
       <DependentUpon>201607280342402_Delete_HomeOwer_With_HomeOwerUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607290805452_Added_Messages.resx">
+      <DependentUpon>201607290805452_Added_Messages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

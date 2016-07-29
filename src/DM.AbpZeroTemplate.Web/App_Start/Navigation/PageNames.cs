@@ -49,6 +49,7 @@ namespace DM.AbpZeroTemplate.Web.Navigation
                 public const string Notices = "DoorSystem.Notices";
                 public const string Delivers = "DoorSystem.Delivers";
                 public const string Reports = "DoorSystem.Reports";
+                public const string Messages = "DoorSystem.Messages";
             }
         }
 

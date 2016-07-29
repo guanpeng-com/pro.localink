@@ -324,6 +324,13 @@ appModule.config([
                 menu: 'DoorSystem.Reports'
             });
         }
+        if (abp.auth.hasPermission('Pages.DoorSystem.Messages')) {
+            $stateProvider.state('doorSystem.messages', {
+                url: '/messages',
+                templateUrl: '~/App/doorSystem/views/messages/index.cshtml',
+                menu: 'DoorSystem.Messages'
+            });
+        }
     }
 ]);
 

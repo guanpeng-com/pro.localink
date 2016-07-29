@@ -114,6 +114,11 @@
         public const string Pages_DoorSystem_OpenAttemps = "Pages.DoorSystem.OpenAttemps";
         public const string Pages_DoorSystem_OpenAttemps_Delete = "Pages.DoorSystem.OpenAttemps.Delete";
 
+        public const string Pages_DoorSystem_Messages = "Pages.DoorSystem.Messages";
+        public const string Pages_DoorSystem_Messages_Create = "Pages.DoorSystem.Messages.Create";
+        public const string Pages_DoorSystem_Messages_Edit = "Pages.DoorSystem.Messages.Edit";
+        public const string Pages_DoorSystem_Messages_Delete = "Pages.DoorSystem.Messages.Delete";
+
         public const string Pages_DoorSystem_HomeOwerUsers = "Pages.DoorSystem.HomeOwerUsers";
         public const string Pages_DoorSystem_HomeOwerUsers_Create = "Pages.DoorSystem.HomeOwerUsers.Create";
         public const string Pages_DoorSystem_HomeOwerUsers_Edit = "Pages.DoorSystem.HomeOwerUsers.Edit";

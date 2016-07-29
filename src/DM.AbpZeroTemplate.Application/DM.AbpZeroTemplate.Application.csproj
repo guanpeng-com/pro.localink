@@ -205,6 +205,7 @@
     <Compile Include="CMS\Contents\Content\Dto\UpdateContentInput.cs" />
     <Compile Include="CMS\Contents\Content\IContentAppService.cs" />
     <Compile Include="Common\CommonLookupAppService.cs" />
+    <Compile Include="Common\Dto\FindHomeOwersInput.cs" />
     <Compile Include="Common\Dto\FindUsersInput.cs" />
     <Compile Include="Common\ICommonLookupAppService.cs" />
     <Compile Include="Configuration\Host\Dto\SendTestEmailInput.cs" />
@@ -241,6 +242,12 @@
     <Compile Include="DoorSystem\HomeOwer\HomeOwerService.cs" />
     <Compile Include="DoorSystem\HomeOwer\IHomeOwerUserService.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerUserService.cs" />
+    <Compile Include="DoorSystem\Message\Dto\CreateMessageInput.cs" />
+    <Compile Include="DoorSystem\Message\Dto\GetMessagesInput.cs" />
+    <Compile Include="DoorSystem\Message\Dto\MessageDto.cs" />
+    <Compile Include="DoorSystem\Message\Dto\UpdateMessageInput.cs" />
+    <Compile Include="DoorSystem\Message\IMessageService.cs" />
+    <Compile Include="DoorSystem\Message\MessageService.cs" />
     <Compile Include="DoorSystem\OpenAttemp\Dto\CreateOpenAttempInput.cs" />
     <Compile Include="DoorSystem\OpenAttemp\Dto\GetOpenAttempsInput.cs" />
     <Compile Include="DoorSystem\OpenAttemp\Dto\OpenAttempDto.cs" />
