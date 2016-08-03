@@ -351,6 +351,7 @@
     <Content Include="App\common\views\auditLogs\detailModal.min.css">
       <DependentUpon>detailModal.css</DependentUpon>
     </Content>
+    <Content Include="App\common\views\common\fileUploadModal.js" />
     <Content Include="App\common\views\common\lookupModal.js" />
     <Content Include="App\common\views\languages\editTextModal.js" />
     <Content Include="App\common\views\languages\createOrEditModal.js" />
@@ -390,6 +391,7 @@
     <Content Include="App\common\views\profile\linkAccountModal.js" />
     <Content Include="App\common\views\profile\linkedAccountsModal.js" />
     <Content Include="App\common\views\notifications\settingsModal.js" />
+    <Content Include="App\common\views\qrcode\qrcode.js" />
     <Content Include="App\common\views\users\createOrEditModal.css">
       <DependentUpon>createOrEditModal.less</DependentUpon>
     </Content>
@@ -421,6 +423,9 @@
     <Content Include="App\doorSystem\views\communities\createOrEditCommunityModal.js" />
     <Content Include="App\doorSystem\views\communities\detailModal.js" />
     <Content Include="App\doorSystem\views\communities\index.js" />
+    <Content Include="App\doorSystem\views\deliverys\createOrEditDeliveryModal.js" />
+    <Content Include="App\doorSystem\views\deliverys\detailModal.js" />
+    <Content Include="App\doorSystem\views\deliverys\index.js" />
     <Content Include="App\doorSystem\views\doors\createOrEditDoorModal.js" />
     <Content Include="App\doorSystem\views\doors\detailModal.js" />
     <Content Include="App\doorSystem\views\doors\index.js" />
@@ -430,10 +435,13 @@
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\detailModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\index.js" />
-    <Content Include="App\doorSystem\views\Messages\createOrEditMessageModal.js" />
-    <Content Include="App\doorSystem\views\Messages\detailModal.js" />
-    <Content Include="App\doorSystem\views\Messages\index.js" />
+    <Content Include="App\doorSystem\views\messages\createOrEditMessageModal.js" />
+    <Content Include="App\doorSystem\views\messages\detailModal.js" />
+    <Content Include="App\doorSystem\views\messages\index.js" />
     <Content Include="App\doorSystem\views\openAttemps\index.js" />
+    <Content Include="App\doorSystem\views\reports\createOrEditReportModal.js" />
+    <Content Include="App\doorSystem\views\reports\detailModal.js" />
+    <Content Include="App\doorSystem\views\reports\index.js" />
     <Content Include="App\host\directives\featureTree.css">
       <DependentUpon>featureTree.less</DependentUpon>
     </Content>
@@ -674,6 +682,7 @@
     <Content Include="libs\angular-moment\angular-moment.js" />
     <Content Include="libs\angular-moment\angular-moment.min.js" />
     <Content Include="libs\angular-ocLazyLoad\ocLazyLoad.min.js" />
+    <Content Include="libs\angular-qrcode\angular-qrcode.js" />
     <Content Include="libs\angular-ui-grid\ui-grid.css" />
     <Content Include="libs\angular-ui-grid\ui-grid.js" />
     <Content Include="libs\angular-ui-grid\ui-grid.min.css" />
@@ -1178,6 +1187,8 @@
     <Content Include="libs\morris\spec\viz\visual_specs.js" />
     <Content Include="libs\mustachejs\mustache.js" />
     <Content Include="libs\mustachejs\mustache.min.js" />
+    <Content Include="libs\qrcode\qrcode_UTF8.js" />
+    <Content Include="libs\qrcode\qrcode.js" />
     <Content Include="libs\slider-revolution-slider\css\extralayers.css" />
     <Content Include="libs\slider-revolution-slider\css\navstylechange.css" />
     <Content Include="libs\slider-revolution-slider\css\noneed.css" />
@@ -2070,9 +2081,17 @@
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.cshtml" />
     <Content Include="App\doorSystem\views\homeOwerUsers\detailModal.cshtml" />
     <Content Include="App\doorSystem\views\homeOwerUsers\index.cshtml" />
-    <Content Include="App\doorSystem\views\Messages\createOrEditMessageModal.cshtml" />
-    <Content Include="App\doorSystem\views\Messages\detailModal.cshtml" />
-    <Content Include="App\doorSystem\views\Messages\index.cshtml" />
+    <Content Include="App\doorSystem\views\messages\createOrEditMessageModal.cshtml" />
+    <Content Include="App\doorSystem\views\messages\detailModal.cshtml" />
+    <Content Include="App\doorSystem\views\messages\index.cshtml" />
+    <Content Include="App\doorSystem\views\deliverys\createOrEditDeliveryModal.cshtml" />
+    <Content Include="App\doorSystem\views\deliverys\detailModal.cshtml" />
+    <Content Include="App\doorSystem\views\deliverys\index.cshtml" />
+    <Content Include="App\common\views\qrcode\qrcode.cshtml" />
+    <Content Include="App\doorSystem\views\reports\createOrEditReportModal.cshtml" />
+    <Content Include="App\doorSystem\views\reports\detailModal.cshtml" />
+    <Content Include="App\doorSystem\views\reports\index.cshtml" />
+    <Content Include="App\common\views\common\fileUploadModal.cshtml" />
     <None Include="Properties\PublishProfiles\dm.pubxml" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />

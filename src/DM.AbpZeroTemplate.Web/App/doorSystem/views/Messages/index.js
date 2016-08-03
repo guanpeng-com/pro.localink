@@ -53,7 +53,7 @@
                                 '</div>'
                         },
                         {
-                            name: app.localize('Title'),
+                            name: app.localize('MessageTitle'),
                             field: 'title',
                             cellTemplate:
                                 '<div class=\"ui-grid-cell-messages\" title="{{row.entity.title}}"> {{COL_FIELD CUSTOM_FILTERS}} &nbsp;</div>',

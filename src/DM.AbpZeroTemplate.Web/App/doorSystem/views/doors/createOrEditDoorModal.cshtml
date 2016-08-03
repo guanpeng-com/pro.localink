@@ -20,6 +20,7 @@
                         ng-model="vm.door.communityId"
                         ui-jq="selectpicker"
                         ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        ng-change="vm.loadDoorType()"
                         data-live-search="true"
                         ng-options="community.id as community.name for community in vm.communityies"></select>
             </div>

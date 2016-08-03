@@ -129,7 +129,12 @@
       <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
@@ -204,9 +209,12 @@
     <Compile Include="CMS\Contents\Content\Dto\MoveContentInput.cs" />
     <Compile Include="CMS\Contents\Content\Dto\UpdateContentInput.cs" />
     <Compile Include="CMS\Contents\Content\IContentAppService.cs" />
+    <Compile Include="Common\CommonFileUploadAppService.cs" />
     <Compile Include="Common\CommonLookupAppService.cs" />
     <Compile Include="Common\Dto\FindHomeOwersInput.cs" />
+    <Compile Include="Common\Dto\FileUploadInput.cs" />
     <Compile Include="Common\Dto\FindUsersInput.cs" />
+    <Compile Include="Common\ICommonFileUploadAppService.cs" />
     <Compile Include="Common\ICommonLookupAppService.cs" />
     <Compile Include="Configuration\Host\Dto\SendTestEmailInput.cs" />
     <Compile Include="Configuration\Host\Dto\TenantManagementSettingsEditDto.cs" />
@@ -224,6 +232,12 @@
     <Compile Include="DoorSystem\Community\Dto\CreateCommunityInput.cs" />
     <Compile Include="DoorSystem\Community\Dto\GetCommunitiesInput.cs" />
     <Compile Include="DoorSystem\Community\ICommunityService.cs" />
+    <Compile Include="DoorSystem\Delivery\Dto\CreateDeliveryInput.cs" />
+    <Compile Include="DoorSystem\Delivery\Dto\GetDeliverysInput.cs" />
+    <Compile Include="DoorSystem\Delivery\Dto\DeliveryDto.cs" />
+    <Compile Include="DoorSystem\Delivery\Dto\UpdateDeliveryInput.cs" />
+    <Compile Include="DoorSystem\Delivery\IDeliveryService.cs" />
+    <Compile Include="DoorSystem\Delivery\DeliveryService.cs" />
     <Compile Include="DoorSystem\Door\Dto\CreateDoorInput.cs" />
     <Compile Include="DoorSystem\Door\Dto\GetDoorsInput.cs" />
     <Compile Include="DoorSystem\Door\Dto\DoorDto.cs" />
@@ -253,6 +267,12 @@
     <Compile Include="DoorSystem\OpenAttemp\Dto\OpenAttempDto.cs" />
     <Compile Include="DoorSystem\OpenAttemp\IOpenAttempService.cs" />
     <Compile Include="DoorSystem\OpenAttemp\OpenAttempService.cs" />
+    <Compile Include="DoorSystem\Report\Dto\CreateReportInput.cs" />
+    <Compile Include="DoorSystem\Report\Dto\GetReportsInput.cs" />
+    <Compile Include="DoorSystem\Report\Dto\ReportDto.cs" />
+    <Compile Include="DoorSystem\Report\Dto\UpdateReportInput.cs" />
+    <Compile Include="DoorSystem\Report\IReportService.cs" />
+    <Compile Include="DoorSystem\Report\ReportService.cs" />
     <Compile Include="Dto\PagedAndFilteredInputDto.cs" />
     <Compile Include="Dto\PagedInputDto.cs" />
     <Compile Include="Dto\PagedSortedAndFilteredInputDto.cs" />
@@ -292,6 +312,8 @@
     <Compile Include="Authorization\Users\Dto\UserEditDto.cs" />
     <Compile Include="Authorization\Users\Dto\UserRoleDto.cs" />
     <Compile Include="CustomDtoMapper.cs" />
+    <Compile Include="HttpFormatters\FileUpload.cs" />
+    <Compile Include="HttpFormatters\UploadMultipartMediaTypeFormatter.cs" />
     <Compile Include="IO\AppFileHelper.cs" />
     <Compile Include="Localization\Dto\CreateOrUpdateLanguageInput.cs" />
     <Compile Include="Localization\Dto\ApplicationLanguageEditDto.cs" />

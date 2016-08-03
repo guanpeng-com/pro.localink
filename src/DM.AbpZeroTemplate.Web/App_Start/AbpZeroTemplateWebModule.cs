@@ -91,11 +91,26 @@ namespace DM.AbpZeroTemplate.Web
             appFolders.TempFileDownloadFolder = server.MapPath("~/Temp/Downloads");
             appFolders.WebLogsFolder = server.MapPath("~/Logs");
 
+            //普通上传文件路径
+            appFolders.CommonFileFolder = server.MapPath("~/Upload/Common");
+            //临时上传文件路径
+            appFolders.TempFileFolder = server.MapPath("~/Upload/Temp");
+            //应用普通文件上传路径
+            appFolders.AppCommonFileFolder = server.MapPath("~/APP_PATH/Upload/Common");
+            //应用临时文件上传路径
+            appFolders.AppTempFileFolder = server.MapPath("~/APP_PATH/Upload/Temp");
+
             appFolders.AppFileFolder = "Upload/Files";
             appFolders.AppImageFolder = "Upload/Images";
             appFolders.AppVideoFolder = "Upload/Videos";
 
-            try { DirectoryHelper.CreateIfNotExists(appFolders.TempFileDownloadFolder); } catch { }
+            try
+            {
+                DirectoryHelper.CreateIfNotExists(appFolders.TempFileDownloadFolder);
+                DirectoryHelper.CreateIfNotExists(appFolders.CommonFileFolder);
+                DirectoryHelper.CreateIfNotExists(appFolders.TempFileFolder);
+            }
+            catch { }
         }
     }
 }

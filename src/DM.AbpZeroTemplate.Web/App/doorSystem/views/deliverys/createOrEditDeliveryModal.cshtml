@@ -1,0 +1,27 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="deliverysForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.delivery.Id">@L("Edit"):{{vm.delivery.name}}</span>
+                <span ng-if="!vm.delivery.Id">@L("AddDelivery")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.delivery.homeOwerName}" ng-model="vm.delivery.homeOwerName"
+                       ng-click="vm.selectHomeOwer()" />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="deliverysForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>
+
+

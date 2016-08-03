@@ -38,6 +38,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 获取全部小区
         /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
         /// <returns></returns>
         [HttpGet]
         [UnitOfWork]

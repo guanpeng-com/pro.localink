@@ -125,9 +125,15 @@
         public const string Pages_DoorSystem_HomeOwerUsers_Delete = "Pages.DoorSystem.HomeOwerUsers.Delete";
         public const string Pages_DoorSystem_HomeOwerUsers_Auth = "Pages.DoorSystem.HomeOwerUsers.Auth";
 
+        public const string Pages_DoorSystem_Deliverys = "Pages.DoorSystem.Deliverys";
+        public const string Pages_DoorSystem_Deliverys_Create = "Pages.DoorSystem.Deliverys.Create";
+        public const string Pages_DoorSystem_Deliverys_Edit = "Pages.DoorSystem.Deliverys.Edit";
+        public const string Pages_DoorSystem_Deliverys_Delete = "Pages.DoorSystem.Deliverys.Delete";
 
-        public const string Pages_DoorSystem_Notices = "Pages.DoorSystem.Notices";
-        public const string Pages_DoorSystem_Delivers = "Pages.DoorSystem.Delivers";
+
         public const string Pages_DoorSystem_Reports = "Pages.DoorSystem.Reports";
+        public const string Pages_DoorSystem_Reports_Create = "Pages.DoorSystem.Reports.Create";
+        public const string Pages_DoorSystem_Reports_Edit = "Pages.DoorSystem.Reports.Edit";
+        public const string Pages_DoorSystem_Reports_Delete = "Pages.DoorSystem.Reports.Delete";
     }
 }

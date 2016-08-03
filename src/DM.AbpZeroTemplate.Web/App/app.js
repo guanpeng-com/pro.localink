@@ -14,7 +14,8 @@ var appModule = angular.module("app", [
     'frapontillo.bootstrap-switch',
     'abp',
     'simditor',
-    'datetimepicker'
+    'datetimepicker',
+    'monospaced.qrcode'
 ]);
 
 /* LAZY LOAD CONFIG */
@@ -303,18 +304,11 @@ appModule.config([
                 menu: 'DoorSystem.HomeOwerUsers'
             });
         }
-        if (abp.auth.hasPermission('Pages.DoorSystem.Notices')) {
-            $stateProvider.state('doorSystem.notices', {
-                url: '/notices',
-                templateUrl: '~/App/doorSystem/views/notices/index.cshtml',
-                menu: 'DoorSystem.Notices'
-            });
-        }
-        if (abp.auth.hasPermission('Pages.DoorSystem.Delivers')) {
-            $stateProvider.state('doorSystem.delivers', {
-                url: '/delivers',
-                templateUrl: '~/App/doorSystem/views/delivers/index.cshtml',
-                menu: 'DoorSystem.Delivers'
+        if (abp.auth.hasPermission('Pages.DoorSystem.Deliverys')) {
+            $stateProvider.state('doorSystem.deliverys', {
+                url: '/deliverys',
+                templateUrl: '~/App/doorSystem/views/deliverys/index.cshtml',
+                menu: 'DoorSystem.Deliverys'
             });
         }
         if (abp.auth.hasPermission('Pages.DoorSystem.Reports')) {

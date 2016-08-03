@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Apps;
+using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -13,18 +14,21 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         public IRepository<Community, long> CommunityRepository { get; set; }
         private readonly IAbpSession _abpSession;
         private readonly UserManager _userManager;
+        private readonly AppManager _appManager;
 
         public CommunityManager(
             IRepository<Community, long> communityRepository,
             ILogger logger,
             IAbpSession abpSession,
-            UserManager userManager
+            UserManager userManager,
+            AppManager appManager
             )
         {
             CommunityRepository = communityRepository;
             Logger = logger;
             _abpSession = abpSession;
             _userManager = userManager;
+            _appManager = appManager;
         }
 
         /// <summary>
@@ -34,6 +38,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// <returns></returns>
         public virtual async Task CreateAsync(Community community)
         {
+            //创建小区之前，需要创建小区的cms
+            App app = new App(community.TenantId, community.Name, community.Name, "APP_" + community.Id.ToString());
+            await _appManager.CreateAsync(app);
+            community.AppId = app.Id;
+
             community.AuthCommunity();
             await CommunityRepository.InsertAsync(community);
             var userId = _abpSession.GetUserId();

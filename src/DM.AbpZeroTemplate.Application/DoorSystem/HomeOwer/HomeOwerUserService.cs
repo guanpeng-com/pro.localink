@@ -28,7 +28,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task CreateHomeOwerUser(CreateHomeOwerUserInput input)
         {
-            var entity = new HomeOwerUser(CurrentUnitOfWork.GetTenantId(), input.UserName, input.Token);
+            var entity = new HomeOwerUser(input.UserName, input.Token);
             await _manager.CreateAsync(entity);
         }
 

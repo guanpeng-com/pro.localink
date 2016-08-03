@@ -7,7 +7,7 @@ namespace DM.AbpZeroTemplate.WebApi
 {
     public abstract class AbpZeroTemplateApiControllerBase : AbpApiController
     {
-        private readonly HomeOwerUserManager _homeOwerUserManager;
+        protected readonly HomeOwerUserManager _homeOwerUserManager;
 
         protected AbpZeroTemplateApiControllerBase()
         {

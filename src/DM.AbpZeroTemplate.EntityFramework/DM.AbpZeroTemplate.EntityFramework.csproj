@@ -161,6 +161,18 @@
     <Compile Include="Migrations\201607290805452_Added_Messages.Designer.cs">
       <DependentUpon>201607290805452_Added_Messages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608020731314_Added_Reports.cs" />
+    <Compile Include="Migrations\201608020731314_Added_Reports.Designer.cs">
+      <DependentUpon>201608020731314_Added_Reports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608021208060_Added_AppId_To_Community.cs" />
+    <Compile Include="Migrations\201608021208060_Added_AppId_To_Community.Designer.cs">
+      <DependentUpon>201608021208060_Added_AppId_To_Community.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608031010435_Remove_IMayHaveTenant.cs" />
+    <Compile Include="Migrations\201608031010435_Remove_IMayHaveTenant.Designer.cs">
+      <DependentUpon>201608031010435_Remove_IMayHaveTenant.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -216,6 +228,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607290805452_Added_Messages.resx">
       <DependentUpon>201607290805452_Added_Messages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608020731314_Added_Reports.resx">
+      <DependentUpon>201608020731314_Added_Reports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608021208060_Added_AppId_To_Community.resx">
+      <DependentUpon>201608021208060_Added_AppId_To_Community.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608031010435_Remove_IMayHaveTenant.resx">
+      <DependentUpon>201608031010435_Remove_IMayHaveTenant.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

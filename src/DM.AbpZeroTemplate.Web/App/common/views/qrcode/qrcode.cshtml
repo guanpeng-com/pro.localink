@@ -1,0 +1,17 @@
+﻿<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span>@L("QRCode")</span>
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="text-center">
+            <qrcode data="{{vm.qrcode.data}}" version="{{vm.qrcode.version}}" error-correction-level="{{vm.qrcode.error_correction_level}}" size="{{vm.qrcode.size}}"></qrcode>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="vm.close()">@L("Close")</button>
+    </div>
+</div>
+
+

@@ -50,11 +50,13 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// </summary>
         /// <param name="tenantId">公司Id</param>
         /// <param name="id">业主Id</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
         /// <returns></returns>
         [HttpGet]
         [UnitOfWork]
         [Route("/{id:long}/AccessKeys")]
-        public virtual async Task<IHttpActionResult> GetAccessKeys(int? tenantId, long id, string userName, string token)
+        public virtual async Task<IHttpActionResult> GetAccessKeys(long id, string userName, string token, int? tenantId = null)
         {
             if (!base.AuthUser()) return Unauthorized();
             try
@@ -97,26 +99,22 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 注册用户
         /// </summary>
-        /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
-        /// <param name="token">令牌</param>
+        /// <param name="token">用户令牌</param>
         /// <returns></returns>
+        [SecretVersionedRoute]
         [HttpPost]
         [UnitOfWork]
         [Route("/{id:long}/RegisterUserToHomeOwer")]
-        public async virtual Task<IHttpActionResult> RegisterUserToHomeOwer(int? tenantId, string userName, string token)
+        public async virtual Task<IHttpActionResult> RegisterUserToHomeOwer(string userName, string token)
         {
             try
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
-                {
-                    var homeOwerUser = new HomeOwerUser(tenantId, userName, token);
+                var homeOwerUser = new HomeOwerUser(userName, token);
 
-                    await _homeOwerUserManager.CreateAsync(homeOwerUser);
+                await _homeOwerUserManager.CreateAsync(homeOwerUser);
 
-                    return Ok();
-                }
-
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -127,15 +125,17 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 认证用户为业主
         /// </summary>
-        /// <param name="tenantId"></param>
-        /// <param name="userName"></param>
-        /// <param name="homeOwerName"></param>
-        /// <param name="phone"></param>
+        /// <param name="tenantId">公司Id</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
+        /// <param name="communityId">小区Id</param>
+        /// <param name="homeOwerName">业主姓名</param>
+        /// <param name="phone">业主手机号</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
         [Route("/{id:long}/AuthUserToHomeOwer")]
-        public async virtual Task<IHttpActionResult> AuthUserToHomeOwer(int? tenantId, string userName, long communityId, string homeOwerName, string phone, string token)
+        public async virtual Task<IHttpActionResult> AuthUserToHomeOwer(string userName, long communityId, string homeOwerName, string phone, string token, int? tenantId = null)
         {
             if (!base.AuthUser()) return Unauthorized();
             try
@@ -155,6 +155,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     else
                     {
                         homeOwerUser.HomeOwerId = homeOwer.Id;
+                        homeOwerUser.TenantId = tenantId;
                         await _homeOwerUserManager.UpdateAsync(homeOwerUser);
                     }
 

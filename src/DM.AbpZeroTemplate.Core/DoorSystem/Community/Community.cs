@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Apps;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using DM.DoorSystem.Sdk.Clients;
 using System;
@@ -65,6 +66,13 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// 小区可用的钥匙类型
         /// </summary>
         public virtual string DoorTypes { get; set; }
+
+        /// <summary>
+        /// 小区cms
+        /// </summary>
+        public virtual long AppId { get; set; }
+        [ForeignKey("AppId")]
+        public virtual App App { get; set; }
 
         /// <summary>
         /// 门禁

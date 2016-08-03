@@ -39,12 +39,13 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// </summary>
         /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
         /// <param name="homeOwerId">业主Id</param>
         /// <param name="isSuccess">是否成功</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> CreateOpenAttemp(int? tenantId, string userName, long homeOwerId, bool isSuccess, string token)
+        public async virtual Task<IHttpActionResult> CreateOpenAttemp(string userName, long homeOwerId, bool isSuccess, string token, int? tenantId = null)
         {
             if (!base.AuthUser()) return Unauthorized();
             try

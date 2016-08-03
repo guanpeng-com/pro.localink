@@ -177,14 +177,6 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                                 icon: "icon-manage",
                                 requiredPermissionName: AppPermissions.Pages_DoorSystem_OpenAttemps
                              )
-                         ).AddItem(
-                            new MenuItemDefinition(
-                                PageNames.App.DoorSystem.HomeOwerUsers,
-                                L("HomeOwerUsers"),
-                                url: "doorSystem.homeOwerUsers",
-                                icon: "icon-manage",
-                                requiredPermissionName: AppPermissions.Pages_DoorSystem_HomeOwerUsers
-                             )
                          )
                          .AddItem(
                             new MenuItemDefinition(
@@ -196,11 +188,11 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                             )
                          ).AddItem(
                             new MenuItemDefinition(
-                                PageNames.App.DoorSystem.Delivers,
+                                PageNames.App.DoorSystem.Deliverys,
                                 L("Delivers"),
-                                url: "doorSystem.delivers",
+                                url: "doorSystem.deliverys",
                                 icon: "icon-manage",
-                                requiredPermissionName: AppPermissions.Pages_DoorSystem_Delivers
+                                requiredPermissionName: AppPermissions.Pages_DoorSystem_Deliverys
                             )
                          )
                          .AddItem(

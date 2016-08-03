@@ -29,6 +29,16 @@
             $uibModalInstance.dismiss();
         };
 
+        vm.loadDoorType = function () {
+            doorService.getCommunityDoorTypes({ id: vm.door.communityId })
+            .success(function (result) {
+            vm.doorTypes = result;
+            setTimeout(function () {
+                $("#doorTypeSelectedCombox").selectpicker('refresh');
+            }, 0);
+            });
+        };
+
         function init() {
             communityService.getUserCommunities()
             .success(function (result) {
@@ -38,18 +48,18 @@
                 }, 0);
             });
 
-            doorService.GetCommunityDoorTypes({ id: vm.door.communityId })
-            .success(function (result) {
-                vm.doorTypes = result;
-                setTimeout(function () {
-                    $("#doorTypeSelectedCombox").selectpicker('refresh');
-                }, 0);
-            });
-
             if (vm.door.id) {
                 doorService.getDoor({ id: vm.door.id })
                 .success(function (result) {
                     vm.door = result;
+                });
+
+                doorService.getCommunityDoorTypes({ id: vm.door.communityId })
+                    .success(function (result) {
+                    vm.doorTypes = result;
+                    setTimeout(function () {
+                        $("#doorTypeSelectedCombox").selectpicker('refresh');
+                    }, 0);
                 });
             }
         }

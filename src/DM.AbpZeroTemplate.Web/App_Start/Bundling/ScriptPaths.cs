@@ -50,6 +50,10 @@ namespace DM.AbpZeroTemplate.Web.Bundling
 
         public const string MustacheJs = "~/libs/mustachejs/mustache.min.js";
 
+
+        public const string QRCodeJs = "~/libs/qrcode/qrcode.js";
+        public const string QRCodeUTF8Js = "~/libs/qrcode/qrcode_UTF8.js";
+
         public const string Angular = "~/Scripts/angular.min.js";
         public const string Angular_Sanitize = "~/Scripts/angular-sanitize.min.js";
         public const string Angular_Touch = "~/Scripts/angular-touch.min.js";
@@ -69,6 +73,8 @@ namespace DM.AbpZeroTemplate.Web.Bundling
         public const string Angular_Editor_SimditorAll = "~/libs/angular-editor/javascripts/simditor/simditor-all.js";
         public const string Angular_Editor_Simditor = "~/libs/angular-editor/javascripts/simditor/simditor.js";
         public const string Angular_Editor_Uploader = "~/libs/angular-editor/javascripts/simditor/uploader.js";
+
+        public const string Angular_QRCode = "~/libs/angular-qrcode/angular-qrcode.js";
 
         public const string Abp = "~/Abp/Framework/scripts/abp.js";
         public const string Abp_JQuery = "~/Abp/Framework/scripts/libs/abp.jquery.js";

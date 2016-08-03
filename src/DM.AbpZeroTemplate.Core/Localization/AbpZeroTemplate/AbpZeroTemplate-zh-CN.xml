@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="zh-CN">
   <texts>
+    <text name="True" value="是"/>
+    <text name="False" value="否"/>
+
     <text name="HomePage" value="主页" />
     <text name="AboutUs" value="关于我们" />
     <text name="Administration" value="管理" />
@@ -359,7 +362,7 @@
     <text name="Keys" value="钥匙"/>
     <text name="Notices" value="通知"/>
     <text name="Delivers" value="快递"/>
-    <text name="Reports" value="保修"/>
+    <text name="Reports" value="报修"/>
 
     <text name="Doors" value="门禁"/>
     <text name="CommunityName" value="小区名称"/>
@@ -398,6 +401,58 @@
     <text name="DoorDetail" value="门禁详情"/>
     <text name="HomeOwerDetail" value="业主详情"/>
     <text name="CommunityDetail" value="小区详情"/>
+
+    <text name="DeliveryTitleString" value="{0}，您的快递。"/>
+    <text name="DeliveryContentString" value="这是您的验证码：{0}。 (需要其他人员代领的时侯需要出示此验证码。)"/>
+
+    <text name="DeliveryTitleMessage" value="快递通知"/>
+    <text name="DeliveryContentMessage" value="{0}，有您的快递，请去领取。"/>
+
+
+    <text name="SelectFiles" value="选择文件（可多选）"/>
+    <text name="UploadQueue" value="上传队列"/>
+    <text name="QueueLength" value="队列长度"/>
+    <text name="FileName" value="文件名"/>
+    <text name="Size" value="大小"/>
+    <text name="Progress" value="进度"/>
+    <text name="Status" value="状态"/>
+    <text name="Upload" value="上传"/>
+    <text name="Remove" value="移除"/>
+    <text name="UploadAll" value="上传全部"/>
+    <text name="CancelAll" value="取消全部"/>
+    <text name="RemoveAll" value="移除全部"/>
+    <text name="QueueProgress" value="队列进度"/>
+
+
+    <text name="OpenAttemps" value="开锁记录"/>
+    <text name="BrowerInfo" value="浏览器信息"/>
+    <text name="ClientName" value="客户端名称"/>
+    <text name="ClientIpAddress" value="客户端IP"/>
+    <text name="IsSuccess" value="是否成功"/>
+    <text name="Messages" value="通知"/>
+    <text name="MessageIsPublic" value="是否公告"/>
+    <text name="MessageTitle" value="标题"/>
+    <text name="MessageContent" value="内容"/>
+    <text name="AddMessage" value="添加通知"/>
+    <text name="MessageIsRead" value="是否已读"/>
+    <text name="Deliverys" value="快递"/>
+    <text name="DeliveryId" value="Id"/>
+    <text name="DeliveryTitle" value="标题"/>
+    <text name="DeliveryIsGather" value="是否收取"/>
+    <text name="DeliveryGatherTime" value="收取时间"/>
+    <text name="DeliveryQRCode" value="二维码"/>
+    <text name="AddDelivery" value="添加快递"/>
+    <text name="AddReport" value="添加报修"/>
+    <text name="ReportTitle" value="标题"/>
+    <text name="ReportContent" value="内容"/>
+    <text name="ReportStatus" value="状态"/>
+    <text name="ReportFiles" value="附件"/>
+    <text name="ReportSend" value="已发送"/>
+    <text name="ReportProcessing" value="处理中"/>
+    <text name="ReportFinished" value="已完成"/>
+    <text name="ReportDetail" value="报修详情"/>
+    <text name="DeliveryDetail" value="快递详情"/>
+    <text name="MessageDetail" value="通知详情"/>
     <!--DoorSystem End-->
 
   </texts>

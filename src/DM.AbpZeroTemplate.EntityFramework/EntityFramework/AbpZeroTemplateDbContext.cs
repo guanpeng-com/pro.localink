@@ -54,9 +54,19 @@ namespace DM.AbpZeroTemplate.EntityFramework
         public virtual IDbSet<HomeOwerUser> HomeOwerUsers { get; set; }
 
         /// <summary>
-        ///  业主用户
+        ///  业主消息
         /// </summary>
         public virtual IDbSet<Message> Messages { get; set; }
+
+        /// <summary>
+        ///  业主快递
+        /// </summary>
+        public virtual IDbSet<Delivery> Deliverys { get; set; }
+
+        /// <summary>
+        ///  业主报修
+        /// </summary>
+        public virtual IDbSet<Report> Reports { get; set; }
 
         /* Setting "Default" to base class helps us when working migration commands on Package Manager Console.
          * But it may cause problems when working Migrate.exe of EF. ABP works either way.         * 

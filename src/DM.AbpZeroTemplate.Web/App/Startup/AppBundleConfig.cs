@@ -37,6 +37,8 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                         ScriptPaths.SweetAlert,
                         ScriptPaths.Toastr,
                         ScriptPaths.MomentJs,
+                        ScriptPaths.QRCodeJs,
+                        ScriptPaths.QRCodeUTF8Js,
                         ScriptPaths.Bootstrap_DateRangePicker,
                         ScriptPaths.Bootstrap_DateTimePicker,
                         ScriptPaths.Bootstrap_Select,
@@ -59,6 +61,9 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                         ScriptPaths.Angular_Editor_SimditorAll,
                         ScriptPaths.Angular_Editor_Uploader,
                         ScriptPaths.Angular_Editor,
+
+
+                        ScriptPaths.Angular_QRCode,
 
                         ScriptPaths.Abp,
                         ScriptPaths.Abp_JQuery,

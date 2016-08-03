@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+
+    <text name="True" value="True"/>
+    <text name="False" value="False"/>
+    
     <text name="HomePage" value="Home page" />
     <text name="AboutUs" value="About us" />
     <text name="Administration" value="Administration" />
@@ -491,6 +495,59 @@
     <text name="DoorDetail" value="DoorDetail"/>
     <text name="HomeOwerDetail" value="HomeOwerDetail"/>
     <text name="CommunityDetail" value="CommunityDetail"/>
+
+    <text name="DeliveryTitleString" value="{0}, you have a express delivery."/>
+    <text name="DeliveryContentString" value="This is you validate code : {0}. (This code is usable for anthor people taking this delivery.)"/>
+
+    <text name="DeliveryTitleMessage" value="Express Delivery Notice"/>
+    <text name="DeliveryContentMessage" value="{0}, you have a express delivery."/>
+
+
+    <text name="SelectFiles" value="SelectFiles"/>
+    <text name="UploadQueue" value="UploadQueue"/>
+    <text name="QueueLength" value="QueueLength"/>
+    <text name="FileName" value="FileName"/>
+    <text name="Size" value="Size"/>
+    <text name="Progress" value="Progress"/>
+    <text name="Status" value="Status"/>
+    <text name="Upload" value="Upload"/>
+    <text name="Remove" value="Remove"/>
+    <text name="UploadAll" value="UploadAll"/>
+    <text name="CancelAll" value="CancelAll"/>
+    <text name="RemoveAll" value="RemoveAll"/>
+    <text name="QueueProgress" value="QueueProgress"/>
+
+
+    <text name="OpenAttemps" value="OpenAttemps"/>
+    <text name="BrowerInfo" value="BrowerInfo"/>
+    <text name="ClientName" value="ClientName"/>
+    <text name="ClientIpAddress" value="ClientIpAddress"/>
+    <text name="IsSuccess" value="IsSuccess"/>
+    <text name="Messages" value="Messages"/>
+    <text name="MessageIsPublic" value="IsPublic"/>
+    <text name="MessageTitle" value="Title"/>
+    <text name="MessageContent" value="Content"/>
+    <text name="AddMessage" value="AddMessage"/>
+    <text name="MessageIsRead" value="IsRead"/>
+    <text name="Deliverys" value="Deliverys"/>
+    <text name="DeliveryId" value="Id"/>
+    <text name="DeliveryTitle" value="Title"/>
+    <text name="DeliveryIsGather" value="IsGather"/>
+    <text name="DeliveryGatherTime" value="GatherTime"/>
+    <text name="DeliveryQRCode" value="QR Code"/>
+    <text name="AddDelivery" value="AddDelivery"/>
+    <text name="AddReport" value="AddReport"/>
+    <text name="ReportTitle" value="Title"/>
+    <text name="ReportContent" value="Content"/>
+    <text name="ReportStatus" value="Status"/>
+    <text name="ReportFiles" value="Files"/>
+    <text name="ReportSend" value="Send"/>
+    <text name="ReportProcessing" value="Processing"/>
+    <text name="ReportFinished" value="Finished"/>
+    <text name="ReportDetail" value="ReportDetail"/>
+    <text name="DeliveryDetail" value="DeliveryDetail"/>
+    <text name="MessageDetail" value="MessageDetail"/>
+    
     <!--DoorSystem End-->
   </texts>
 </localizationDictionary>

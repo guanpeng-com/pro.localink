@@ -12,16 +12,15 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_HomeOwerUsers")]
-    public class HomeOwerUser : FullAuditedEntity<long>, IMayHaveTenant
+    public class HomeOwerUser : FullAuditedEntity<long>
     {
         public HomeOwerUser()
         {
 
         }
 
-        public HomeOwerUser(int? tenantId, string userName, string token)
+        public HomeOwerUser(string userName, string token)
         {
-            TenantId = tenantId;
             Token = token;
             UserName = userName;
         }

@@ -124,7 +124,7 @@ namespace DM.AbpZeroTemplate.Web.Controllers
                 {
                     throw new UserFriendlyException(L("ContentPicture_Warn_SizeLimit"));
                 }
-
+                
                 //Check file type & format
                 var fileImage = Image.FromStream(file.InputStream);
                 if (!fileImage.RawFormat.Equals(ImageFormat.Jpeg) && !fileImage.RawFormat.Equals(ImageFormat.Png))

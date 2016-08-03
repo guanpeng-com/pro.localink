@@ -47,7 +47,7 @@ namespace DM.AbpZeroTemplate.Web.Navigation
                 public const string OpenAttemps = "DoorSystem.OpenAttemps";
                 public const string HomeOwerUsers = "DoorSystem.HomeOwerUsers";
                 public const string Notices = "DoorSystem.Notices";
-                public const string Delivers = "DoorSystem.Delivers";
+                public const string Deliverys = "DoorSystem.Deliverys";
                 public const string Reports = "DoorSystem.Reports";
                 public const string Messages = "DoorSystem.Messages";
             }

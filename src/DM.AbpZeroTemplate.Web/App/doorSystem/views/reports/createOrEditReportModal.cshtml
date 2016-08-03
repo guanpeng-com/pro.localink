@@ -1,0 +1,66 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="reportsForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.report.Id">@L("Edit"):{{vm.report.name}}</span>
+                <span ng-if="!vm.report.Id">@L("AddReport")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Title" ng-class="{'edited':vm.report.title}" ng-model="vm.report.title" maxlength="@Report.MaxDefaultStringLength"
+                       required />
+                <label>@L("ReportTitle")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <textarea auto-focus class="form-control" type="text" name="Content" ng-class="{'edited':vm.report.content}" ng-model="vm.report.content" maxlength="@Report.MaxContentStringLength"></textarea>
+                <label>@L("ReportContent")</label>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="!vm.message.isPublic">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.report.homeOwerName}" ng-model="vm.report.homeOwerName"
+                       ng-click="vm.selectHomeOwer()"
+                       required />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="vm.report.homeOwerId">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Files" ng-class="{'edited':vm.report.files}" ng-model="vm.report.files" maxlength="@Report.MaxFilesStringLength" ng-click="vm.fileUpload()" />
+                <label>@L("ReportFiles")</label>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="vm.report.id">
+            <div class="form-group">
+                <label>@L("ReportStatus")</label>
+                <select id="statusSelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.report.status}"
+                        name="CommunityId"
+                        ng-model="vm.report.status"
+                        ng-options="status.value as status.name for status in vm.reportStatus"></select>
+            </div>
+        </div>
+</div>
+
+
+
+<div class="modal-footer">
+    <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+    <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="reportsForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+</div>
+    </form>
+</div>
+
+
