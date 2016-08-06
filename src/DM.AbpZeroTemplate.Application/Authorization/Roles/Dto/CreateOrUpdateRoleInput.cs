@@ -11,5 +11,8 @@ namespace DM.AbpZeroTemplate.Authorization.Roles.Dto
 
         [Required]
         public List<string> GrantedPermissionNames { get; set; }
+
+
+        public List<long> CommunityIds { get; set; }
     }
 }

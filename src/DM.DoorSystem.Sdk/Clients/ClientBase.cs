@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace DM.DoorSystem.Sdk.Clients
 {
-    public abstract class ClientBase
+    public abstract class ClientBase<T>
+        where T : ISdk, new()
     {
+        protected Requestor Requestor;
 
+        public ClientBase()
+        {
+            Requestor = new Requestor();
+            Requestor.sdk = new T();
+        }
     }
 }

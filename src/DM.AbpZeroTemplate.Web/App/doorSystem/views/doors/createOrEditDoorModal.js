@@ -32,10 +32,10 @@
         vm.loadDoorType = function () {
             doorService.getCommunityDoorTypes({ id: vm.door.communityId })
             .success(function (result) {
-            vm.doorTypes = result;
-            setTimeout(function () {
-                $("#doorTypeSelectedCombox").selectpicker('refresh');
-            }, 0);
+                vm.doorTypes = result;
+                setTimeout(function () {
+                    $("#doorTypeSelectedCombox").selectpicker('refresh');
+                }, 0);
             });
         };
 
@@ -52,14 +52,13 @@
                 doorService.getDoor({ id: vm.door.id })
                 .success(function (result) {
                     vm.door = result;
-                });
-
-                doorService.getCommunityDoorTypes({ id: vm.door.communityId })
-                    .success(function (result) {
-                    vm.doorTypes = result;
-                    setTimeout(function () {
-                        $("#doorTypeSelectedCombox").selectpicker('refresh');
-                    }, 0);
+                    doorService.getCommunityDoorTypes({ id: vm.door.communityId })
+    .success(function (result) {
+        vm.doorTypes = result;
+        setTimeout(function () {
+            $("#doorTypeSelectedCombox").selectpicker('refresh');
+        }, 0);
+    });
                 });
             }
         }

@@ -9,6 +9,8 @@ using Abp.CMS.EntityFramework;
 using DM.AbpZeroTemplate.DoorSystem.Community;
 using DM.AbpZeroTemplate.DoorSystem;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using EntityFramework.DynamicFilters;
+using System.Collections.Generic;
 
 namespace DM.AbpZeroTemplate.EntityFramework
 {
@@ -99,6 +101,7 @@ namespace DM.AbpZeroTemplate.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             //AbpCMSDbContext.InitDbSet(modelBuilder);
+            modelBuilder.Filter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, (IAdminCommunity entity, ICollection<long> communityIds) => communityIds.Contains(entity.CommunityId), new List<long>());
         }
     }
 }

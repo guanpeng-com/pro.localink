@@ -55,13 +55,14 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 await DeliveryRepository.InsertAsync(entity);
 
                 //添加消息通知
-                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name));
+                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name), homeOwer.CommunityId);
                 message.HomeOwerId = entity.HomeOwerId;
                 await _messageManager.CreateAsync(message);
 
-                var userId = _abpSession.GetUserId();
+                var userId = _abpSession.UserId;
                 var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-                Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
+                if (currentUser != null)
+                    Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
             }
         }
 
@@ -73,9 +74,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(Delivery entity)
         {
             await DeliveryRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
         }
 
         /// <summary>
@@ -87,9 +89,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             await DeliveryRepository.DeleteAsync(id);
             var entity = await DeliveryRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Delivery {1}", currentUser.UserName, entity.Title);
         }
 
         /// <summary>

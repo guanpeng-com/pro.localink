@@ -548,6 +548,17 @@
     <text name="DeliveryDetail" value="DeliveryDetail"/>
     <text name="MessageDetail" value="MessageDetail"/>
     
+    
+    <text name="SMSValidateCode" value="You validate code is {0}."/>
+       <text name="SMSSendCodeError" value="Validate code message send error"/>
+    <text name="ValidateCodeError" value="Validate code validate error"/>
+    <text name="UnknowError" value="Unknow error."/>
+    <text name="UserAuthError" value="User auth error."/>
+    <text name="HomeOwerNotExists" value="HomeOwner not exists."/>
+    <text name="HomeOwerUserNotExists" value="User is not a HomeOwner"/>
+    <text name="DeliveryIsGathered" value="Delivery has been gathered."/>
     <!--DoorSystem End-->
+    
+    
   </texts>
 </localizationDictionary>

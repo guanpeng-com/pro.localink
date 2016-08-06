@@ -1,6 +1,7 @@
 ﻿using Abp.Apps;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using DM.AbpZeroTemplate.Authorization.Roles;
 using DM.DoorSystem.Sdk.Clients;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
     {
         public Community()
         {
-
         }
 
         public Community(int? tenantId, string name, string address)

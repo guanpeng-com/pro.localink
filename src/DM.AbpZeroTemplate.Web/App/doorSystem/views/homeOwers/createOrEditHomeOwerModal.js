@@ -1,6 +1,6 @@
 ﻿(function () {
-    appModule.controller('doorSystem.views.homeOwers.createOrEditHomeOwerModal', ['$scope', '$uibModalInstance', 'abp.services.app.homeOwer', 'homeOwer', 'appSession', 'abp.services.app.community',
-    function ($scope, $uibModalInstance, homeOwerService, homeOwer, $appSession, communityService) {
+    appModule.controller('doorSystem.views.homeOwers.createOrEditHomeOwerModal', ['$scope', '$uibModalInstance', 'abp.services.app.homeOwer', 'homeOwer', 'appSession', 'abp.services.app.community', 'lookupModal', 'abp.services.app.commonLookup',
+    function ($scope, $uibModalInstance, homeOwerService, homeOwer, $appSession, communityService, lookupModal, commonLookupService) {
         var vm = this;
         vm.homeOwer = homeOwer;
         vm.saving = false;

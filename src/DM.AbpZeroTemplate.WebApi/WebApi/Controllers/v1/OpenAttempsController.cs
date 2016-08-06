@@ -14,11 +14,13 @@ using System.Web.Http;
 using System.Web.OData;
 using System.Web.OData.Routing;
 using DM.DoorSystem.Sdk;
+using Abp.Web.Models;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
     [VersionedRoute("api/version", 1)]
     [RoutePrefix("api/v1/OpenAttemps")]
+    [WrapResult]
     public class OpenAttempsController : AbpZeroTemplateApiControllerBase
     {
         private readonly OpenAttempManager _openAttempManager;
@@ -41,32 +43,25 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
         /// <param name="homeOwerId">业主Id</param>
+        /// <param name="communityId">小区Id</param>
         /// <param name="isSuccess">是否成功</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> CreateOpenAttemp(string userName, long homeOwerId, bool isSuccess, string token, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> CreateOpenAttemp(string userName, long homeOwerId, long communityId, bool isSuccess, string token, int? tenantId = null)
         {
-            if (!base.AuthUser()) return Unauthorized();
-            try
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
-                {
-                    var openAttemp = new OpenAttemp();
+                var openAttemp = new OpenAttemp(tenantId, communityId);
 
-                    openAttemp.HomeOwerId = homeOwerId;
-                    openAttemp.UserName = userName;
-                    openAttemp.IsSuccess = isSuccess;
+                openAttemp.HomeOwerId = homeOwerId;
+                openAttemp.UserName = userName;
+                openAttemp.IsSuccess = isSuccess;
 
-                    await _openAttempManager.CreateAsync(openAttemp);
+                await _openAttempManager.CreateAsync(openAttemp);
 
-                    return Ok();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return Ok();
             }
 
         }

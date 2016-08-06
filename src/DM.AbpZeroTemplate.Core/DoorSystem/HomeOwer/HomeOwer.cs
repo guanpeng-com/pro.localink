@@ -11,11 +11,10 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_HomeOwers")]
-    public class HomeOwer : FullAuditedEntity<long>, IMayHaveTenant
+    public class HomeOwer : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public HomeOwer()
         {
-
         }
 
         public HomeOwer(int? tenantId, long communityId, string name, string phone, string email, string gender)
@@ -77,5 +76,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         [StringLength(MaxDefaultStringLength)]
         public virtual string Gender { get; set; }
+
+        /// <summary>
+        /// 验证码
+        /// </summary>
+        [StringLength(MaxDefaultStringLength)]
+        public virtual string ValidateCode { get; set; }
     }
 }

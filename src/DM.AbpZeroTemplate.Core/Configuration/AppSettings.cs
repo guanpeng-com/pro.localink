@@ -24,6 +24,8 @@ namespace DM.AbpZeroTemplate.Configuration
             public const string AllowSelfRegistration = "App.UserManagement.AllowSelfRegistration";
             public const string IsNewRegisteredUserActiveByDefault = "App.UserManagement.IsNewRegisteredUserActiveByDefault";
             public const string UseCaptchaOnRegistration = "App.UserManagement.UseCaptchaOnRegistration";
+
+            public const string PhoneCountryCode = "App.UserManagement.PhoneCountryCode";
         }
     }
 }

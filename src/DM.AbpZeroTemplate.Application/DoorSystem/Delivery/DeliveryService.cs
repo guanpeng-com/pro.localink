@@ -14,7 +14,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About Delivery
     [AutoMapFrom(typeof(Delivery))]
-    public class DeliveryService : AbpZeroTemplateServiceBase, IDeliveryService
+    public class DeliveryService : AbpZeroTemplateAppServiceBase, IDeliveryService
     {
         private readonly DeliveryManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
@@ -28,7 +28,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task CreateDelivery(CreateDeliveryInput input)
         {
-            var entity = new Delivery(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId);
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+            var entity = new Delivery(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, homeOwer.CommunityId);
             await _manager.CreateAsync(entity);
         }
 
@@ -38,6 +39,22 @@ namespace DM.AbpZeroTemplate.DoorSystem
         }
 
         public async Task<PagedResultOutput<DeliveryDto>> GetDeliverys(GetDeliverysInput input)
+        {
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
+            {
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
+                {
+                    return await ProcessGet(input);
+                }
+            }
+        }
+
+        public async Task<PagedResultOutput<DeliveryDto>> GetAllDeliverys(GetDeliverysInput input)
+        {
+            return await ProcessGet(input);
+        }
+
+        private async Task<PagedResultOutput<DeliveryDto>> ProcessGet(GetDeliverysInput input)
         {
             var query = _manager.FindDeliveryList(input.Sorting);
             if (input.HomeOwerId.HasValue)

@@ -6,51 +6,75 @@ using System.Threading.Tasks;
 
 namespace DM.DoorSystem.Sdk
 {
-    public abstract class DoorSystem
+    public class DoorSystem : ISdk
     {
-        public static volatile string Version = "1.0.0";
-        public static volatile string ApiBase = "http://121.40.204.191:8180/mdserver/service";
-        public static volatile string TestApiBase = "http://121.40.204.191:8180/mdserver/service";
-        public static volatile bool IsTest = true;
-        public static int DefaultTimeout = 80000;
-        public static int DefaultReadAndWriteTimeout = 20000;
+        public DoorSystem() { }
 
-        public static string GetApiBaseUri()
+        public string Version
+        {
+            get
+            {
+                return "1.0.0";
+            }
+        }
+
+        public string ApiBase
+        {
+            get
+            {
+                return "http://121.40.204.191:8180/mdserver/service";
+            }
+        }
+
+        public string TestApiBase
+        {
+            get
+            {
+                return "http://121.40.204.191:8180/mdserver/service";
+            }
+        }
+
+        public bool IsTest
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public int DefaultTimeout
+        {
+            get
+            {
+                return 80000;
+            }
+        }
+
+        public int DefaultReadAndWriteTimeout
+        {
+            get
+            {
+                return 80000;
+            }
+        }
+
+        public Dictionary<string, string> Params
+        {
+            get
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("app_key", "24e504a6efee47fe8dadfc0a3afd3d46");
+                dic.Add("agt_num", "80202");
+                return dic;
+            }
+        }
+
+        public string GetApiBaseUrl()
         {
             if (IsTest)
                 return TestApiBase;
             else
                 return ApiBase;
-        }
-
-        /// <summary>
-        /// 服务端认证key
-        /// </summary>
-        public static volatile string AppKey = "24e504a6efee47fe8dadfc0a3afd3d46";
-
-        /// <summary>
-        /// 服务端认证编号
-        /// </summary>
-        public static volatile string AgtNum = "80202";
-
-        public static void SetAppKey(string appKey)
-        {
-            AppKey = appKey;
-        }
-
-        public static string GetAppKey()
-        {
-            return AppKey;
-        }
-
-        public static void SetAgeNum(string agtNum)
-        {
-            AgtNum = agtNum;
-        }
-
-        public static string GetAgeNum()
-        {
-            return AgtNum;
         }
     }
 }

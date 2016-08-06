@@ -21,6 +21,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         Task<PagedResultOutput<DoorDto>> GetDoors(GetDoorsInput input);
 
+
         /// <summary>
         /// 获取业主的全部门禁
         /// </summary>
@@ -50,6 +51,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
         Task DeleteDoor(IdInput<long> input);
 
         /// <summary>
+        /// 删除业主门禁
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task DeleteHomeOwerDoor(DeleteHomeOwerDoorInput input);
+
+        /// <summary>
         /// 根据Id获取详情
         /// </summary>
         /// <param name="input"></param>
@@ -75,5 +83,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <param name="input"></param>
         /// <returns></returns>
         Task<DoorDto> AuthDoor(IdInput<long> input);
+
+        /// <summary>
+        /// 添加业主门禁
+        /// </summary>
+        /// <returns></returns>
+        Task AddHomeOwerDoor(AddHomeOwerDoorInput input);
     }
 }

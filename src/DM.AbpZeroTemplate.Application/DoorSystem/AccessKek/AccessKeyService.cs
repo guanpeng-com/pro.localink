@@ -14,7 +14,7 @@ using Abp.UI;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About AccessKey
-    public class AccessKeyService : AbpZeroTemplateServiceBase, IAccessKeyService
+    public class AccessKeyService : AbpZeroTemplateAppServiceBase, IAccessKeyService
     {
         private readonly AccessKeyManager _manager;
         private readonly CommunityManager _communityManager;
@@ -38,10 +38,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
             var isExists = (await _manager.AccessKeyRepository.CountAsync(a => a.HomeOwerId == input.HomeOwerId && a.DoorId == input.DoorId)) > 0;
             if (!isExists)
             {
-                var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), input.DoorId, input.HomeOwerId, input.Validity);
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+                var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), input.DoorId, input.HomeOwerId, input.Validity, homeOwer.CommunityId);
 
                 var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(entity.DoorId);
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(entity.HomeOwerId);
+
 
                 entity.GetKey(door.PId, homeOwer.Phone, entity.Validity);
 
@@ -60,51 +61,57 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task<PagedResultOutput<AccessKeyDto>> GetAccessKeys(GetAccessKeysInput input)
         {
-            var query = _manager.FindAccessKeyList(input.Sorting);
-
-            var homeOwerDic = new Dictionary<long, string>();
-            var doorDic = new Dictionary<long, string>();
-
-            var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
-
-            items.ForEach(i =>
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
             {
-                if (!homeOwerDic.Keys.Contains(i.HomeOwerId))
-                    homeOwerDic.Add(i.HomeOwerId, string.Empty);
-                if (!doorDic.Keys.Contains(i.DoorId))
-                    doorDic.Add(i.DoorId, string.Empty);
-            });
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
+                {
+                    var query = _manager.FindAccessKeyList(input.Sorting);
 
-            var homeOwerNames = from h in _homeOwerManager.HomeOwerRepository.GetAll()
-                                where homeOwerDic.Keys.Contains(h.Id)
-                                select new { h.Id, h.Name };
-            await homeOwerNames.ForEachAsync(h =>
-                                 {
-                                     homeOwerDic[h.Id] = h.Name;
-                                 });
+                    var homeOwerDic = new Dictionary<long, string>();
+                    var doorDic = new Dictionary<long, string>();
 
-            var doorNames = from d in _doorManager.DoorRepository.GetAll()
-                            where doorDic.Keys.Contains(d.Id)
-                            select new { d.Id, d.Name };
-            await doorNames.ForEachAsync(d =>
-            {
-                doorDic[d.Id] = d.Name;
-            });
+                    var totalCount = await query.CountAsync();
+                    var items = await query.PageBy(input).ToListAsync();
+
+                    items.ForEach(i =>
+                    {
+                        if (!homeOwerDic.Keys.Contains(i.HomeOwerId))
+                            homeOwerDic.Add(i.HomeOwerId, string.Empty);
+                        if (!doorDic.Keys.Contains(i.DoorId))
+                            doorDic.Add(i.DoorId, string.Empty);
+                    });
+
+                    var homeOwerNames = from h in _homeOwerManager.HomeOwerRepository.GetAll()
+                                        where homeOwerDic.Keys.Contains(h.Id)
+                                        select new { h.Id, h.Name };
+                    await homeOwerNames.ForEachAsync(h =>
+                                         {
+                                             homeOwerDic[h.Id] = h.Name;
+                                         });
+
+                    var doorNames = from d in _doorManager.DoorRepository.GetAll()
+                                    where doorDic.Keys.Contains(d.Id)
+                                    select new { d.Id, d.Name };
+                    await doorNames.ForEachAsync(d =>
+                    {
+                        doorDic[d.Id] = d.Name;
+                    });
 
 
-            return new PagedResultOutput<AccessKeyDto>(
-                totalCount,
-                items.Select(
-                        item =>
-                        {
-                            var dto = item.MapTo<AccessKeyDto>();
-                            dto.HomeOwerName = homeOwerDic[item.HomeOwerId];
-                            dto.DoorName = doorDic[item.DoorId];
-                            return dto;
-                        }
-                    ).ToList()
-                );
+                    return new PagedResultOutput<AccessKeyDto>(
+                        totalCount,
+                        items.Select(
+                                item =>
+                                {
+                                    var dto = item.MapTo<AccessKeyDto>();
+                                    dto.HomeOwerName = homeOwerDic[item.HomeOwerId];
+                                    dto.DoorName = doorDic[item.DoorId];
+                                    return dto;
+                                }
+                            ).ToList()
+                        );
+                }
+            }
         }
 
         public async Task UpdateAccessKey(UpdateAccessKeyInput input)

@@ -8,6 +8,8 @@ using Abp.Authorization;
 using Abp.AutoMapper;
 using DM.AbpZeroTemplate.Authorization.Dto;
 using DM.AbpZeroTemplate.Authorization.Roles.Dto;
+using DM.AbpZeroTemplate.DoorSystem.Community.Dto;
+using DM.AbpZeroTemplate.DoorSystem.Community;
 
 namespace DM.AbpZeroTemplate.Authorization.Roles
 {
@@ -18,10 +20,13 @@ namespace DM.AbpZeroTemplate.Authorization.Roles
     public class RoleAppService : AbpZeroTemplateAppServiceBase, IRoleAppService
     {
         private readonly RoleManager _roleManager;
+        private readonly CommunityManager _communityManager;
 
-        public RoleAppService(RoleManager roleManager)
+        public RoleAppService(RoleManager roleManager,
+            CommunityManager communityManager)
         {
             _roleManager = roleManager;
+            _communityManager = communityManager;
         }
 
         public async Task<ListResultOutput<RoleListDto>> GetRoles()
@@ -35,6 +40,7 @@ namespace DM.AbpZeroTemplate.Authorization.Roles
         {
             var permissions = PermissionManager.GetAllPermissions();
             var grantedPermissions = new Permission[0];
+            var communities = await _communityManager.CommunityRepository.GetAllListAsync();
             RoleEditDto roleEditDto;
 
             if (input.Id.HasValue) //Editing existing role?
@@ -49,11 +55,12 @@ namespace DM.AbpZeroTemplate.Authorization.Roles
             }
 
             return new GetRoleForEditOutput
-                   {
-                       Role = roleEditDto,
-                       Permissions = permissions.MapTo<List<FlatPermissionDto>>().OrderBy(p => p.DisplayName).ToList(),
-                       GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
-                   };
+            {
+                Role = roleEditDto,
+                Permissions = permissions.MapTo<List<FlatPermissionDto>>().OrderBy(p => p.DisplayName).ToList(),
+                GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList(),
+                Communities = communities.MapTo<List<CommunityDto>>().OrderBy(c => c.Name).ToList()
+            };
         }
 
         public async Task CreateOrUpdateRole(CreateOrUpdateRoleInput input)
@@ -83,8 +90,9 @@ namespace DM.AbpZeroTemplate.Authorization.Roles
             var role = await _roleManager.GetRoleByIdAsync(input.Role.Id.Value);
             role.DisplayName = input.Role.DisplayName;
             role.IsDefault = input.Role.IsDefault;
-            
+
             await UpdateGrantedPermissionsAsync(role, input.GrantedPermissionNames);
+            await UpdateCommunitiesAsync(role, input.CommunityIds);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Roles_Create)]
@@ -94,12 +102,19 @@ namespace DM.AbpZeroTemplate.Authorization.Roles
             CheckErrors(await _roleManager.CreateAsync(role));
             await CurrentUnitOfWork.SaveChangesAsync(); //It's done to get Id of the role.
             await UpdateGrantedPermissionsAsync(role, input.GrantedPermissionNames);
+            await UpdateCommunitiesAsync(role, input.CommunityIds);
         }
 
         private async Task UpdateGrantedPermissionsAsync(Role role, List<string> grantedPermissionNames)
         {
             var grantedPermissions = PermissionManager.GetPermissionsFromNamesByValidating(grantedPermissionNames);
             await _roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
+        }
+
+        private async Task UpdateCommunitiesAsync(Role role, List<long> communityIds)
+        {
+            role.CommunityIdArray = communityIds;
+             await _roleManager.UpdateAsync(role);
         }
     }
 }

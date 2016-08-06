@@ -7,7 +7,7 @@ using DM.DoorSystem.Sdk.Models;
 
 namespace DM.DoorSystem.Sdk.Clients
 {
-    public class CommunityClient : ClientBase, ICommunityClient
+    public class CommunityClient : ClientBase<DoorSystem>, ICommunityClient
     {
         public CommunityResponse Create(string departName, string cityCode)
         {

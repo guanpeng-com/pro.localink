@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_Doors")]
-    public class Door : FullAuditedEntity<long>, IMayHaveTenant
+    public class Door : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public Door()
         {

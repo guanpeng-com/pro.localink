@@ -274,7 +274,7 @@ appModule.config([
         if (abp.auth.hasPermission('Pages.DoorSystem.Doors')) {
             $stateProvider.state('doorSystem.homeOwerDoors', {
                 url: '/:communityId/:homeOwerId/doors',
-                templateUrl: '~/App/doorSystem/views/doors/index.cshtml',
+                templateUrl: '~/App/doorSystem/views/doors/homeOwerDoorIndex.cshtml',
                 menu: 'DoorSystem.Doors'
             });
             $stateProvider.state('doorSystem.doors', {

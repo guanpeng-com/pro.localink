@@ -51,9 +51,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
             }
             entity.AuthDoor();
             await DoorRepository.InsertAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>
@@ -64,9 +65,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(Door entity)
         {
             await DoorRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>
@@ -78,9 +80,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             await DoorRepository.DeleteAsync(id);
             var entity = await DoorRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Door {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>

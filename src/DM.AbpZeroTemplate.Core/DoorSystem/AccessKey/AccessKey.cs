@@ -12,19 +12,20 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_AccessKeys")]
-    public class AccessKey : FullAuditedEntity<long>, IMayHaveTenant
+    public class AccessKey : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public AccessKey()
         {
 
         }
 
-        public AccessKey(int? tenantId, long doorId, long homeOwerId, DateTime validity)
+        public AccessKey(int? tenantId, long doorId, long homeOwerId, DateTime validity, long communityId)
         {
             TenantId = tenantId;
             DoorId = doorId;
             HomeOwerId = homeOwerId;
             Validity = validity;
+            CommunityId = communityId;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -61,6 +62,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 是否认证
         /// </summary>
         public virtual bool IsAuth { get; private set; }
+
+        [ForeignKey("CommunityId")]
+        public virtual Community.Community Community { get; set; }
+        public virtual long CommunityId { get; set; }
 
         /// <summary>
         /// 申请钥匙

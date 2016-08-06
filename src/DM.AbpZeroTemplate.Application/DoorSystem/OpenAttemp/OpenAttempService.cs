@@ -14,7 +14,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About OpenAttemp
     [AutoMapFrom(typeof(OpenAttemp))]
-    public class OpenAttempService : AbpZeroTemplateServiceBase, IOpenAttempService
+    public class OpenAttempService : AbpZeroTemplateAppServiceBase, IOpenAttempService
     {
 
         public IAuditInfoProvider AuditInfoProvider { get; set; }
@@ -31,7 +31,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task CreateOpenAttemp(CreateOpenAttempInput input)
         {
-            var entity = new OpenAttemp();
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+
+            var entity = new OpenAttemp(CurrentUnitOfWork.GetTenantId(), homeOwer.CommunityId);
             entity.HomeOwerId = input.HomeOwerId;
             entity.UserName = input.UserName;
             entity.IsSuccess = input.IsSuccess;
@@ -46,20 +48,26 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task<PagedResultOutput<OpenAttempDto>> GetOpenAttemps(GetOpenAttempsInput input)
         {
-            var query = _manager.FindOpenAttempList(input.Sorting);
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
+            {
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
+                {
+                    var query = _manager.FindOpenAttempList(input.Sorting);
 
-            var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
-            return new PagedResultOutput<OpenAttempDto>(
-                totalCount,
-                items.Select(
-                        item =>
-                        {
-                            var dto = item.MapTo<OpenAttempDto>();
-                            return dto;
-                        }
-                    ).ToList()
-                );
+                    var totalCount = await query.CountAsync();
+                    var items = await query.PageBy(input).ToListAsync();
+                    return new PagedResultOutput<OpenAttempDto>(
+                        totalCount,
+                        items.Select(
+                                item =>
+                                {
+                                    var dto = item.MapTo<OpenAttempDto>();
+                                    return dto;
+                                }
+                            ).ToList()
+                        );
+                }
+            }
         }
 
         public async Task<OpenAttempDto> GetOpenAttemp(IdInput<long> input)

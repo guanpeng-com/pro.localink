@@ -211,6 +211,7 @@
     <Compile Include="CMS\Contents\Content\IContentAppService.cs" />
     <Compile Include="Common\CommonFileUploadAppService.cs" />
     <Compile Include="Common\CommonLookupAppService.cs" />
+    <Compile Include="Common\Dto\FindDoorsInput.cs" />
     <Compile Include="Common\Dto\FindHomeOwersInput.cs" />
     <Compile Include="Common\Dto\FileUploadInput.cs" />
     <Compile Include="Common\Dto\FindUsersInput.cs" />
@@ -238,6 +239,8 @@
     <Compile Include="DoorSystem\Delivery\Dto\UpdateDeliveryInput.cs" />
     <Compile Include="DoorSystem\Delivery\IDeliveryService.cs" />
     <Compile Include="DoorSystem\Delivery\DeliveryService.cs" />
+    <Compile Include="DoorSystem\Door\Dto\AddHomeOwerDoorInput.cs" />
+    <Compile Include="DoorSystem\Door\Dto\DeleteHomeOwerDoorInput.cs" />
     <Compile Include="DoorSystem\Door\Dto\CreateDoorInput.cs" />
     <Compile Include="DoorSystem\Door\Dto\GetDoorsInput.cs" />
     <Compile Include="DoorSystem\Door\Dto\DoorDto.cs" />

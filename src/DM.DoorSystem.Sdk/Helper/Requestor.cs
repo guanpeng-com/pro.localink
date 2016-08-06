@@ -12,31 +12,33 @@ using System.Web;
 
 namespace DM.DoorSystem.Sdk
 {
-    internal class Requestor : DoorSystem
+    public class Requestor
     {
-        internal static HttpWebRequest GetRequest(string path, string method)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(GetApiBaseUri() + path);
+        public ISdk sdk;
 
-            request.UserAgent = "DoorSystem C# SDK version" + Version;
+        public HttpWebRequest GetRequest(string path, string method)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(sdk.GetApiBaseUrl() + path);
+
+            request.UserAgent = "DoorSystem C# SDK version" + sdk.Version;
             request.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
-            request.Timeout = DefaultTimeout;
-            request.ReadWriteTimeout = DefaultReadAndWriteTimeout;
+            request.Timeout = sdk.DefaultTimeout;
+            request.ReadWriteTimeout = sdk.DefaultReadAndWriteTimeout;
             request.Method = method;
 
             return request;
         }
 
-        internal static string DoRequest(string path, string method, Dictionary<string, object> param = null)
+        public string DoRequest(string path, string method, Dictionary<string, object> param = null)
         {
-            if (string.IsNullOrEmpty(AppKey))
+            foreach (string item in sdk.Params.Keys)
             {
-                throw new DSException("No App key provided. ");
+                if (string.IsNullOrEmpty(sdk.Params[item]))
+                {
+                    throw new DSException(string.Format("No {0} provided. ", item));
+                }
             }
-            if (string.IsNullOrEmpty(AgtNum))
-            {
-                throw new DSException("No Agt num provided. ");
-            }
+
             try
             {
                 HttpWebRequest req;
@@ -58,8 +60,13 @@ namespace DM.DoorSystem.Sdk
                             throw new DSException("Request params is empty");
                         }
 
-                        param.Add("app_key", AppKey);
-                        param.Add("agt_num", AgtNum);
+                        foreach (string item in sdk.Params.Keys)
+                        {
+                            if (!string.IsNullOrEmpty(sdk.Params[item]))
+                            {
+                                param.Add(item, sdk.Params[item]);
+                            }
+                        }
 
                         //var body = JsonConvert.SerializeObject(param, Formatting.Indented);
                         var body = CreateQuery(param, false);

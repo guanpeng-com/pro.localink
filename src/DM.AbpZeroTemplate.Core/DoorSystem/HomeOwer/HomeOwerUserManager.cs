@@ -57,9 +57,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 throw new UserFriendlyException(string.Format("{0} is exists.", entity.UserName));
             }
             await HomeOwerUserRepository.InsertAsync(entity);
-            var userId = _abpSession.GetUserId();
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwerUser {1}", currentUser.UserName, entity.UserName);
         }
 
         /// <summary>
@@ -70,9 +67,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(HomeOwerUser entity)
         {
             await HomeOwerUserRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwerUser {1}", currentUser.UserName, entity.UserName);
         }
 
         /// <summary>
@@ -83,10 +77,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task DeleteAsync(long id)
         {
             await HomeOwerUserRepository.DeleteAsync(id);
-            var entity = await HomeOwerUserRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwerUser {1}", currentUser.UserName, entity.UserName);
         }
 
         /// <summary>

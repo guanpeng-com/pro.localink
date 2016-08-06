@@ -19,6 +19,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public long HomeOwerId;
 
+        public long CommunityId;
+
         public bool IsRead;
 
         public bool IsPublic;

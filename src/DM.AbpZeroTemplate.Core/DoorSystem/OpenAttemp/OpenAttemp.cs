@@ -13,11 +13,15 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_OpenAttemps")]
-    public class OpenAttemp : Entity<long>, IHasCreationTime, IMayHaveTenant
+    public class OpenAttemp : Entity<long>, IHasCreationTime, IMayHaveTenant, IAdminCommunity
     {
-        public OpenAttemp()
+        public OpenAttemp() { }
+
+        public OpenAttemp(int? tenantId, long communityId)
         {
             CreationTime = Clock.Now;
+            TenantId = tenantId;
+            CommunityId = communityId;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -49,5 +53,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual bool IsSuccess { get; set; }
 
         public virtual int? TenantId { get; set; }
+
+        [ForeignKey("CommunityId")]
+        public virtual Community.Community Community { get; set; }
+        public virtual long CommunityId { get; set; }
     }
 }

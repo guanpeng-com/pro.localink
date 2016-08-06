@@ -20,6 +20,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public string Content;
 
         public long HomeOwerId;
+        public long CommunityId;
 
         public string HomeOwerName;
 

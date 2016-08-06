@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Services;
 using Abp.Localization;
+using DM.AbpZeroTemplate;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -157,7 +158,7 @@ namespace DM.AbpZeroDoor.DoorSystem.Enums
         public static string L(string name)
         {
             ILocalizationManager localizationManager = IocManager.Instance.Resolve<ILocalizationManager>();
-            return localizationManager.GetString(AbpCMSConsts.LocalizationSourceName, name);
+            return localizationManager.GetString(AbpZeroTemplateConsts.LocalizationSourceName, name);
         }
     }
 }

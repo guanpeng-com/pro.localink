@@ -8,6 +8,9 @@ using Microsoft.AspNet.Identity;
 using DM.AbpZeroTemplate.Authorization.Users;
 using DM.AbpZeroTemplate.MultiTenancy;
 using Abp.Apps;
+using System.Collections.Generic;
+using System.Linq;
+using DM.AbpZeroTemplate.Authorization.Roles;
 
 namespace DM.AbpZeroTemplate
 {
@@ -22,6 +25,8 @@ namespace DM.AbpZeroTemplate
         public UserManager UserManager { get; set; }
 
         public AppManager AppManager { get; set; }
+
+        public RoleManager RoleManager { get; set; }
 
         public long AppId
         {
@@ -108,6 +113,37 @@ namespace DM.AbpZeroTemplate
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
+        }
+
+        protected async virtual Task<List<long>> GetAdminCommunityIdList()
+        {
+            List<long> allowIds = null;
+            if (AbpSession.UserId.HasValue)
+            {
+                var currentUser = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+                if (currentUser.UserName != User.AdminUserName)
+                {
+                    allowIds = new List<long>();
+                    //用户角色
+                    var distinctRoleIds = (
+                            from userListRoleDto in currentUser.Roles
+                            select userListRoleDto.RoleId
+                            ).Distinct();
+                    //角色管理的小区id
+                    foreach (var roleId in distinctRoleIds)
+                    {
+                        var temp = (await RoleManager.GetRoleByIdAsync(roleId)).CommunityIdArray;
+                        foreach (long item in temp)
+                        {
+                            if (!allowIds.Contains(item))
+                            {
+                                allowIds.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            return allowIds;
         }
     }
 }

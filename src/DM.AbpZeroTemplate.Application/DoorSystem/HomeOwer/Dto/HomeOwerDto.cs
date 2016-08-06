@@ -21,6 +21,5 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public string Email;
 
         public string Gender;
-
     }
 }

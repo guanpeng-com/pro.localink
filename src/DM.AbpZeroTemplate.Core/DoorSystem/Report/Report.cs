@@ -12,16 +12,17 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_Reports")]
-    public class Report : FullAuditedEntity<long>, IMayHaveTenant
+    public class Report : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public Report() { }
 
-        public Report(int? tenantId, string title, string content)
+        public Report(int? tenantId, string title, string content, long communityId)
         {
             TenantId = tenantId;
             Title = title;
             Content = content;
             Status = EReportStatusType.ReportSend;
+            CommunityId = communityId;
         }
 
 
@@ -76,5 +77,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 处理状态
         /// </summary>
         public virtual EReportStatusType Status { get; set; }
+
+        public virtual long CommunityId { get; set; }
     }
 }

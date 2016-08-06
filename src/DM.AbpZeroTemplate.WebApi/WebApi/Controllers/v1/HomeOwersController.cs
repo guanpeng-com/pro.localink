@@ -14,11 +14,18 @@ using System.Web.Http;
 using System.Web.OData;
 using System.Web.OData.Routing;
 using DM.DoorSystem.Sdk;
+using DM.DoorSystem.Sdk.Clients;
+using DM.AbpZeroTemplate.Configuration;
+using DM.AbpZeroTemplate.DoorSystem.Dto;
+using DM.AbpZeroTemplate.DoorSystem.Community.Dto;
+using Abp.Web.Models;
+using Abp.UI;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
     [VersionedRoute("api/version", 1)]
     [RoutePrefix("api/v1/HomeOwers")]
+    [WrapResult]
     public class HomeOwersController : AbpZeroTemplateApiControllerBase
     {
         private readonly CommunityManager _communityManager;
@@ -27,6 +34,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         private readonly DoorManager _doorManager;
         private readonly TenantManager _tenantManager;
         private readonly HomeOwerUserManager _homeOwerUserManager;
+
+        private readonly DM.DoorSystem.Sdk.DoorSystem _doorSystemSdk = new DM.DoorSystem.Sdk.DoorSystem();
 
         public HomeOwersController(
             CommunityManager communityManager,
@@ -58,41 +67,34 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         [Route("/{id:long}/AccessKeys")]
         public virtual async Task<IHttpActionResult> GetAccessKeys(long id, string userName, string token, int? tenantId = null)
         {
-            if (!base.AuthUser()) return Unauthorized();
-            try
+            base.AuthUser();
+            //var tenant = await _tenantManager.FindByTenancyNameAsync(tenancyName);
+            //int? tenantId = tenant == null ? (int?)null : tenant.Id;
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                //var tenant = await _tenantManager.FindByTenancyNameAsync(tenancyName);
-                //int? tenantId = tenant == null ? (int?)null : tenant.Id;
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == id);
+                if (homeOwer == null)
                 {
-                    var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == id);
-                    if (homeOwer == null)
-                    {
-                        return NotFound();
-                    }
-                    var homeOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(hu => hu.HomeOwerId == homeOwer.Id);
-                    if (homeOwerUser == null)
-                    {
-                        throw new Exception("User is Unauthorized. HomeOwerUser is not exists.");
-                    }
-
-                    var query = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
-                                 join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
-                                 where a.HomeOwerId == homeOwer.Id && a.IsAuth && d.IsAuth
-                                 select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name }
-                                ).ToList();
-
-                    return Ok(new
-                    {
-                        AppKey = DM.DoorSystem.Sdk.DoorSystem.AppKey,
-                        UserId = homeOwer.Phone,
-                        AccessKeys = query
-                    });
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                var homeOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(hu => hu.HomeOwerId == homeOwer.Id);
+                if (homeOwerUser == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
+                }
+
+                var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
+                            join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
+                            where a.HomeOwerId == homeOwer.Id && a.IsAuth && d.IsAuth
+                            select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name }
+                            ).ToList();
+
+                return Ok(new
+                {
+                    AppKey = _doorSystemSdk.Params["app_key"],
+                    UserId = homeOwer.Phone,
+                    AccessKeys = list
+                });
             }
         }
 
@@ -105,67 +107,110 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         [SecretVersionedRoute]
         [HttpPost]
         [UnitOfWork]
-        [Route("/{id:long}/RegisterUserToHomeOwer")]
+        [Route("/RegisterUserToHomeOwer")]
         public async virtual Task<IHttpActionResult> RegisterUserToHomeOwer(string userName, string token)
         {
-            try
-            {
-                var homeOwerUser = new HomeOwerUser(userName, token);
+            var homeOwerUser = new HomeOwerUser(userName, token);
 
-                await _homeOwerUserManager.CreateAsync(homeOwerUser);
+            await _homeOwerUserManager.CreateAsync(homeOwerUser);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            return Ok();
         }
 
         /// <summary>
-        /// 认证用户为业主
+        /// 认证用户为业主，第一步，发送验证码
         /// </summary>
         /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
         /// <param name="communityId">小区Id</param>
-        /// <param name="homeOwerName">业主姓名</param>
         /// <param name="phone">业主手机号</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        [Route("/{id:long}/AuthUserToHomeOwer")]
-        public async virtual Task<IHttpActionResult> AuthUserToHomeOwer(string userName, long communityId, string homeOwerName, string phone, string token, int? tenantId = null)
+        [Route("/AuthUserSendCode")]
+        public async virtual Task<IHttpActionResult> AuthUserSendCode(string userName, long communityId, string phone, string token, int? tenantId = null)
         {
-            if (!base.AuthUser()) return Unauthorized();
-            try
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
+                var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, phone);
+                if (homeOwerUser != null)
                 {
-                    var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
-                    var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, homeOwerName, phone);
-                    if (homeOwerUser == null)
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
+                }
+                if (homeOwer == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                else
+                {
+                    //发送验证码
+                    SMSClient smsClient = new SMSClient();
+                    var code = smsClient.ValidateCode();
+                    var phoneCountryCode = await SettingManager.GetSettingValueAsync(AppSettings.UserManagement.PhoneCountryCode);
+                    var response = smsClient.Send("Localink", phoneCountryCode + homeOwer.Phone, L("SMSValidateCode", code));
+                    if (response.SMSSends.Count > 0 && response.SMSSends[0].Stuats == "0")
                     {
-                        return NotFound();
-                    }
-                    if (homeOwer == null)
-                    {
-                        return NotFound();
+                        homeOwer.ValidateCode = code;
+                        await _homeOwerManager.UpdateAsync(homeOwer);
+                        return Ok();
                     }
                     else
                     {
+                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 认证用户为业主，第二步，验证验证码，完成验证
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="communityId"></param>
+        /// <param name="phone"></param>
+        /// <param name="token"></param>
+        /// <param name="code"></param>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/AuthUserValidateCode")]
+        public async virtual Task<IHttpActionResult> AuthUserValidateCode(string userName, long communityId, string phone, string token, string code, int? tenantId = null)
+        {
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
+                var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, phone);
+                if (homeOwerUser != null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
+                }
+                if (homeOwer == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                else
+                {
+                    //验证验证码是否正确
+                    if (!string.IsNullOrEmpty(homeOwer.ValidateCode) && code == homeOwer.ValidateCode)
+                    {
                         homeOwerUser.HomeOwerId = homeOwer.Id;
                         homeOwerUser.TenantId = tenantId;
+                        homeOwer.ValidateCode = string.Empty;
                         await _homeOwerUserManager.UpdateAsync(homeOwerUser);
+                        await _homeOwerManager.UpdateAsync(homeOwer);
+
+                        return Ok(new { HomeOwer = AutoMapper.Mapper.Map<HomeOwerDto>(homeOwer), Community = AutoMapper.Mapper.Map<CommunityDto>(homeOwer.Community) });
                     }
-
-                    return Ok();
+                    else
+                    {
+                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.ValidateCodeError);
+                    }
                 }
-
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
             }
         }
     }

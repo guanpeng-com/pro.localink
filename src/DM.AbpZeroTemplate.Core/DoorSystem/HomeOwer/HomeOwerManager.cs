@@ -39,9 +39,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task CreateAsync(HomeOwer entity)
         {
             await HomeOwerRepository.InsertAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>
@@ -52,9 +53,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(HomeOwer entity)
         {
             await HomeOwerRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>
@@ -66,9 +68,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             await HomeOwerRepository.DeleteAsync(id);
             var entity = await HomeOwerRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create HomeOwer {1}", currentUser.UserName, entity.Name);
         }
 
         /// <summary>
@@ -98,12 +101,12 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 根据名称和手机号获取业主
         /// </summary>
-        /// <param name="homeOwerName"></param>
+        /// <param name="communityId"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public virtual async Task<HomeOwer> GetHomeOwerByNameAndPhoneAndCommunityId(long communityId, string homeOwerName, string phone)
+        public virtual async Task<HomeOwer> GetHomeOwerByNameAndPhoneAndCommunityId(long communityId, string phone)
         {
-            var homeOwer = await HomeOwerRepository.FirstOrDefaultAsync(h => h.Name == homeOwerName && h.Phone == phone && h.CommunityId == communityId);
+            var homeOwer = await HomeOwerRepository.FirstOrDefaultAsync(h => h.Phone == phone && h.CommunityId == communityId);
             return homeOwer;
         }
     }

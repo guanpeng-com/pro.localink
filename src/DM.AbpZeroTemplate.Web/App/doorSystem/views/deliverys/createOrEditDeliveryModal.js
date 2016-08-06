@@ -1,9 +1,10 @@
 ﻿(function () {
-    appModule.controller('doorSystem.views.deliverys.createOrEditDeliveryModal', ['$scope', '$uibModalInstance', 'abp.services.app.delivery', 'delivery', 'appSession', 'lookupModal', 'abp.services.app.commonLookup',
-    function ($scope, $uibModalInstance, deliveryService, delivery, $appSession, lookupModal, commonLookupService) {
+    appModule.controller('doorSystem.views.deliverys.createOrEditDeliveryModal', ['$scope', '$uibModalInstance', 'abp.services.app.delivery', 'delivery', 'appSession', 'lookupModal', 'abp.services.app.commonLookup', 'abp.services.app.community',
+    function ($scope, $uibModalInstance, deliveryService, delivery, $appSession, lookupModal, commonLookupService, communityService) {
         var vm = this;
         vm.delivery = delivery;
         vm.saving = false;
+        vm.communityies = [];
 
         vm.save = function () {
             if (vm.delivery.id) {
@@ -31,6 +32,7 @@
                 title: app.localize('SelectAHomeOwer'),
                 serviceMethod: commonLookupService.findHomeOwers,
                 extraFilters: {
+                    communityId: vm.delivery.communityId
                 },
                 callback: function (selectedItem) {
                     vm.delivery.homeOwerId = selectedItem.value;
@@ -40,6 +42,15 @@
         };
 
         function init() {
+            communityService.getUserCommunities()
+.success(function (result) {
+    vm.communityies = result;
+    setTimeout(function () {
+        $('#communitySelectedCombox').selectpicker('refresh');
+        $('#genderSelectedCombox').selectpicker('refresh');
+    }, 0);
+});
+
             if (vm.delivery.id) {
                 deliveryService.getDelivery({ id: vm.delivery.id })
                 .success(function (result) {

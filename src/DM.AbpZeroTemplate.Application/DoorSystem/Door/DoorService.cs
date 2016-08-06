@@ -12,21 +12,26 @@ using System.Collections;
 using DM.AbpZeroTemplate.DoorSystem.Community;
 using System;
 using AutoMapper;
+using Abp.Domain.Repositories;
+using DM.AbpZeroTemplate.EntityFramework;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About Door
-    public class DoorService : AbpZeroTemplateServiceBase, IDoorService
+    public class DoorService : AbpZeroTemplateAppServiceBase, IDoorService
     {
         private readonly DoorManager _manager;
         private readonly CommunityManager _communityManager;
         private readonly HomeOwerManager _homeOwerManager;
+        private readonly IRepository<HomeOwerDoor, long> _homeOwerDoorRepository;
 
-        public DoorService(DoorManager manager, CommunityManager communityManager, HomeOwerManager homeOwerManager)
+        public DoorService(DoorManager manager, CommunityManager communityManager, HomeOwerManager homeOwerManager,
+            IRepository<HomeOwerDoor, long> homeOwerDoorRepository)
         {
             _manager = manager;
             _communityManager = communityManager;
             _homeOwerManager = homeOwerManager;
+            _homeOwerDoorRepository = homeOwerDoorRepository;
         }
 
         public async Task CreateDoor(CreateDoorInput input)
@@ -44,43 +49,64 @@ namespace DM.AbpZeroTemplate.DoorSystem
             await _manager.DeleteAsync(input.Id);
         }
 
+        public async Task DeleteHomeOwerDoor(DeleteHomeOwerDoorInput input)
+        {
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+            foreach (var item in homeOwer.Doors)
+            {
+                if (item.DoorId == input.DoorId)
+                {
+                    await _homeOwerDoorRepository.DeleteAsync(item.Id);
+                    break;
+                }
+
+            }
+            CurrentUnitOfWork.SaveChanges();
+        }
+
         public async Task<PagedResultOutput<DoorDto>> GetDoors(GetDoorsInput input)
         {
-            var query = _manager.FindDoorList(input.Sorting);
-
-            if (input.CommunityId.HasValue)
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
             {
-                query = query.Where(d => d.CommunityId == input.CommunityId.Value);
-            }
-
-            if (input.HomeOwerId.HasValue)
-            {
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId.Value);
-
-                var hds = homeOwer.Doors.ToList();
-                var hdIds = new List<long>();
-                hds.ForEach(hd =>
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
                 {
-                    hdIds.Add(hd.DoorId);
-                });
+                    var query = _manager.FindDoorList(input.Sorting);
 
-                query = from d in query
-                        where hdIds.Contains(d.Id)
-                        select d;
-            }
+                    if (input.CommunityId.HasValue)
+                    {
+                        query = query.Where(d => d.CommunityId == input.CommunityId.Value);
+                    }
 
-            var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
-            return new PagedResultOutput<DoorDto>(
-                totalCount,
-                items.Select(
-                        item =>
+                    if (input.HomeOwerId.HasValue)
+                    {
+                        var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId.Value);
+
+                        var hds = homeOwer.Doors.ToList();
+                        var hdIds = new List<long>();
+                        hds.ForEach(hd =>
                         {
-                            var dto = item.MapTo<DoorDto>();
-                            return dto;
-                        }
-                    ).ToList()
-                );
+                            hdIds.Add(hd.DoorId);
+                        });
+
+                        query = from d in query
+                                where hdIds.Contains(d.Id)
+                                select d;
+                    }
+
+                    var totalCount = await query.CountAsync();
+                    var items = await query.PageBy(input).ToListAsync();
+                    return new PagedResultOutput<DoorDto>(
+                        totalCount,
+                        items.Select(
+                                item =>
+                                {
+                                    var dto = item.MapTo<DoorDto>();
+                                    return dto;
+                                }
+                            ).ToList()
+                        );
+                }
+            }
         }
 
         public async Task<List<DoorDto>> GetAllDoors(GetDoorsInput input)
@@ -175,6 +201,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 }
             }
             return list;
+        }
+
+        public async Task AddHomeOwerDoor(AddHomeOwerDoorInput input)
+        {
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+            homeOwer.Doors.Add(new HomeOwerDoor(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, input.DoorId));
+            await _homeOwerManager.UpdateAsync(homeOwer);
         }
     }
 }

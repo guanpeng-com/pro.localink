@@ -7,7 +7,7 @@ using DM.DoorSystem.Sdk.Models;
 
 namespace DM.DoorSystem.Sdk.Clients
 {
-    public class DoorClient : ClientBase, IDoorClient
+    public class DoorClient : ClientBase<DoorSystem>, IDoorClient
     {
         public DoorResponse Create(string pid, string departId, string lockName)
         {

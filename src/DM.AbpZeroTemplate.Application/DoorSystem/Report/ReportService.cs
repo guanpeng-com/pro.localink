@@ -15,18 +15,23 @@ namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About Report
     [AutoMapFrom(typeof(Report))]
-    public class ReportService : AbpZeroTemplateServiceBase, IReportService
+    public class ReportService : AbpZeroTemplateAppServiceBase, IReportService
     {
         private readonly ReportManager _manager;
+        private readonly HomeOwerManager _homeOwerManager;
 
-        public ReportService(ReportManager manager)
+        public ReportService(ReportManager manager,
+            HomeOwerManager homeOwerManager)
         {
             _manager = manager;
+            _homeOwerManager = homeOwerManager;
         }
 
         public async Task CreateReport(CreateReportInput input)
         {
-            var entity = new Report(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content);
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+
+            var entity = new Report(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, homeOwer.CommunityId);
             entity.HomeOwerId = input.HomeOwerId;
             entity.FileArray = input.FileArray;
             await _manager.CreateAsync(entity);
@@ -38,6 +43,22 @@ namespace DM.AbpZeroTemplate.DoorSystem
         }
 
         public async Task<PagedResultOutput<ReportDto>> GetReports(GetReportsInput input)
+        {
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
+            {
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
+                {
+                    return await ProcessGet(input);
+                }
+            }
+        }
+
+        public async Task<PagedResultOutput<ReportDto>> GetAllReports(GetReportsInput input)
+        {
+            return await ProcessGet(input);
+        }
+
+        private async Task<PagedResultOutput<ReportDto>> ProcessGet(GetReportsInput input)
         {
             var query = _manager.FindReportList(input.Sorting);
 

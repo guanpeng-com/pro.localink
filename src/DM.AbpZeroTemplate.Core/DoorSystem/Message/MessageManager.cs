@@ -38,9 +38,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task CreateAsync(Message entity)
         {
             await MessageRepository.InsertAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
         }
 
         /// <summary>
@@ -51,9 +52,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(Message entity)
         {
             await MessageRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
         }
 
         /// <summary>
@@ -65,9 +67,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             await MessageRepository.DeleteAsync(id);
             var entity = await MessageRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
         }
 
         /// <summary>

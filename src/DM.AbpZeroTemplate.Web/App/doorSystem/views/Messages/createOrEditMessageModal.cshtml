@@ -11,6 +11,47 @@
 
         <div class="modal-body">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <label>@L("MessageIsPublic")</label>
+                <div class="md-checkbox-list">
+                    <div class="md-checkbox">
+                        <input id="IsPublic" class="md-check" type="checkbox" name="IsPublic" ng-model="vm.message.isPublic">
+                        <label for="IsPublic">
+                            <span class="inc"></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            （选中为公告，未选中择为业主通知）
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.message.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.message.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="!vm.message.isPublic&&vm.message.communityId">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.message.homeOwerName}" ng-model="vm.message.homeOwerName"
+                       ng-click="vm.selectHomeOwer()" />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
                 <input auto-focus class="form-control" type="text" name="Title" ng-class="{'edited':vm.message.title}" ng-model="vm.message.title" maxlength="@Message.MaxDefaultStringLength" />
                 <label>@L("MessageTitle")</label>
             </div>
@@ -20,14 +61,6 @@
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
                 <textarea auto-focus class="form-control" name="Content" ng-class="{'edited':vm.message.content}" ng-model="vm.message.content"></textarea>
                 <label>@L("MessageContent")</label>
-            </div>
-        </div>
-
-        <div class="modal-body" ng-if="!vm.message.isPublic">
-            <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.message.homeOwerName}" ng-model="vm.message.homeOwerName"
-                       ng-click="vm.selectHomeOwer()" />
-                <label>@L("HomeOwerName")</label>
             </div>
         </div>
 
@@ -42,23 +75,6 @@
                             <span class="check"></span>
                             <span class="box"></span>
                             已读
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-body">
-            <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <label>@L("MessageIsPublic")</label>
-                <div class="md-checkbox-list">
-                    <div class="md-checkbox">
-                        <input id="IsPublic" class="md-check" type="checkbox" name="IsPublic" ng-model="vm.message.isPublic">
-                        <label for="IsPublic">
-                            <span class="inc"></span>
-                            <span class="check"></span>
-                            <span class="box"></span>
-                            （选中为公告，未选中择为业主通知）
                         </label>
                     </div>
                 </div>

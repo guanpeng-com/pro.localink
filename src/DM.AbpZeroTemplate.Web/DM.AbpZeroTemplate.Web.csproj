@@ -428,8 +428,10 @@
     <Content Include="App\doorSystem\views\deliverys\index.js" />
     <Content Include="App\doorSystem\views\doors\createOrEditDoorModal.js" />
     <Content Include="App\doorSystem\views\doors\detailModal.js" />
+    <Content Include="App\doorSystem\views\doors\homeOwerDoorIndex.js" />
     <Content Include="App\doorSystem\views\doors\index.js" />
     <Content Include="App\doorSystem\views\homeOwers\createOrEditHomeOwerModal.js" />
+    <Content Include="App\doorSystem\views\homeOwers\selectDoorModal.js" />
     <Content Include="App\doorSystem\views\homeOwers\detailModal.js" />
     <Content Include="App\doorSystem\views\homeOwers\index.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.js" />
@@ -2092,6 +2094,8 @@
     <Content Include="App\doorSystem\views\reports\detailModal.cshtml" />
     <Content Include="App\doorSystem\views\reports\index.cshtml" />
     <Content Include="App\common\views\common\fileUploadModal.cshtml" />
+    <Content Include="App\doorSystem\views\homeOwers\selectDoorModal.cshtml" />
+    <Content Include="App\doorSystem\views\doors\homeOwerDoorIndex.cshtml" />
     <None Include="Properties\PublishProfiles\dm.pubxml" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />

@@ -10,6 +10,22 @@
         </div>
 
         <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.delivery.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.delivery.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="vm.delivery.communityId">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
                 <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.delivery.homeOwerName}" ng-model="vm.delivery.homeOwerName"
                        ng-click="vm.selectHomeOwer()" />

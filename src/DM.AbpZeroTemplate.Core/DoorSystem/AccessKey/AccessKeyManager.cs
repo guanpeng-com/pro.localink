@@ -38,9 +38,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task CreateAsync(AccessKey entity)
         {
             await AccessKeyRepository.InsertAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
         }
 
         /// <summary>
@@ -51,9 +52,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual async Task UpdateAsync(AccessKey entity)
         {
             await AccessKeyRepository.UpdateAsync(entity);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
         }
 
         /// <summary>
@@ -65,9 +67,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             await AccessKeyRepository.DeleteAsync(id);
             var entity = await AccessKeyRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
         }
 
         /// <summary>

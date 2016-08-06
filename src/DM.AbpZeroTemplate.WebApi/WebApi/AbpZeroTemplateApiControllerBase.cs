@@ -1,3 +1,4 @@
+using Abp.UI;
 using Abp.WebApi.Controllers;
 using DM.AbpZeroTemplate.DoorSystem;
 using System.Web;
@@ -20,11 +21,12 @@ namespace DM.AbpZeroTemplate.WebApi
             _homeOwerUserManager = homeOwerUserManager;
         }
 
-        protected bool AuthUser()
+        protected void AuthUser()
         {
             var userName = HttpContext.Current.Request["userName"];
             var token = HttpContext.Current.Request["token"];
-            return  _homeOwerUserManager.AuthUser(userName, token);
+            if (!_homeOwerUserManager.AuthUser(userName, token))
+                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.UserAuthError);
         }
     }
 }

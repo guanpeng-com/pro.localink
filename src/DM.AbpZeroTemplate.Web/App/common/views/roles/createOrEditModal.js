@@ -7,16 +7,28 @@
             vm.saving = false;
             vm.role = null;
             vm.permissionEditData = null;
+            vm.communities = null;
+            vm.communityIds = [];
 
             vm.save = function () {
                 vm.saving = true;
+
+                var selectCommunityIds = _.map(
+                    _.where(vm.communities, { isSelected: true }),
+                    function (community) {
+                        return community.id;
+                    });
+
+                vm.communityIds = selectCommunityIds;
+
                 roleService.createOrUpdateRole({
                     role: vm.role,
-                    grantedPermissionNames: vm.permissionEditData.grantedPermissionNames
+                    grantedPermissionNames: vm.permissionEditData.grantedPermissionNames,
+                    communityIds: vm.communityIds
                 }).success(function () {
                     abp.notify.info(app.localize('SavedSuccessfully'));
                     $uibModalInstance.close();
-                }).finally(function() {
+                }).finally(function () {
                     vm.saving = false;
                 });
             };
@@ -34,6 +46,14 @@
                         permissions: result.permissions,
                         grantedPermissionNames: result.grantedPermissionNames
                     };
+                    vm.communities = result.communities;
+
+                    for (var i = 0; i < vm.communities.length; i++) {
+                        if (vm.role.communityIdArray.indexOf(vm.communities[i].id) >= 0) {
+                            vm.communities[i].isSelected = true;
+                        }
+                    }
+
                 });
             }
 

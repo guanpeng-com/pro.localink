@@ -60,6 +60,9 @@ namespace DM.AbpZeroTemplate
                 //Disabling email sending in debug mode
                 IocManager.Register<IEmailSender, NullEmailSender>(DependencyLifeStyle.Transient);
             }
+
+
+            Configuration.UnitOfWork.RegisterFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, false);
         }
 
         public override void Initialize()

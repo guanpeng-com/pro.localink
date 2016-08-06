@@ -4,6 +4,7 @@ using Abp.Domain.Services;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using DM.AbpZeroTemplate.Authorization.Users;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,15 +40,17 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         public virtual async Task CreateAsync(Community community)
         {
             //创建小区之前，需要创建小区的cms
-            App app = new App(community.TenantId, community.Name, community.Name, "APP_" + community.Id.ToString());
+            App app = new App(community.TenantId, community.Name, community.Name, "APP_" + Guid.NewGuid().ToString());
             await _appManager.CreateAsync(app);
+            CurrentUnitOfWork.SaveChanges();
             community.AppId = app.Id;
 
             community.AuthCommunity();
             await CommunityRepository.InsertAsync(community);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Create Community {1}", currentUser.UserName, community.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Create Community {1}", currentUser.UserName, community.Name);
         }
 
         /// <summary>
@@ -58,9 +61,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         public virtual async Task UpdateAsync(Community community)
         {
             await CommunityRepository.UpdateAsync(community);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Edit Community {1}", currentUser.UserName, community.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Edit Community {1}", currentUser.UserName, community.Name);
         }
 
         /// <summary>
@@ -72,9 +76,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         {
             await CommunityRepository.DeleteAsync(id);
             var community = await CommunityRepository.GetAsync(id);
-            var userId = _abpSession.GetUserId();
+            var userId = _abpSession.UserId;
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            Logger.InfoFormat("Admin {0} Auth Community {1}", currentUser.UserName, community.Name);
+            if (currentUser != null)
+                Logger.InfoFormat("Admin {0} Auth Community {1}", currentUser.UserName, community.Name);
         }
 
         /// <summary>

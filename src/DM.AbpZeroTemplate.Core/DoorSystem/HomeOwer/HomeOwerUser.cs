@@ -39,6 +39,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         public virtual long HomeOwerId { get; set; }
 
+
         /// <summary>
         /// 用户
         /// </summary>

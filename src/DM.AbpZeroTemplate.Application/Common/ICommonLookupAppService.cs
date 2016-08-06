@@ -13,5 +13,7 @@ namespace DM.AbpZeroTemplate.Common
         Task<PagedResultOutput<NameValueDto>> FindUsers(FindUsersInput input);
 
         Task<PagedResultOutput<NameValueDto>> FindHomeOwers(FindHomeOwersInput input);
+
+        Task<PagedResultOutput<NameValueDto>> FindDoors(FindDoorsInput input);
     }
 }

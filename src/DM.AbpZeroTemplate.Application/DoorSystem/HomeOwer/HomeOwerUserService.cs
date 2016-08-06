@@ -14,7 +14,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About HomeOwerUser
     [AutoMapFrom(typeof(HomeOwerUser))]
-    public class HomeOwerUserService : AbpZeroTemplateServiceBase, IHomeOwerUserService
+    public class HomeOwerUserService : AbpZeroTemplateAppServiceBase, IHomeOwerUserService
     {
         private readonly HomeOwerUserManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
@@ -39,20 +39,26 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task<PagedResultOutput<HomeOwerUserDto>> GetHomeOwerUsers(GetHomeOwerUsersInput input)
         {
-            var query = _manager.FindHomeOwerUserList(input.Sorting);
-            query.Include("HomeOwer");
-            var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
-            return new PagedResultOutput<HomeOwerUserDto>(
-                totalCount,
-                items.Select(
-                        item =>
-                        {
-                            var dto = item.MapTo<HomeOwerUserDto>();
-                            return dto;
-                        }
-                    ).ToList()
-                );
+            using (CurrentUnitOfWork.EnableFilter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name))
+            {
+                using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
+                {
+                    var query = _manager.FindHomeOwerUserList(input.Sorting);
+                    query.Include("HomeOwer");
+                    var totalCount = await query.CountAsync();
+                    var items = await query.PageBy(input).ToListAsync();
+                    return new PagedResultOutput<HomeOwerUserDto>(
+                        totalCount,
+                        items.Select(
+                                item =>
+                                {
+                                    var dto = item.MapTo<HomeOwerUserDto>();
+                                    return dto;
+                                }
+                            ).ToList()
+                        );
+                }
+            }
         }
 
         public async Task UpdateHomeOwerUser(UpdateHomeOwerUserInput input)

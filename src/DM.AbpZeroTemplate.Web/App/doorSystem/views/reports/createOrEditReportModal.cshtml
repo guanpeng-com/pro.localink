@@ -8,6 +8,30 @@
                 <span ng-if="!vm.report.Id">@L("AddReport")</span>
             </h4>
         </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.report.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.report.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="vm.report.communityId">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.report.homeOwerName}" ng-model="vm.report.homeOwerName"
+                       ng-click="vm.selectHomeOwer()"
+                       required />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
 
         <div class="modal-body">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
@@ -21,15 +45,6 @@
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
                 <textarea auto-focus class="form-control" type="text" name="Content" ng-class="{'edited':vm.report.content}" ng-model="vm.report.content" maxlength="@Report.MaxContentStringLength"></textarea>
                 <label>@L("ReportContent")</label>
-            </div>
-        </div>
-
-        <div class="modal-body" ng-if="!vm.message.isPublic">
-            <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.report.homeOwerName}" ng-model="vm.report.homeOwerName"
-                       ng-click="vm.selectHomeOwer()"
-                       required />
-                <label>@L("HomeOwerName")</label>
             </div>
         </div>
 

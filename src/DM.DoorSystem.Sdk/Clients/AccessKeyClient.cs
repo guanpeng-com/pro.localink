@@ -7,7 +7,7 @@ using DM.DoorSystem.Sdk.Models;
 
 namespace DM.DoorSystem.Sdk.Clients
 {
-    public class AccessKeyClient : ClientBase, IAccessKeyClient
+    public class AccessKeyClient : ClientBase<DoorSystem>, IAccessKeyClient
     {
 
         public AccessKeyResponse Get(List<string> pids, string userId, string dateStr)

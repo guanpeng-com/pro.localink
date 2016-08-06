@@ -13,6 +13,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     public class OpenAttempDto : AuditedEntityDto<long>
     {
 
+        public long CommunityId;
         public long HomeOwerId;
 
         public string HomeOwerName;

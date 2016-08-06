@@ -134,6 +134,7 @@
     <Compile Include="DoorSystem\AccessKey\AccessKeyManager.cs" />
     <Compile Include="DoorSystem\Community\Community.cs" />
     <Compile Include="DoorSystem\Community\CommunityManager.cs" />
+    <Compile Include="DoorSystem\Community\IAdminCommunity.cs" />
     <Compile Include="DoorSystem\Delivery\Delivery.cs" />
     <Compile Include="DoorSystem\Delivery\DeliveryManager.cs" />
     <Compile Include="DoorSystem\Door\Door.cs" />

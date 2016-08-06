@@ -52,6 +52,12 @@
     <Compile Include="Clients\IAccessKeyClient.cs" />
     <Compile Include="Clients\IDoorClient.cs" />
     <Compile Include="Clients\ICommunityClient.cs" />
+    <Compile Include="Clients\Nexmo\ISMSClient.cs" />
+    <Compile Include="Clients\Nexmo\SMSClient.cs" />
+    <Compile Include="Models\Nexmo\SMSSend.cs" />
+    <Compile Include="Models\Nexmo\SMSSendResponse.cs" />
+    <Compile Include="NexmoSystem.cs" />
+    <Compile Include="ISdk.cs" />
     <Compile Include="DoorSystem.cs" />
     <Compile Include="Exception\DSException.cs" />
     <Compile Include="Helper\Mapper.cs" />

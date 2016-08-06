@@ -30,6 +30,19 @@
                 <uib-tab heading="@L("Permissions")">
                     <permission-tree edit-data="vm.permissionEditData"></permission-tree>
                 </uib-tab>
+                <uib-tab heading="@L("Communities")">
+                    <div class="md-checkbox-list">
+                        <div class="md-checkbox" ng-repeat="community in vm.communities">
+                            <input id="community_{{community.id}}" class="md-check" type="checkbox" name="CommunityId" ng-model="community.isSelected">
+                            <label for="community_{{community.id}}">
+                                <span class="inc"></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                {{community.name}}
+                            </label>
+                        </div>
+                    </div>
+                </uib-tab>
             </uib-tabset>
         </div>
         <div class="modal-footer">

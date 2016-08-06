@@ -18,14 +18,18 @@ using System.Collections;
 using Abp.Timing;
 using Abp.Application.Services.Dto;
 using DM.AbpZeroTemplate.DoorSystem.Dto;
+using Abp.Web.Models;
+using Abp.UI;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
     [VersionedRoute("api/version", 1)]
     [RoutePrefix("api/v1/Deliverys")]
+    [WrapResult]
     public class DeliverysController : AbpZeroTemplateApiControllerBase
     {
         private readonly DeliveryManager _deliveryManager;
+        private readonly HomeOwerManager _homeOwerManager;
         private readonly TenantManager _tenantManager;
 
         private readonly DeliveryService _deliveryService;
@@ -34,12 +38,14 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             DeliveryManager deliveryManager,
             TenantManager tenantManager,
             HomeOwerUserManager homeOwerUserManager,
-            DeliveryService deliveryService)
+            DeliveryService deliveryService,
+            HomeOwerManager homeOwerManager)
             : base(homeOwerUserManager)
         {
             _deliveryManager = deliveryManager;
             _tenantManager = tenantManager;
             _deliveryService = deliveryService;
+            _homeOwerManager = homeOwerManager;
         }
 
         /// <summary>
@@ -54,29 +60,22 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <returns></returns>
         [HttpGet]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> GetDeliverys(string userName, string token, int skipCount, int maxResultCount, string sorting, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> GetDeliverys(string userName, string token, int skipCount, int maxResultCount, string sorting = null, int? tenantId = null)
         {
-            try
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
-                {
-                    if (!base.AuthUser()) return Unauthorized();
-                    var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
+                var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
 
-                    var input = new GetDeliverysInput();
-                    input.HomeOwerId = homeOwerUser.HomeOwerId;
-                    input.MaxResultCount = maxResultCount;
-                    input.SkipCount = skipCount;
-                    if (!string.IsNullOrEmpty(sorting))
-                        input.Sorting = sorting;
-                    return Ok(await _deliveryService.GetDeliverys(input));
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+                var input = new GetDeliverysInput();
+                input.HomeOwerId = homeOwerUser.HomeOwerId;
+                input.MaxResultCount = maxResultCount;
+                input.SkipCount = skipCount;
+                if (!string.IsNullOrEmpty(sorting))
+                    input.Sorting = sorting;
 
+                return Ok(await _deliveryService.GetAllDeliverys(input));
+            }
         }
 
         /// <summary>
@@ -87,33 +86,41 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <param name="token">令牌</param>
         /// <param name="homeOwerId">业主Id</param>
         /// <param name="deliveryId">快递Id</param>
+        /// <param name="code">验证码</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> GatherDelivery(string userName, string token, long homeOwerId, long deliveryId, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> GatherDelivery(string userName, string token, long homeOwerId, long deliveryId, string code, int? tenantId = null)
         {
-            try
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                if (homeOwer == null)
                 {
-                    if (!base.AuthUser()) return Unauthorized();
-                    var delivery = await _deliveryManager.DeliveryRepository.FirstOrDefaultAsync(deliveryId);
-                    if (delivery.HomeOwerId != homeOwerId)
-                    {
-                        return Ok(new { IsReplaceGather = true });
-                    }
-                    else
-                    {
-                        delivery.IsGather = true;
-                        delivery.GatherTime = Clock.Now;
-                        await _deliveryManager.UpdateAsync(delivery);
-                        return Ok(new { IsReplaceGather = false });
-                    }
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                var delivery = await _deliveryManager.DeliveryRepository.FirstOrDefaultAsync(deliveryId);
+                if (delivery.IsGather)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.DeliveryIsGathered);
+                }
+                if (delivery.HomeOwerId != homeOwerId)
+                {
+                    return Ok(new { IsReplaceGather = true });
+                }
+                else if (!string.IsNullOrEmpty(code) && code == delivery.Token)
+                {
+                    delivery.IsGather = true;
+                    delivery.GatherTime = Clock.Now;
+                    delivery.Token = string.Empty;
+                    await _deliveryManager.UpdateAsync(delivery);
+                    return Ok(new { IsReplaceGather = false });
+                }
+                else
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.ValidateCodeError);
+                }
             }
         }
 
@@ -131,33 +138,38 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         [UnitOfWork]
         public async virtual Task<IHttpActionResult> ReplaceGatherDelivery(string userName, string token, long homeOwerId, long deliveryId, string code, int? tenantId = null)
         {
-            try
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                if (homeOwer == null)
                 {
-                    if (!base.AuthUser()) return Unauthorized();
-
-                    var delivery = await _deliveryManager.DeliveryRepository.FirstOrDefaultAsync(deliveryId);
-                    if (delivery.HomeOwerId != homeOwerId)
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                var delivery = await _deliveryManager.DeliveryRepository.FirstOrDefaultAsync(deliveryId);
+                if (delivery.IsGather)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.DeliveryIsGathered);
+                }
+                if (delivery.HomeOwerId != homeOwerId)
+                {
+                    if (delivery.Token == code)
                     {
-                        if (delivery.Token == code)
-                        {
-                            delivery.IsGather = true;
-                            delivery.GatherTime = Clock.Now;
-                            delivery.IsReplace = true;
-                            delivery.ReplaceHomeOwerId = homeOwerId;
-
-                            await _deliveryManager.UpdateAsync(delivery);
-                            return Ok();
-                        }
+                        delivery.IsGather = true;
+                        delivery.GatherTime = Clock.Now;
+                        delivery.IsReplace = true;
+                        delivery.ReplaceHomeOwerId = homeOwerId;
+                        delivery.Token = string.Empty;
+                        await _deliveryManager.UpdateAsync(delivery);
+                        return Ok();
+                    }
+                    else
+                    {
+                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.ValidateCodeError);
                     }
                 }
+                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.UnknowError);
             }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-            return NotFound();
         }
     }
 }

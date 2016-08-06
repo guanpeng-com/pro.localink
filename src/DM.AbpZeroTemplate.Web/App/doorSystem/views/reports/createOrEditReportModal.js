@@ -1,10 +1,11 @@
 ﻿(function () {
-    appModule.controller('doorSystem.views.reports.createOrEditReportModal', ['$scope', '$uibModalInstance', 'abp.services.app.report', 'report', 'appSession', 'lookupModal', 'abp.services.app.commonLookup', 'fileUploadModal',
-    function ($scope, $uibModalInstance, reportService, report, $appSession, lookupModal, commonLookupService, fileUploadModal) {
+    appModule.controller('doorSystem.views.reports.createOrEditReportModal', ['$scope', '$uibModalInstance', 'abp.services.app.report', 'report', 'appSession', 'lookupModal', 'abp.services.app.commonLookup', 'fileUploadModal', 'abp.services.app.community',
+    function ($scope, $uibModalInstance, reportService, report, $appSession, lookupModal, commonLookupService, fileUploadModal, communityService) {
         var vm = this;
         vm.report = report;
         vm.saving = false;
         vm.reportStatus = [];
+        vm.communityies = [];
 
         vm.save = function () {
             if (vm.report.id) {
@@ -33,6 +34,7 @@
                 title: app.localize('SelectAHomeOwer'),
                 serviceMethod: commonLookupService.findHomeOwers,
                 extraFilters: {
+                    communityId: vm.report.communityId
                 },
                 callback: function (selectedItem) {
                     vm.report.homeOwerId = selectedItem.value;
@@ -52,6 +54,14 @@
         };
 
         function init() {
+            communityService.getUserCommunities()
+.success(function (result) {
+    vm.communityies = result;
+    setTimeout(function () {
+        $('#communitySelectedCombox').selectpicker('refresh');
+        $('#genderSelectedCombox').selectpicker('refresh');
+    }, 0);
+});
             if (vm.report.id) {
                 reportService.getAllReportStatus()
                 .success(function (result) {

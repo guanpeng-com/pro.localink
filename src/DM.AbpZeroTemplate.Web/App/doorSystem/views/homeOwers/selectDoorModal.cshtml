@@ -1,0 +1,49 @@
+﻿<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span>@L("SelectDoor")</span>
+        </h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal audit-log-detail-view" role="form">
+            <div class="form-body">
+                <h3 class="form-section">@L("SelectDoor")</h3>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="modal-body" ng-if="vm.homeOwerDoor.communityId&&vm.homeOwerDoor.homeOwerId">
+                            <div class="form-group">
+                                <label>@L("DoorType")</label>
+                                <select id="doorTypeSelectedCombox"
+                                        class="form-control"
+                                        required
+                                        ng-model="vm.homeOwerDoor.doorType"
+                                        ng-class="{'edited':vm.homeOwerDoor.doorType}"
+                                        name="DoorType"
+                                        ui-jq="selectpicker"
+                                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                                        data-live-search="true"
+                                        ng-options="doorType.key as doorType.value for doorType in vm.doorTypes"></select>
+                            </div>
+                        </div>
+
+                        <div class="modal-body" ng-if="vm.homeOwerDoor.doorType&&vm.homeOwerDoor.communityId&&vm.homeOwerDoor.homeOwerId">
+                            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                                <input auto-focus class="form-control" type="text" name="DoorId" ng-class="{'edited':vm.homeOwerDoor.doorName}" ng-model="vm.homeOwerDoor.doorName"
+                                       ng-click="vm.selectDoor()" />
+                                <label>@L("DoorName")</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+        <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="homeOwersForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+    </div>
+</div>
+
+

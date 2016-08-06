@@ -11,16 +11,17 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_Messages")]
-    public class Message : FullAuditedEntity<long>, IMayHaveTenant
+    public class Message : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public Message() { }
 
-        public Message(int? tenantId, string title, string content)
+        public Message(int? tenantId, string title, string content, long communityId)
         {
             TenantId = tenantId;
             Title = title;
             Content = content;
             IsRead = false;
+            CommunityId = communityId;
         }
 
 
@@ -34,7 +35,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public virtual string Content { get; set; }
 
-        public virtual long HomeOwerId { get; set; }
+        public virtual long? HomeOwerId { get; set; }
 
         [ForeignKey("HomeOwerId")]
         public virtual HomeOwer HomeOwer { get; set; }
@@ -42,5 +43,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual bool IsRead { get; set; }
 
         public virtual bool IsPublic { get; set; }
+
+        public virtual long CommunityId { get; set; }
     }
 }

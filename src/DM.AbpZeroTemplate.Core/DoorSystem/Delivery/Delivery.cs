@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     [Table("localink_Deliverys")]
-    public class Delivery : FullAuditedEntity<long>, IMayHaveTenant
+    public class Delivery : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
         public Delivery() { }
 
-        public Delivery(int? tenantId, long homeOwerId)
+        public Delivery(int? tenantId, long homeOwerId, long communityId)
         {
             TenantId = tenantId;
             Title = string.Empty;
@@ -25,6 +25,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             IsGather = false;
             IsReplace = false;
             Token = GetToken();
+            CommunityId = communityId;
         }
 
 
@@ -45,6 +46,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         [ForeignKey("HomeOwerId")]
         public virtual HomeOwer HomeOwer { get; set; }
+
+
+        public virtual long CommunityId { get; set; }
 
         /// <summary>
         /// 是否收取

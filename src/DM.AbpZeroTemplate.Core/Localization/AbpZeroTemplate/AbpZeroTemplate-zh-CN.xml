@@ -453,6 +453,16 @@
     <text name="ReportDetail" value="报修详情"/>
     <text name="DeliveryDetail" value="快递详情"/>
     <text name="MessageDetail" value="通知详情"/>
+
+
+    <text name="SMSValidateCode" value="您的验证码是 {0}。"/>
+    <text name="SMSSendCodeError" value="验证码发送失败。"/>
+    <text name="ValidateCodeError" value="验证码验证失败。"/>
+    <text name="UnknowError" value="未知错误。"/>
+    <text name="UserAuthError" value="用户验证失败。"/>
+    <text name="HomeOwerNotExists" value="业主不存在。"/>
+    <text name="HomeOwerUserNotExists" value="用户未认证为业主。"/>
+    <text name="DeliveryIsGathered" value="快递已经领取过了。"/>
     <!--DoorSystem End-->
 
   </texts>
