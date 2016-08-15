@@ -463,6 +463,8 @@
     <text name="HomeOwerNotExists" value="业主不存在。"/>
     <text name="HomeOwerUserNotExists" value="用户未认证为业主。"/>
     <text name="DeliveryIsGathered" value="快递已经领取过了。"/>
+    <text name="HomeOwerUserIsExists" value="业主已经认证。"/>
+    <text name="CreatedAccessKeyIsExists" value="钥匙已经申请过了。"/>
     <!--DoorSystem End-->
 
   </texts>

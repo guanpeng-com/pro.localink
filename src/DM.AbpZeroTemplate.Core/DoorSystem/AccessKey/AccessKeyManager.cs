@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
+using Abp.UI;
 using Castle.Core.Logging;
 using DM.AbpZeroTemplate.Authorization.Users;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
          UserManager userManager
         )
         {
-
+            LocalizationSourceName = DM.AbpZeroTemplate.AbpZeroTemplateConsts.LocalizationSourceName;
             AccessKeyRepository = _AccessKeyRepository;
             Logger = logger;
             _abpSession = abpSession;
@@ -35,13 +36,22 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         /// <param name="AccessKey"></param>
         /// <returns></returns>
-        public virtual async Task CreateAsync(AccessKey entity)
+        public virtual async Task<AccessKey> CreateAsync(AccessKey entity)
         {
-            await AccessKeyRepository.InsertAsync(entity);
-            var userId = _abpSession.UserId;
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            if (currentUser != null)
-                Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            var isExists = (await AccessKeyRepository.CountAsync(a => a.HomeOwerId == entity.HomeOwerId && a.DoorId == entity.DoorId)) > 0;
+            if (!isExists)
+            {
+                var accessKey = await AccessKeyRepository.InsertAsync(entity);
+                var userId = _abpSession.UserId;
+                var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
+                if (currentUser != null)
+                    Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+                return accessKey;
+            }
+            else
+            {
+                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExists"));
+            }
         }
 
         /// <summary>
@@ -51,11 +61,19 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         public virtual async Task UpdateAsync(AccessKey entity)
         {
-            await AccessKeyRepository.UpdateAsync(entity);
-            var userId = _abpSession.UserId;
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            if (currentUser != null)
-                Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            var isExists = (await AccessKeyRepository.CountAsync(a => a.Id != entity.Id && a.HomeOwerId == entity.HomeOwerId && a.DoorId == entity.DoorId)) > 0;
+            if (!isExists)
+            {
+                await AccessKeyRepository.UpdateAsync(entity);
+                var userId = _abpSession.UserId;
+                var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
+                if (currentUser != null)
+                    Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
+            }
+            else
+            {
+                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExists"));
+            }
         }
 
         /// <summary>

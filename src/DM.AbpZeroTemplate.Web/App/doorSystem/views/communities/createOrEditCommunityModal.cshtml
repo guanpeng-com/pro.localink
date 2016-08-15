@@ -11,19 +11,24 @@
 
         <div class="modal-body">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <input auto-focus class="form-control" type="text" name="Name" ng-class="{'edited':vm.community.name}" ng-model="vm.community.name" 
-                  required
-                  maxlength="@Community.MaxDefaultStringLength" />
+                <input auto-focus class="form-control" type="text" name="Name" ng-class="{'edited':vm.community.name}" ng-model="vm.community.name"
+                       required
+                       maxlength="@Community.MaxDefaultStringLength" />
                 <label>@L("CommunityName")</label>
             </div>
         </div>
         <div class="modal-body">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <input auto-focus class="form-control" type="text" name="Address" ng-class="{'edited':vm.community.address}" ng-model="vm.community.address" maxlength="@Community.MaxAddressStringLength" />
+                <input auto-focus class="form-control" type="text" name="Address" ng-class="{'edited':vm.community.address}" ng-model="vm.community.address" maxlength="@Community.MaxAddressStringLength" ng-click="vm.selectArea()" readonly />
                 <label>@L("CommunityAddress")</label>
             </div>
         </div>
-
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="latLng" ng-class="{'edited':vm.community.latLng}" ng-model="vm.community.latLng" ng-click="vm.selectMarker()" readonly />
+                <label>@L("CommunityLatLng")</label>
+            </div>
+        </div>
         <div class="modal-body">
             <label>@L("DoorType")</label>
             <div class="md-checkbox-list" ng-repeat="type in vm.doorTypes">

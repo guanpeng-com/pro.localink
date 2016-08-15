@@ -121,24 +121,22 @@ namespace DM.AbpZeroTemplate
             if (AbpSession.UserId.HasValue)
             {
                 var currentUser = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
-                if (currentUser.UserName != User.AdminUserName)
+
+                allowIds = new List<long>();
+                //用户角色
+                var distinctRoleIds = (
+                        from userListRoleDto in currentUser.Roles
+                        select userListRoleDto.RoleId
+                        ).Distinct();
+                //角色管理的小区id
+                foreach (var roleId in distinctRoleIds)
                 {
-                    allowIds = new List<long>();
-                    //用户角色
-                    var distinctRoleIds = (
-                            from userListRoleDto in currentUser.Roles
-                            select userListRoleDto.RoleId
-                            ).Distinct();
-                    //角色管理的小区id
-                    foreach (var roleId in distinctRoleIds)
+                    var temp = (await RoleManager.GetRoleByIdAsync(roleId)).CommunityIdArray;
+                    foreach (long item in temp)
                     {
-                        var temp = (await RoleManager.GetRoleByIdAsync(roleId)).CommunityIdArray;
-                        foreach (long item in temp)
+                        if (!allowIds.Contains(item))
                         {
-                            if (!allowIds.Contains(item))
-                            {
-                                allowIds.Add(item);
-                            }
+                            allowIds.Add(item);
                         }
                     }
                 }

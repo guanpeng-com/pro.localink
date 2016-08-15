@@ -42,7 +42,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// </summary>
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
-        /// <param name="name">小区名称</param>
+        /// <param name="name">小区名称(模糊查询参数)</param>
         /// <returns></returns>
         [HttpGet]
         [UnitOfWork]
@@ -69,6 +69,53 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     {
                         communities = await _communityManager.CommunityRepository.GetAllListAsync(c => c.IsAuth == true);
                     }
+                    communities.ForEach(c =>
+                    {
+                        if (!dic.Keys.Contains(c.Address))
+                        {
+                            dic[c.Address] = new ArrayList();
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                        }
+                        else
+                        {
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                        }
+                    });
+                }
+            };
+            return Ok(dic);
+        }
+
+        /// <summary>
+        /// 根据经纬度，获取小区集合
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>       
+        /// <param name="name">小区名称(模糊查询参数)</param>
+        /// <param name="lat">经度</param>
+        /// <param name="lng">纬度</param>
+        /// <param name="raidus">半径</param>
+        /// <returns></returns>
+        [HttpGet]
+        [UnitOfWork]
+        public virtual IHttpActionResult GetCommunitiesByLatLng(string userName, string token, double lat, double lng, int raidus, string name = null)
+        {
+            base.AuthUser();
+            Dictionary<string, ArrayList> dic = new Dictionary<string, ArrayList>();
+            var tenants = _tenantManager.Tenants.ToList();
+            foreach (var t in tenants)
+            {
+                int? tenantId = t == null ? (int?)null : t.Id;
+                if (t.TenancyName == Tenant.DefaultTenantName)
+                {
+                    tenantId = null;
+                }
+                using (CurrentUnitOfWork.SetTenantId(tenantId))
+                {
+                    List<Community> communities = new List<Community>();
+
+                    communities = _communityManager.FindCommunityListByLatLng(lat, lng, raidus, name).ToList();
+
                     communities.ForEach(c =>
                     {
                         if (!dic.Keys.Contains(c.Address))

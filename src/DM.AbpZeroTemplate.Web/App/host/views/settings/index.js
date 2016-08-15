@@ -1,7 +1,7 @@
 ﻿(function () {
     appModule.controller('host.views.settings.index', [
-        '$scope', 'appSession', 'abp.services.app.hostSettings', 'abp.services.app.commonLookup',
-        function ($scope, appSession, hostSettingsService, commonLookupService) {
+        '$scope', 'appSession', 'abp.services.app.hostSettings', 'abp.services.app.commonLookup', 
+        function ($scope, appSession, hostSettingsService, commonLookupService, areaService) {
             var vm = this;
 
             $scope.$on('$viewContentLoaded', function () {

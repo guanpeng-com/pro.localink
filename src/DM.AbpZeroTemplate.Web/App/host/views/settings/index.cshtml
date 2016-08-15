@@ -63,10 +63,6 @@
                             <select id="TenantEditionSelectionCombobox" class="form-control edited" ng-options="vm.getEditionValue(item) as item.displayText for item in vm.editions" ng-model="vm.settings.tenantManagement.defaultEditionId"></select>
                             <label for="TenantEditionSelectionCombobox">@L("Edition")</label>
                         </div>
-                        <div class="form-group form-md-line-input form-md-floating-label">
-                            <input class="form-control" type="text" name="PhoneCountryCode" ng-class="{'edited':vm.settings.tenantManagement.phoneCountryCode}" ng-model="vm.settings.tenantManagement.phoneCountryCode" required maxlength="128">
-                            <label>@L("PhoneCountryCode")</label>
-                        </div>
                     </div>
                 </uib-tab>
 

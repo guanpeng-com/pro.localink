@@ -20,6 +20,7 @@ using DM.AbpZeroTemplate.DoorSystem.Dto;
 using DM.AbpZeroTemplate.DoorSystem.Community.Dto;
 using Abp.Web.Models;
 using Abp.UI;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
@@ -99,6 +100,48 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         }
 
         /// <summary>
+        /// 根据钥匙类型申请钥匙 EDoorType doorType, DateTime vilidity, 
+        /// </summary>
+        /// <param name="tenantId">公司Id</param>
+        /// <param name="communityId">小区Id</param>
+        /// <param name="id">业主Id</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
+        /// <param name="doorType">钥匙类型(0-社区大门,1-邮箱,2-住户门,3-车库)</param>
+        /// <param name="vilidity">钥匙截止日期</param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/ApplyAccessKey")]
+        public virtual async Task<IHttpActionResult> ApplyAccessKey(long communityId, long id, string userName, string token, EDoorType doorType, DateTime vilidity, int? tenantId = null)
+        {
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var doors = from d in _doorManager.DoorRepository.GetAll()
+                            where d.DoorType == doorType.ToString() && d.IsAuth
+                            select d;
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(id);
+                var doorIds = (from hd in homeOwer.Doors
+                               join d in doors on hd.DoorId equals d.Id
+                               select hd.DoorId).ToList();
+                if (doorIds.Count == 0)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerDoorNotExists);
+                }
+                else
+                {
+                    foreach (long doorId in doorIds)
+                    {
+                        var accessKey = new AccessKey(tenantId, doorId, homeOwer.Id, vilidity, communityId);
+                        await _accessKeyManager.CreateAsync(accessKey);
+                    }
+                    return Ok();
+                }
+            }
+        }
+
+        /// <summary>
         /// 注册用户
         /// </summary>
         /// <param name="userName">用户名</param>
@@ -136,13 +179,17 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             {
                 var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
                 var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, phone);
-                if (homeOwerUser != null)
+                if (homeOwerUser == null)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
                 }
                 if (homeOwer == null)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                if (homeOwerUser.HomeOwerId != 0)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsExists);
                 }
                 else
                 {
@@ -185,7 +232,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             {
                 var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
                 var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, phone);
-                if (homeOwerUser != null)
+                if (homeOwerUser == null)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
                 }

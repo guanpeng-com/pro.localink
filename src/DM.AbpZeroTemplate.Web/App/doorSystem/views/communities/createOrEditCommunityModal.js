@@ -1,6 +1,6 @@
 ﻿(function () {
-    appModule.controller('doorSystem.views.communities.createOrEditCommunityModal', ['$scope', '$uibModalInstance', 'abp.services.app.community', 'community', 'appSession', 'abp.services.app.door',
-    function ($scope, $uibModalInstance, communityService, community, $appSession, doorService) {
+    appModule.controller('doorSystem.views.communities.createOrEditCommunityModal', ['$scope', '$uibModalInstance', 'abp.services.app.community', 'community', 'appSession', 'abp.services.app.door', 'selectAreaModal', 'gmapModal',
+    function ($scope, $uibModalInstance, communityService, community, $appSession, doorService, selectAreaModal, gmapModal) {
         var vm = this;
         vm.community = community;
         vm.saving = false;
@@ -37,6 +37,24 @@
             $uibModalInstance.dismiss();
         };
 
+        vm.selectArea = function () {
+            selectAreaModal.open({
+                callback: function (text) {
+                    vm.community.address = text;
+                }
+            });
+        };
+
+        vm.selectMarker = function () {
+            gmapModal.open({
+                filterText: vm.community.name,
+                address: vm.community.address,
+                callback: function (marker) {
+                    vm.community.latLng = marker.latitude + "," + marker.longitude;
+                }
+            });
+        };
+
         function init() {
             doorService.getDoorTypes({ id: vm.community.id })
             .success(function (result) {
@@ -47,6 +65,7 @@
                 communityService.getCommunity({ id: vm.community.id })
                 .success(function (result) {
                     vm.community = result;
+                    vm.community.latLng = vm.community.lat + "," + vm.community.lng;
                 });
             }
         }

@@ -66,6 +66,11 @@ namespace DM.AbpZeroTemplate.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Settings, L("Settings"), multiTenancySides: MultiTenancySides.Host);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"), multiTenancySides: MultiTenancySides.Host);
 
+            var areas = pages.CreateChildPermission(AppPermissions.Pages_Areas, L("Areas"), multiTenancySides: MultiTenancySides.Host);
+            areas.CreateChildPermission(AppPermissions.Pages_Areas_Create, L("AreaCreate"), multiTenancySides: MultiTenancySides.Host);
+            areas.CreateChildPermission(AppPermissions.Pages_Areas_Edit, L("AreaEdit"), multiTenancySides: MultiTenancySides.Host);
+            areas.CreateChildPermission(AppPermissions.Pages_Areas_Delete, L("AreaDelete"), multiTenancySides: MultiTenancySides.Host);
+
             //CMS-SPECIFIC PERMISSIONS
             var cms = pages.CreateChildPermission(AppPermissions.Pages_CMS, L("CMS"));
 

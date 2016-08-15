@@ -1,0 +1,57 @@
+@using DM.AbpZeroTemplate.Localization
+<style>
+    .angular-google-map-container {
+        width: 100%;
+        height: 500px;
+    }
+
+    .pac-container {
+        z-index: 9999;
+    }
+</style>
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            {{vm.options.title}}
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div busy-if="vm.loading">
+            <form style="padding-left:15px;padding-right:15px;">
+                <div class="input-group margin-bottom-10" id="searchDiv" style="width:100%">
+                </div>
+            </form>
+            <div>
+                <ui-gmap-google-map class="col-md-12"
+                                    center="vm.map.center"
+                                    zoom="vm.map.zoom"
+                                    dragging="vm.map.dragging"
+                                    bounds="vm.map.bounds"
+                                    events="vm.map.events"
+                                    options="vm.map.options"
+                                    pan="true"
+                                    control="vm.map.control">
+                    <ui-gmap-search-box template="vm.map.searchbox.template" events="vm.map.searchbox.events" parentdiv="vm.map.searchbox.parentdiv"></ui-gmap-search-box>
+
+                    <ui-gmap-markers models="vm.map.markers" coords="'self'" icon="'icon'" click="vm.onMarkerClicked" options="'options'">
+                        <ui-gmap-windows show="'showWindow'" closeClick="'closeClick'" ng-cloak>
+                            <div>
+                                <p ng-non-bindable>{{text}}</p>
+                                <div ng-controller='common.views.common.gmapModal.InfoController'>
+                                    <a class="btn" ng-click="clickedButtonInWindow()">@L("SelectMe")</a>
+                                </div>
+                            </div>
+                        </ui-gmap-windows>
+                    </ui-gmap-markers>
+
+                </ui-gmap-google-map>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+    </div>
+</div>
+<script id="searchbox.tpl.html" type="text/ng-template">
+    <input auto-focus ng-model="vm.options.filterText" class="form-control" placeholder="@L("SearchWithThreeDot")" type="text">
+</script>

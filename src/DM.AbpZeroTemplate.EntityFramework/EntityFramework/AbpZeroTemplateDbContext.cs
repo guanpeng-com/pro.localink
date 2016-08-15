@@ -70,6 +70,11 @@ namespace DM.AbpZeroTemplate.EntityFramework
         /// </summary>
         public virtual IDbSet<Report> Reports { get; set; }
 
+        /// <summary>
+        ///  地区
+        /// </summary>
+        public virtual IDbSet<Area> Areas { get; set; }
+
         /* Setting "Default" to base class helps us when working migration commands on Package Manager Console.
          * But it may cause problems when working Migrate.exe of EF. ABP works either way.         * 
          */
@@ -102,6 +107,11 @@ namespace DM.AbpZeroTemplate.EntityFramework
 
             //AbpCMSDbContext.InitDbSet(modelBuilder);
             modelBuilder.Filter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, (IAdminCommunity entity, ICollection<long> communityIds) => communityIds.Contains(entity.CommunityId), new List<long>());
+
+            modelBuilder.Entity<Area>()
+                                .HasMany(a => a.Children)
+                                .WithOptional(a => a.Parent)
+                                .HasForeignKey(a => a.ParentId);
         }
     }
 }

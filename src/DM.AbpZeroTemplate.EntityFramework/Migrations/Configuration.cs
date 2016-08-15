@@ -11,7 +11,7 @@ namespace DM.AbpZeroTemplate.Migrations
 
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             ContextKey = "AbpZeroTemplate";
         }
 

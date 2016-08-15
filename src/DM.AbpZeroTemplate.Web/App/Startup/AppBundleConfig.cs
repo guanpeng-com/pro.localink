@@ -65,6 +65,9 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
 
                         ScriptPaths.Angular_QRCode,
 
+                        ScriptPaths.Angular_Simple_Logger,
+                        ScriptPaths.Angular_Google_Maps,
+
                         ScriptPaths.Abp,
                         ScriptPaths.Abp_JQuery,
                         ScriptPaths.Abp_Toastr,

@@ -19,7 +19,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public HomeOwer(int? tenantId, long communityId, string name, string phone, string email, string gender)
         {
-            TenantId = TenantId;
+            TenantId = tenantId;
             CommunityId = communityId;
             Name = name;
             Phone = phone;

@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using DM.AbpZeroTemplate.DoorSystem;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
+    [MultiTenancySideAttribute(MultiTenancySides.Host)]
     [Table("localink_HomeOwerUsers")]
     public class HomeOwerUser : FullAuditedEntity<long>
     {

@@ -1,0 +1,46 @@
+@using DM.AbpZeroTemplate.Localization
+<div>
+    <form name="areaForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                {{vm.options.title}}
+            </h4>
+        </div>
+        <div class="modal-body">
+            <div busy-if="vm.loading">
+                <div class="form-group">
+                    <label>@L("AreaLevel1")</label>
+                    <select id="area1SelectedCombox"
+                            required
+                            class="form-control"
+                            ng-model="vm.area1"
+                            ng-options="area.name for area in vm.areas">
+                        <option value="">@L("SelectPlease")</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>@L("AreaLevel2")</label>
+                    <select id="area2SelectedCombox"
+                            class="form-control"
+                            ng-model="vm.area2"
+                            ng-options="area.name for area in vm.area1.children">
+                        <option value="">@L("SelectPlease")</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>@L("AreaLevel3")</label>
+                    <select id="area3SelectedCombox"
+                            class="form-control"
+                            ng-model="vm.area3"
+                            ng-options="area.name for area in vm.area2.children">
+                        <option value="">@L("SelectPlease")</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="areaForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>

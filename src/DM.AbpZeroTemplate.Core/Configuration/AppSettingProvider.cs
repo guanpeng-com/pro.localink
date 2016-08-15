@@ -25,7 +25,8 @@ namespace DM.AbpZeroTemplate.Configuration
                        new SettingDefinition(AppSettings.UserManagement.AllowSelfRegistration, ConfigurationManager.AppSettings[AppSettings.UserManagement.UseCaptchaOnRegistration] ?? "true", scopes: SettingScopes.Tenant),
                        new SettingDefinition(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault, ConfigurationManager.AppSettings[AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault] ?? "false", scopes: SettingScopes.Tenant),
                        new SettingDefinition(AppSettings.UserManagement.UseCaptchaOnRegistration, ConfigurationManager.AppSettings[AppSettings.UserManagement.UseCaptchaOnRegistration] ?? "true", scopes: SettingScopes.Tenant),
-                       new SettingDefinition(AppSettings.UserManagement.PhoneCountryCode,ConfigurationManager.AppSettings[AppSettings.UserManagement.PhoneCountryCode] ?? "86",scopes: SettingScopes.Tenant)
+                       new SettingDefinition(AppSettings.UserManagement.PhoneCountryCode,ConfigurationManager.AppSettings[AppSettings.UserManagement.PhoneCountryCode] ?? "86",scopes: SettingScopes.Tenant),
+                       new SettingDefinition(AppSettings.UserManagement.RootAreaId,ConfigurationManager.AppSettings[AppSettings.UserManagement.RootAreaId] ?? string.Empty,scopes: SettingScopes.Tenant)
                    };
         }
     }

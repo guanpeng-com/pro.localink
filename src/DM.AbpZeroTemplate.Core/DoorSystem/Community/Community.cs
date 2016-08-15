@@ -20,13 +20,15 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         {
         }
 
-        public Community(int? tenantId, string name, string address)
+        public Community(int? tenantId, string name, string address, double lat, double lng)
         {
-            TenantId = TenantId;
+            TenantId = tenantId;
             Name = name;
             Address = address;
             IsAuth = false;
             DepartId = string.Empty;
+            Lat = lat;
+            Lng = lng;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -66,6 +68,16 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// 小区可用的钥匙类型
         /// </summary>
         public virtual string DoorTypes { get; set; }
+
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public virtual double Lat { get; set; }
+
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public virtual double Lng { get; set; }
 
         /// <summary>
         /// 小区cms

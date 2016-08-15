@@ -5,6 +5,8 @@ using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using DM.AbpZeroTemplate.Authorization.Users;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -91,6 +93,33 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             var query = from c in CommunityRepository.GetAll()
                         orderby sort
                         select c;
+            return query;
+        }
+
+        /// <summary>
+        /// 根据经纬度，获取小区集合
+        /// </summary>
+        /// <param name="lat">经度</param>
+        /// <param name="lng">纬度</param>
+        /// <param name="raidus">半径</param>
+        /// <param name="name">小区名称(模糊查询参数)</param>
+        /// <returns></returns>
+        public virtual IQueryable<Community> FindCommunityListByLatLng(double lat, double lng, int raidus, string name = null)
+        {
+            var latLngArr = LatLngUtils.getAround(lat, lng, raidus);
+            var minLat = latLngArr[0];
+            var maxLat = latLngArr[2];
+            var minLng = latLngArr[1];
+            var maxLng = latLngArr[3];
+            var query = FindCommunityList(string.Empty);
+            query = query.Where(
+                c =>
+                c.IsAuth &&
+                c.Lat >= minLat && c.Lat <= maxLat && c.Lng >= minLng && c.Lng <= maxLng);
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(c => c.Name.Contains(name));
+            }
             return query;
         }
     }

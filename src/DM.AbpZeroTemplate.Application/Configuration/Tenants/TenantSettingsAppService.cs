@@ -36,7 +36,8 @@ namespace DM.AbpZeroTemplate.Configuration.Tenants
                     IsNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault),
                     IsEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin),
                     UseCaptchaOnRegistration = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration),
-                    PhoneCountryCode = await SettingManager.GetSettingValueAsync(AppSettings.UserManagement.PhoneCountryCode)
+                    PhoneCountryCode = await SettingManager.GetSettingValueAsync(AppSettings.UserManagement.PhoneCountryCode),
+                    RootAreaId = await SettingManager.GetSettingValueAsync<long>(AppSettings.UserManagement.RootAreaId)
                 }
             };
 
@@ -96,6 +97,9 @@ namespace DM.AbpZeroTemplate.Configuration.Tenants
 
             //设置手机国家编码
             await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.UserManagement.PhoneCountryCode, input.UserManagement.PhoneCountryCode);
+
+            //设置租户的根地区
+            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AppSettings.UserManagement.RootAreaId, input.UserManagement.RootAreaId.ToString());
 
             if (!_multiTenancyConfig.IsEnabled)
             {

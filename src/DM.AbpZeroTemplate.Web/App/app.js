@@ -15,10 +15,21 @@ var appModule = angular.module("app", [
     'abp',
     'simditor',
     'datetimepicker',
-    'monospaced.qrcode'
+    'monospaced.qrcode',
+    'uiGmapgoogle-maps'
 ]);
 
 /* LAZY LOAD CONFIG */
+
+/*Google map config*/
+appModule.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+    GoogleMapApi.configure({
+        key: 'AIzaSyDaYYEyeWe3Km0fGg3x-y1IHhMqdNeSTVI',
+
+        libraries: 'weather,geometry,visualization,places'
+    });
+}]);
+
 
 /* This application does not define any lazy-load yet but you can use $ocLazyLoad to define and lazy-load js/css files.
  * This code configures $ocLazyLoad plug-in for this application.
@@ -165,6 +176,15 @@ appModule.config([
                 menu: 'Administration.Settings.Host'
             });
         }
+
+        if (abp.auth.hasPermission('Pages.Areas')) {
+            $stateProvider.state('host.areas', {
+                url: '/areas',
+                templateUrl: '~/App/host/views/areas/index.cshtml',
+                menu: 'Areas'
+            });
+        }
+
 
         //TENANT routes
 

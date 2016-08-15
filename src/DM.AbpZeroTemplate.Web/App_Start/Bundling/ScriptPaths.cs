@@ -74,7 +74,13 @@ namespace DM.AbpZeroTemplate.Web.Bundling
         public const string Angular_Editor_Simditor = "~/libs/angular-editor/javascripts/simditor/simditor.js";
         public const string Angular_Editor_Uploader = "~/libs/angular-editor/javascripts/simditor/uploader.js";
 
+        //QR Code
         public const string Angular_QRCode = "~/libs/angular-qrcode/angular-qrcode.js";
+
+        //Google Map
+        public const string Lodash = "~/libs/lodash/lodash.js";
+        public const string Angular_Simple_Logger = "~/libs/angular-simple-logger/angular-simple-logger.js";
+        public const string Angular_Google_Maps = "~/libs/angular-google-maps/angular-google-maps.js";
 
         public const string Abp = "~/Abp/Framework/scripts/abp.js";
         public const string Abp_JQuery = "~/Abp/Framework/scripts/libs/abp.jquery.js";
@@ -178,12 +184,12 @@ namespace DM.AbpZeroTemplate.Web.Bundling
         {
             var localizationFileList = new[]
             {
-                "ar_AR", 
-                "bg_BG", 
-                "cs_CZ", 
-                "da_DK", 
-                "de_DE", 
-                "en_US", 
+                "ar_AR",
+                "bg_BG",
+                "cs_CZ",
+                "da_DK",
+                "de_DE",
+                "en_US",
                 "es_CL",
                 "eu",
                 "fa_IR",

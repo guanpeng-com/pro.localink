@@ -26,6 +26,8 @@ namespace DM.AbpZeroTemplate.Configuration
             public const string UseCaptchaOnRegistration = "App.UserManagement.UseCaptchaOnRegistration";
 
             public const string PhoneCountryCode = "App.UserManagement.PhoneCountryCode";
+
+            public const string RootAreaId = "App.UserManagement.RootAreaId";
         }
     }
 }

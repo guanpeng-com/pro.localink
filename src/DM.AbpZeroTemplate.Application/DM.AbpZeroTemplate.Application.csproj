@@ -227,6 +227,12 @@
     <Compile Include="DoorSystem\AccessKek\Dto\UpdateAccessKeyInput.cs" />
     <Compile Include="DoorSystem\AccessKek\IAccessKeyService.cs" />
     <Compile Include="DoorSystem\AccessKek\AccessKeyService.cs" />
+    <Compile Include="DoorSystem\Area\Dto\CreateAreaInput.cs" />
+    <Compile Include="DoorSystem\Area\Dto\GetAreasInput.cs" />
+    <Compile Include="DoorSystem\Area\Dto\AreaDto.cs" />
+    <Compile Include="DoorSystem\Area\Dto\UpdateAreaInput.cs" />
+    <Compile Include="DoorSystem\Area\IAreaService.cs" />
+    <Compile Include="DoorSystem\Area\AreaService.cs" />
     <Compile Include="DoorSystem\Community\CommunityService.cs" />
     <Compile Include="DoorSystem\Community\Dto\CommunityDto.cs" />
     <Compile Include="DoorSystem\Community\Dto\UpdateCommunityInput.cs" />

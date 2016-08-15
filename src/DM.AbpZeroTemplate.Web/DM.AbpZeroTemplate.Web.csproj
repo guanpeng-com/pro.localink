@@ -352,6 +352,7 @@
       <DependentUpon>detailModal.css</DependentUpon>
     </Content>
     <Content Include="App\common\views\common\fileUploadModal.js" />
+    <Content Include="App\common\views\common\gmapModal.js" />
     <Content Include="App\common\views\common\lookupModal.js" />
     <Content Include="App\common\views\languages\editTextModal.js" />
     <Content Include="App\common\views\languages\createOrEditModal.js" />
@@ -451,6 +452,9 @@
     <Content Include="App\host\directives\featureTree.min.css">
       <DependentUpon>featureTree.css</DependentUpon>
     </Content>
+    <Content Include="App\host\views\areas\createOrEditAreaModal.js" />
+    <Content Include="App\host\views\areas\index.js" />
+    <Content Include="App\host\views\areas\selectAreaModal.js" />
     <Content Include="App\host\views\editions\createOrEditModal.js" />
     <Content Include="App\host\views\editions\index.js" />
     <Content Include="App\host\views\maintenance\index.css">
@@ -579,6 +583,7 @@
     <Content Include="Areas\Mpa\Views\Users\_CreateOrEditModal.js" />
     <Content Include="Common\Images\app-logo-on-dark.png" />
     <Content Include="Common\Images\app-logo-on-light.png" />
+    <Content Include="Common\Images\blue_marker.png" />
     <Content Include="Common\Images\default-profile-picture.png" />
     <Content Include="Common\Images\SampleProfilePics\sample-profile-08.jpg" />
     <Content Include="Common\Images\SampleProfilePics\sample-profile-01.jpg" />
@@ -685,11 +690,13 @@
     <Content Include="libs\angular-moment\angular-moment.min.js" />
     <Content Include="libs\angular-ocLazyLoad\ocLazyLoad.min.js" />
     <Content Include="libs\angular-qrcode\angular-qrcode.js" />
+    <Content Include="libs\angular-simple-logger\angular-simple-logger.js" />
     <Content Include="libs\angular-ui-grid\ui-grid.css" />
     <Content Include="libs\angular-ui-grid\ui-grid.js" />
     <Content Include="libs\angular-ui-grid\ui-grid.min.css" />
     <Content Include="libs\angular-ui-grid\ui-grid.min.js" />
     <Content Include="libs\angular-ui-grid\ui-grid.svg" />
+    <Content Include="libs\angular-google-maps\angular-google-maps.js" />
     <Content Include="libs\bootstrap-datetimepicker\bootstrap-datetimepicker.css" />
     <Content Include="libs\bootstrap-datetimepicker\bootstrap-datetimepicker.js" />
     <Content Include="libs\bootstrap-datetimepicker\bootstrap-datetimepicker.min.css" />
@@ -1145,6 +1152,7 @@
     <Content Include="libs\json2\json2.min.js" />
     <Content Include="libs\jstree\themes\default\32px_line.png" />
     <Content Include="libs\jstree\themes\default\32px_original.png" />
+    <Content Include="libs\lodash\lodash.js" />
     <Content Include="libs\morris\examples\area-as-line.html" />
     <Content Include="libs\morris\examples\area.html" />
     <Content Include="libs\morris\examples\bar-colors.html" />
@@ -2096,6 +2104,10 @@
     <Content Include="App\common\views\common\fileUploadModal.cshtml" />
     <Content Include="App\doorSystem\views\homeOwers\selectDoorModal.cshtml" />
     <Content Include="App\doorSystem\views\doors\homeOwerDoorIndex.cshtml" />
+    <Content Include="App\host\views\areas\createOrEditAreaModal.cshtml" />
+    <Content Include="App\host\views\areas\index.cshtml" />
+    <Content Include="App\host\views\areas\selectAreaModal.cshtml" />
+    <Content Include="App\common\views\common\gmapModal.cshtml" />
     <None Include="Properties\PublishProfiles\dm.pubxml" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />

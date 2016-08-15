@@ -35,23 +35,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task CreateAccessKey(CreateAccessKeyInput input)
         {
-            var isExists = (await _manager.AccessKeyRepository.CountAsync(a => a.HomeOwerId == input.HomeOwerId && a.DoorId == input.DoorId)) > 0;
-            if (!isExists)
-            {
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
-                var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), input.DoorId, input.HomeOwerId, input.Validity, homeOwer.CommunityId);
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
 
-                var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(entity.DoorId);
+            var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), input.DoorId, input.HomeOwerId, input.Validity, homeOwer.CommunityId);
+            var accessKey = await _manager.CreateAsync(entity);
 
-
-                entity.GetKey(door.PId, homeOwer.Phone, entity.Validity);
-
-                await _manager.CreateAsync(entity);
-            }
-            else
-            {
-                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExists"));
-            }
+            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(accessKey.DoorId);
+            accessKey.GetKey(door.PId, homeOwer.Phone, accessKey.Validity);
         }
 
         public async Task DeleteAccessKey(IdInput<long> input)

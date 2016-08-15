@@ -31,6 +31,13 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                     requiredPermissionName: AppPermissions.Pages_Editions
                     )
                 ).AddItem(new MenuItemDefinition(
+                    PageNames.App.Host.Areas,
+                    L("Areas"),
+                    url: "host.areas",
+                    icon: "icon-grid",
+                    requiredPermissionName: AppPermissions.Pages_Areas
+                    )
+                ).AddItem(new MenuItemDefinition(
                     PageNames.App.Tenant.Dashboard,
                     L("Dashboard"),
                     url: "tenant.dashboard",

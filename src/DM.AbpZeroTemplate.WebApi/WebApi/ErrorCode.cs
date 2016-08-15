@@ -41,7 +41,15 @@ namespace DM.AbpZeroTemplate.WebApi
         /// <summary>
         /// 快递已经领取
         /// </summary>
-        DeliveryIsGathered = 7
+        DeliveryIsGathered = 7,
+        /// <summary>
+        /// 业主没有此类型的钥匙
+        /// </summary>
+        HomeOwerDoorNotExists = 8,
+        /// <summary>
+        /// 业主已认证
+        /// </summary>
+        HomeOwerUserIsExists = 9,
 
     }
 
@@ -79,6 +87,14 @@ namespace DM.AbpZeroTemplate.WebApi
             else if (type == ErrorCodeType.DeliveryIsGathered)
             {
                 return new UserFriendlyException((int)ErrorCodeType.DeliveryIsGathered, L(ErrorCodeType.DeliveryIsGathered.ToString()));
+            }
+            else if (type == ErrorCodeType.HomeOwerDoorNotExists)
+            {
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerDoorNotExists, L(ErrorCodeType.HomeOwerDoorNotExists.ToString()));
+            }
+            else if (type == ErrorCodeType.HomeOwerUserIsExists)
+            {
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsExists, L(ErrorCodeType.HomeOwerUserIsExists.ToString()));
             }
             else
             {

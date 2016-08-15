@@ -102,6 +102,16 @@
                                 @L("EmailConfirmationRequiredForLogin")
                             </label>
                         </div>
+                        <div class="form-group form-md-line-input form-md-floating-label">
+                            <input class="form-control" type="text" name="PhoneCountryCode" ng-class="{'edited':vm.settings.userManagement.phoneCountryCode}" ng-model="vm.settings.userManagement.phoneCountryCode" required maxlength="128">
+                            <label>@L("PhoneCountryCode")</label>
+                        </div>
+                        <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                            <select id="TenantAreaSelectionCombobox" class="form-control edited" ng-options="item.id as item.name for item in vm.areas" ng-model="vm.settings.userManagement.rootAreaId" required>
+                                <option value="">--«Î—°‘Ò--</option>
+                            </select>
+                            <label for="TenantAreaSelectionCombobox">@L("RootArea")</label>
+                        </div>
                     </div>
                 </uib-tab>
 

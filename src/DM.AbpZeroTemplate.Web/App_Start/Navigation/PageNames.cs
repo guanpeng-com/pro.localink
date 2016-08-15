@@ -20,6 +20,7 @@ namespace DM.AbpZeroTemplate.Web.Navigation
                 public const string Editions = "Editions";
                 public const string Maintenance = "Administration.Maintenance";
                 public const string Settings = "Administration.Settings.Host";
+                public const string Areas = "Areas";
             }
 
             public static class Tenant

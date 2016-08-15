@@ -557,6 +557,8 @@
     <text name="HomeOwerNotExists" value="HomeOwner not exists."/>
     <text name="HomeOwerUserNotExists" value="User is not a HomeOwner"/>
     <text name="DeliveryIsGathered" value="Delivery has been gathered."/>
+    <text name="HomeOwerUserIsExists" value="HomeOwner has been Auth."/>
+    <text name="CreatedAccessKeyIsExists" value="AccessKey is exists."/>
     <!--DoorSystem End-->
     
     

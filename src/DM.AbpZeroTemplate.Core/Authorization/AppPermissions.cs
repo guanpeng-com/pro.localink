@@ -60,6 +60,11 @@
 
         public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
 
+        public const string Pages_Areas = "Pages.Areas";
+        public const string Pages_Areas_Create = "Pages.Areas.Create";
+        public const string Pages_Areas_Edit = "Pages.Areas.Edit";
+        public const string Pages_Areas_Delete = "Pages.Areas.Delete";
+
         //CMS-SPECIFIC PERMISSIONS
         public const string Pages_CMS = "Pages.CMS";
 

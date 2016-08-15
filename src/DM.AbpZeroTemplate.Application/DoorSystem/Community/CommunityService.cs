@@ -41,7 +41,9 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
 
         public async Task CreateCommunity(CreateCommunityInput input)
         {
-            var community = new Community(CurrentUnitOfWork.GetTenantId(), input.Name, input.Address);
+            var lat = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[0]);
+            var lng = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+            var community = new Community(CurrentUnitOfWork.GetTenantId(), input.Name, input.Address, lat, lng);
             community.DoorTypes = String.Join(",", input.DoorTypes);
             await _communityManager.CreateAsync(community);
             CurrentUnitOfWork.SaveChanges();
@@ -102,10 +104,14 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
 
         public async Task UpdateCommunity(UpdateCommunityInput input)
         {
+            var lat = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[0]);
+            var lng = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
             var community = await _communityManager.CommunityRepository.GetAsync(input.Id);
             community.Name = input.Name;
             community.Address = input.Address;
             community.DoorTypes = String.Join(",", input.DoorTypes);
+            community.Lat = lat;
+            community.Lng = lng;
             await _communityManager.UpdateAsync(community);
         }
 

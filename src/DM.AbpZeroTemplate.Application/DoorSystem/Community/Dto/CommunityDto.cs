@@ -35,5 +35,15 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community.Dto
         /// 是否验证
         /// </summary>
         public bool IsAuth { get; set; }
+
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public double Lat { get; set; }
+
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public double Lng { get; set; }
     }
 }

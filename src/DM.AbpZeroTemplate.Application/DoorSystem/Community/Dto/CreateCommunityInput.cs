@@ -19,5 +19,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community.Dto
         public string Address { get; set; }
 
         public string[] DoorTypes { get; set; }
+
+        /// <summary>
+        /// 经度，纬度
+        /// </summary>
+        public string LatLng { get; set; }
     }
 }
