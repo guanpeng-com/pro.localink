@@ -62,43 +62,44 @@ namespace DM.AbpZeroTemplate.WebApi
         /// 抛出对应类型的错误
         /// </summary>
         /// <param name="type"></param>
-        public static Exception ThrowError(ErrorCodeType type)
+        /// <param name="details"></param>
+        public static Exception ThrowError(ErrorCodeType type, string details = null)
         {
             if (type == ErrorCodeType.UserAuthError)
             {
-                return new UserFriendlyException((int)ErrorCodeType.UserAuthError, L(ErrorCodeType.UserAuthError.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.UserAuthError, L(ErrorCodeType.UserAuthError.ToString()), details);
             }
             else if (type == ErrorCodeType.HomeOwerNotExists)
             {
-                return new UserFriendlyException((int)ErrorCodeType.HomeOwerNotExists, L(ErrorCodeType.HomeOwerNotExists.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerNotExists, L(ErrorCodeType.HomeOwerNotExists.ToString()), details);
             }
             else if (type == ErrorCodeType.HomeOwerUserNotExists)
             {
-                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserNotExists, L(ErrorCodeType.HomeOwerUserNotExists.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserNotExists, L(ErrorCodeType.HomeOwerUserNotExists.ToString()), details);
             }
             else if (type == ErrorCodeType.SMSSendCodeError)
             {
-                return new UserFriendlyException((int)ErrorCodeType.SMSSendCodeError, L(ErrorCodeType.SMSSendCodeError.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.SMSSendCodeError, L(ErrorCodeType.SMSSendCodeError.ToString()), details);
             }
             else if (type == ErrorCodeType.ValidateCodeError)
             {
-                return new UserFriendlyException((int)ErrorCodeType.ValidateCodeError, L(ErrorCodeType.ValidateCodeError.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.ValidateCodeError, L(ErrorCodeType.ValidateCodeError.ToString()), details);
             }
             else if (type == ErrorCodeType.DeliveryIsGathered)
             {
-                return new UserFriendlyException((int)ErrorCodeType.DeliveryIsGathered, L(ErrorCodeType.DeliveryIsGathered.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.DeliveryIsGathered, L(ErrorCodeType.DeliveryIsGathered.ToString()), details);
             }
             else if (type == ErrorCodeType.HomeOwerDoorNotExists)
             {
-                return new UserFriendlyException((int)ErrorCodeType.HomeOwerDoorNotExists, L(ErrorCodeType.HomeOwerDoorNotExists.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerDoorNotExists, L(ErrorCodeType.HomeOwerDoorNotExists.ToString()), details);
             }
             else if (type == ErrorCodeType.HomeOwerUserIsExists)
             {
-                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsExists, L(ErrorCodeType.HomeOwerUserIsExists.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsExists, L(ErrorCodeType.HomeOwerUserIsExists.ToString()), details);
             }
             else
             {
-                return new UserFriendlyException((int)ErrorCodeType.UnknowError, L(ErrorCodeType.UnknowError.ToString()));
+                return new UserFriendlyException((int)ErrorCodeType.UnknowError, L(ErrorCodeType.UnknowError.ToString()), details);
             }
         }
 

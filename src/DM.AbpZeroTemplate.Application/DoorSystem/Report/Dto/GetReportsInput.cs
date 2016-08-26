@@ -12,7 +12,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     //Create Model Dto Code About Report
     public class GetReportsInput : PagedAndSortedInputDto, IShouldNormalize
     {
-        public long HomeOwerId;
+        public long? HomeOwerId;
 
         public void Normalize()
         {

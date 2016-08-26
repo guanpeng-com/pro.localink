@@ -182,6 +182,7 @@
     <Compile Include="WebApi\Controllers\OData\CommunitysODataController.cs" />
     <Compile Include="WebApi\ErrorCode.cs" />
     <Compile Include="WebApi\Controllers\v2\HomeOwersV2Controller.cs" />
+    <Compile Include="WebApi\Models\Delivery\GatherDeliveryModel.cs" />
     <Compile Include="WebApi\Models\LoginModel.cs" />
     <Compile Include="WebApi\SecretVersionedRoute.cs" />
     <Compile Include="WebApi\VersionedRoute.cs" />

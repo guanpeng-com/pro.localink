@@ -83,7 +83,10 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
                 var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
-
+                if (homeOwerUser.HomeOwerId == 0)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
                 var input = new GetReportsInput();
                 input.HomeOwerId = homeOwerUser.HomeOwerId;
                 input.MaxResultCount = maxResultCount;

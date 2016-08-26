@@ -62,6 +62,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             var query = _manager.FindReportList(input.Sorting);
 
+            if (input.HomeOwerId.HasValue)
+            {
+                query = query.Where(r => r.HomeOwerId == input.HomeOwerId.Value);
+            }
+
             var totalCount = await query.CountAsync();
             var items = await query.PageBy(input).ToListAsync();
             return new PagedResultOutput<ReportDto>(

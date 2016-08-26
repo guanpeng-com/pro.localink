@@ -161,6 +161,32 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         }
 
         /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <param name="from">发送方名称</param>
+        /// <param name="countryCode">国家代码（比如，中国-86）</param>
+        /// <param name="to">接受手机号</param>
+        /// <returns></returns>
+        [SecretVersionedRoute]
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/SendValidateCode")]
+        public async virtual Task<IHttpActionResult> SendValidateCode(string from, string countryCode, string to)
+        {
+            SMSClient smsClient = new SMSClient();
+            var code = smsClient.ValidateCode();
+            var response = smsClient.Send(from, countryCode + to, L("SMSValidateCode", code));
+            if (response.SMSSends.Count > 0 && response.SMSSends[0].Stuats == "0")
+            {
+                return Ok(new { code = code });
+            }
+            else
+            {
+                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.SMSSends[0].ErrorText);
+            }
+        }
+
+        /// <summary>
         /// 认证用户为业主，第一步，发送验证码
         /// </summary>
         /// <param name="tenantId">公司Id</param>
@@ -206,7 +232,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     }
                     else
                     {
-                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError);
+                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.SMSSends[0].ErrorText);
                     }
                 }
             }

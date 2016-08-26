@@ -46,7 +46,7 @@ namespace DM.DoorSystem.Sdk
         {
             get
             {
-                return 80000;
+                return 1200000;
             }
         }
 
@@ -54,7 +54,7 @@ namespace DM.DoorSystem.Sdk
         {
             get
             {
-                return 80000;
+                return 1200000;
             }
         }
 

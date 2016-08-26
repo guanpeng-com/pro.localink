@@ -20,6 +20,7 @@ using Abp.Application.Services.Dto;
 using DM.AbpZeroTemplate.DoorSystem.Dto;
 using Abp.Web.Models;
 using Abp.UI;
+using DM.AbpZeroTemplate.WebApi.Models;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
@@ -66,7 +67,10 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
                 var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
-
+                if (homeOwerUser.HomeOwerId == 0)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
                 var input = new GetDeliverysInput();
                 input.HomeOwerId = homeOwerUser.HomeOwerId;
                 input.MaxResultCount = maxResultCount;
@@ -81,6 +85,43 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 业主领取快递
         /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <param name="gatherDeliveryModel">post参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("GatherDelivery")]
+        public async virtual Task<IHttpActionResult> GatherDelivery(string userName, string token, [FromBody]GatherDeliveryModel gatherDeliveryModel)
+        {
+            var tenantId = gatherDeliveryModel.TenantId;
+            var homeOwerId = gatherDeliveryModel.HomeOwerId;
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                if (homeOwer == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+
+                var deliverys = await _deliveryManager.DeliveryRepository.GetAllListAsync(d => d.IsGather == false && d.HomeOwerId == homeOwerId);
+
+                foreach (var delivery in deliverys)
+                {
+                    delivery.IsGather = true;
+                    delivery.GatherTime = Clock.Now;
+                    delivery.Token = string.Empty;
+                    await _deliveryManager.UpdateAsync(delivery);
+                }
+
+                return Ok();
+            }
+        }
+
+        /// <summary>
+        /// 业主领取快递（弃用）
+        /// </summary>
         /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
         /// <param name="token">令牌</param>
@@ -90,7 +131,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> GatherDelivery(string userName, string token, long homeOwerId, long deliveryId, string code, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> GatherDelivery_Bak(string userName, string token, long homeOwerId, long deliveryId, string code, int? tenantId = null)
         {
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))

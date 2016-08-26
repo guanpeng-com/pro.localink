@@ -49,6 +49,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         public async virtual Task<IHttpActionResult> GetAllCommunities(string userName, string token, string name = null)
         {
             base.AuthUser();
+            ArrayList list = new ArrayList();
             Dictionary<string, ArrayList> dic = new Dictionary<string, ArrayList>();
             var tenants = _tenantManager.Tenants.ToList();
             foreach (var t in tenants)
@@ -83,7 +84,11 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     });
                 }
             };
-            return Ok(dic);
+            foreach (string key in dic.Keys)
+            {
+                list.Add(new { Address = key, Communities = dic[key] });
+            }
+            return Ok(list);
         }
 
         /// <summary>
@@ -101,6 +106,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         public virtual IHttpActionResult GetCommunitiesByLatLng(string userName, string token, double lat, double lng, int raidus, string name = null)
         {
             base.AuthUser();
+            ArrayList list = new ArrayList();
             Dictionary<string, ArrayList> dic = new Dictionary<string, ArrayList>();
             var tenants = _tenantManager.Tenants.ToList();
             foreach (var t in tenants)
@@ -130,6 +136,10 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     });
                 }
             };
+            foreach (string key in dic.Keys)
+            {
+                list.Add(new { Address = key, Communities = dic[key] });
+            }
             return Ok(dic);
         }
     }
