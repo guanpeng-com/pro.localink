@@ -21,6 +21,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
         Task<PagedResultOutput<ReportDto>> GetReports(GetReportsInput input);
 
         /// <summary>
+        /// 获取业主的快递
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultOutput<ReportDto>> GetAllReports(GetReportsInput input);
+
+        /// <summary>
         /// 创建
         /// </summary>
         /// <param name="input"></param>

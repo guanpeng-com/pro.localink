@@ -187,7 +187,7 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                          )
                          .AddItem(
                             new MenuItemDefinition(
-                                PageNames.App.DoorSystem.Notices,
+                                PageNames.App.DoorSystem.Messages,
                                 L("Messages"),
                                 url: "doorSystem.messages",
                                 icon: "icon-manage",
@@ -209,6 +209,15 @@ namespace DM.AbpZeroTemplate.Web.App.Startup
                                 url: "doorSystem.reports",
                                 icon: "icon-manage",
                                 requiredPermissionName: AppPermissions.Pages_DoorSystem_Reports
+                            )
+                         )
+                         .AddItem(
+                            new MenuItemDefinition(
+                                PageNames.App.DoorSystem.KeyHoldings,
+                                L("KeyHoldings"),
+                                url: "doorSystem.keyHoldings",
+                                icon: "icon-manage",
+                                requiredPermissionName: AppPermissions.Pages_DoorSystem_KeyHoldings
                             )
                          )
                      );

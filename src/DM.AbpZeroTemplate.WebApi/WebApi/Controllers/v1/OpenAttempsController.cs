@@ -15,6 +15,7 @@ using System.Web.OData;
 using System.Web.OData.Routing;
 using DM.DoorSystem.Sdk;
 using Abp.Web.Models;
+using DM.AbpZeroTemplate.WebApi.Models;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
@@ -39,17 +40,18 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         ///  添加开锁记录
         /// </summary>
-        /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
-        /// <param name="homeOwerId">业主Id</param>
-        /// <param name="communityId">小区Id</param>
-        /// <param name="isSuccess">是否成功</param>
+        /// <param name="createOpenAttempModel">post参数</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
-        public async virtual Task<IHttpActionResult> CreateOpenAttemp(string userName, long homeOwerId, long communityId, bool isSuccess, string token, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> CreateOpenAttemp(string userName, string token, [FromBody]CreateOpenAttempModel createOpenAttempModel)
         {
+            var tenantId = createOpenAttempModel.TenantId;
+            var communityId = createOpenAttempModel.CommunityId;
+            var homeOwerId = createOpenAttempModel.HomeOwerId;
+            var isSuccess = createOpenAttempModel.IsSuccess;
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {

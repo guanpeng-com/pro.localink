@@ -146,6 +146,11 @@ namespace DM.AbpZeroTemplate.Authorization
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Reports_Edit, L("ReportsEdit"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Reports_Delete, L("ReportsDelete"));
 
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_KeyHoldings, L("KeyHoldings"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_KeyHoldings_Create, L("KeyHoldingsCreate"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_KeyHoldings_Edit, L("KeyHoldingsEdit"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_KeyHoldings_Delete, L("KeyHoldingsDelete"));
+
         }
 
         private static ILocalizableString L(string name)

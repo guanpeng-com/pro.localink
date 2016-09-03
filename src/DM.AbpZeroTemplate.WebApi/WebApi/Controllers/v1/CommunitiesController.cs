@@ -140,7 +140,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             {
                 list.Add(new { Address = key, Communities = dic[key] });
             }
-            return Ok(dic);
+            return Ok(list);
         }
     }
 }

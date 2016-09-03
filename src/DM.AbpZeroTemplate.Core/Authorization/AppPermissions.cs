@@ -140,5 +140,10 @@
         public const string Pages_DoorSystem_Reports_Create = "Pages.DoorSystem.Reports.Create";
         public const string Pages_DoorSystem_Reports_Edit = "Pages.DoorSystem.Reports.Edit";
         public const string Pages_DoorSystem_Reports_Delete = "Pages.DoorSystem.Reports.Delete";
+
+        public const string Pages_DoorSystem_KeyHoldings = "Pages.DoorSystem.KeyHoldings";
+        public const string Pages_DoorSystem_KeyHoldings_Create = "Pages.DoorSystem.KeyHoldings.Create";
+        public const string Pages_DoorSystem_KeyHoldings_Edit = "Pages.DoorSystem.KeyHoldings.Edit";
+        public const string Pages_DoorSystem_KeyHoldings_Delete = "Pages.DoorSystem.KeyHoldings.Delete";
     }
 }

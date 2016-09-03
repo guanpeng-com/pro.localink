@@ -465,6 +465,8 @@
     <text name="DeliveryIsGathered" value="快递已经领取过了。"/>
     <text name="HomeOwerUserIsExists" value="业主已经认证。"/>
     <text name="CreatedAccessKeyIsExists" value="钥匙已经申请过了。"/>
+    <text name="CreatedAccessKeyIsExistsButIsNotAuth" value="钥匙已经申请，但是没有审核通过，请耐心等待。"/>
+    <text name="HomeOwerDoorNotExists" value="业主没有此类型门禁。"/>
     <!--DoorSystem End-->
 
   </texts>

@@ -1,0 +1,72 @@
+﻿@using DM.AbpZeroTemplate.DoorSystem
+
+<div>
+    <form name="keyHoldingsForm" role="form" novalidate class="form-validation">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span ng-if="vm.keyHolding.Id">@L("Edit"):{{vm.keyHolding.visitorName}}</span>
+                <span ng-if="!vm.keyHolding.Id">@L("AddKeyHolding")</span>
+            </h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>@L("HomeOwerCommunity")</label>
+                <select id="communitySelectedCombox"
+                        class="form-control"
+                        required
+                        ng-class="{'edited':vm.keyHolding.communityId}"
+                        name="CommunityId"
+                        ng-model="vm.keyHolding.communityId"
+                        ui-jq="selectpicker"
+                        ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                        data-live-search="true"
+                        ng-options="community.id as community.name for community in vm.communityies"></select>
+            </div>
+        </div>
+
+        <div class="modal-body" ng-if="vm.keyHolding.communityId">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.keyHolding.homeOwerName}" ng-model="vm.keyHolding.homeOwerName"
+                       ng-click="vm.selectHomeOwer()"
+                       required />
+                <label>@L("HomeOwerName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="VisitorName" ng-class="{'edited':vm.keyHolding.visitorName}" ng-model="vm.keyHolding.visitorName" maxlength="@KeyHolding.MaxDefaultStringLength" required />
+                <label>@L("KeyHoldingVisitorName")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Password" ng-class="{'edited':vm.keyHolding.password}" ng-model="vm.keyHolding.password" maxlength="@KeyHolding.MaxPasswordStringLength" />
+                <label>@L("KeyHoldingPassword")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input  auto-focus datetimepicker options="{minView:'day', 'format':'yyyy-mm-dd hh:mm:ss'}" class="form-control date-picker" type="text" name="VisiteStartTime" ng-class="{'edited':vm.keyHolding.visiteStartTime}" ng-model="vm.keyHolding.visiteStartTime" required />
+                <label>@L("KeyHoldingVisiteStartTime")</label>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus datetimepicker options="{minView:'day', 'format':'yyyy-mm-dd hh:mm:ss'}" class="form-control date-picker" type="text" name="VisiteEndTime" ng-class="{'edited':vm.keyHolding.visiteEndTime}" ng-model="vm.keyHolding.visiteEndTime" required />
+                <label>@L("KeyHoldingVisiteEndTime")</label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button ng-disabled="vm.saving" type="button" class="btn btn-default" ng-click="vm.cancel()">@L("Cancel")</button>
+            <button type="submit" button-busy="vm.saving" busy-text="@L("SavingWithThreeDot")" class="btn btn-primary blue" ng-click="vm.save()" ng-disabled="keyHoldingsForm.$invalid"><i class="fa fa-save"></i><span>@L("Save")</span></button>
+        </div>
+    </form>
+</div>
+
+

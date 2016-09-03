@@ -22,7 +22,7 @@
             link: function ($scope, element, attrs, modelCtrl) {
                 var customOpts, el, opts, _formatted, _init, _picker, _setStartDate, _setEndDate, _validateManx, _validateMin;
                 el = $(element);
-                customOpts = $scope.options;
+                customOpts = $scope.opts;
                 opts = angular.extend({}, dateTimePickerConfig, customOpts);
 
                 modelCtrl.$siEmpty = function (val) {

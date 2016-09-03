@@ -21,6 +21,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
         Task<PagedResultOutput<MessageDto>> GetMessages(GetMessagesInput input);
 
         /// <summary>
+        /// 获取业主的信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultOutput<MessageDto>> GetAllMessages(GetMessagesInput input);
+
+        /// <summary>
         /// 创建消息通知
         /// </summary>
         /// <param name="input"></param>

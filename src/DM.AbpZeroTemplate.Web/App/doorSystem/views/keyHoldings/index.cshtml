@@ -1,0 +1,73 @@
+﻿@using DM.AbpZeroTemplate.Localization
+<div ng-controller="doorSystem.views.keyHoldings.index as vm">
+    <div class="row margin-bottom-5">
+        <div class="col-xs-12">
+            <div class="page-head">
+                <div class="page-title">
+                    <h1>
+                        <span>@L("keyHoldings")</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+
+                    </div>
+                    <div class="form">
+                        <form>
+                            <div class="form-body" enter-key="vm.messages.load()">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label class="control-label">@L("CommunityName")</label>
+                                            <select id="communitySelectedCombox"
+                                                    class="form-control"
+                                                    required
+                                                    ng-class="{'edited':vm.requestParams.communityId}"
+                                                    name="CommunityId"
+                                                    ng-model="vm.requestParams.communityId"
+                                                    ui-jq="selectpicker"
+                                                    ui-options='{ iconBase: "famfamfam-flag", tickIcon: "fa fa-check" }'
+                                                    data-live-search="true"
+                                                    ng-options="community.id as community.name for community in vm.communityies">
+                                                <option value="">请选择小区</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5" ng-show="vm.requestParams.communityId">
+                                        <div class="form-group">
+                                            <label>@L("HomeOwerName")</label>
+                                            <input auto-focus class="form-control" type="text" name="HomeOwerId" ng-class="{'edited':vm.requestParams.homeOwerName}" ng-model="vm.requestParams.homeOwerName"
+                                                   ng-click="vm.selectHomeOwer()"
+                                                   required />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="row margin-bottom-10">
+                        <div class="col-sm-12 text-right">
+                            <button class="btn btn-default" ng-click="vm.keyHoldings.load()"><i class=" fa fa-refresh"></i> @L("Refresh")</button>
+                            <button class="btn btn-primary" ng-click="vm.keyHoldings.addKeyHolding()"><i class="fa fa-creative-commons"></i> @L("AddKeyHolding")</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div ng-if="vm.keyHoldings.gridOptions.data" ui-grid="vm.keyHoldings.gridOptions" ui-grid-pagination ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+                    <div ng-if="!vm.keyHoldings.gridOptions.data" class="text-muted">
+                        @L("NoTenantSelected")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

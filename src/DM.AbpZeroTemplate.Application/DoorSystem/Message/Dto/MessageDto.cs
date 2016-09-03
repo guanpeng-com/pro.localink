@@ -22,6 +22,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public long CommunityId;
 
         public string HomeOwerName;
+        public string CommunityName;
 
         public bool IsRead;
 

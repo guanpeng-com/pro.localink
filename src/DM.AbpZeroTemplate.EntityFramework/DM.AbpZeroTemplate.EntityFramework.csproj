@@ -125,6 +125,22 @@
     <Compile Include="Migrations\201608150805118_Added_LatLng_To_Community.Designer.cs">
       <DependentUpon>201608150805118_Added_LatLng_To_Community.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608300644415_Added_KeyHolding.cs" />
+    <Compile Include="Migrations\201608300644415_Added_KeyHolding.Designer.cs">
+      <DependentUpon>201608300644415_Added_KeyHolding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609031210019_Added_Password_To_KeyHolding.cs" />
+    <Compile Include="Migrations\201609031210019_Added_Password_To_KeyHolding.Designer.cs">
+      <DependentUpon>201609031210019_Added_Password_To_KeyHolding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding.cs" />
+    <Compile Include="Migrations\201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding.Designer.cs">
+      <DependentUpon>201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609031231403_Added_IsCollection_To_Keyholding.cs" />
+    <Compile Include="Migrations\201609031231403_Added_IsCollection_To_Keyholding.Designer.cs">
+      <DependentUpon>201609031231403_Added_IsCollection_To_Keyholding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -153,6 +169,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608150805118_Added_LatLng_To_Community.resx">
       <DependentUpon>201608150805118_Added_LatLng_To_Community.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608300644415_Added_KeyHolding.resx">
+      <DependentUpon>201608300644415_Added_KeyHolding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609031210019_Added_Password_To_KeyHolding.resx">
+      <DependentUpon>201609031210019_Added_Password_To_KeyHolding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding.resx">
+      <DependentUpon>201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609031231403_Added_IsCollection_To_Keyholding.resx">
+      <DependentUpon>201609031231403_Added_IsCollection_To_Keyholding.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -24,6 +24,8 @@ using System.Threading;
 using Newtonsoft.Json;
 using DM.AbpZeroTemplate.Common.Dto;
 using DM.AbpZeroTemplate.HttpFormatters;
+using Swashbuckle.Swagger;
+using DM.AbpZeroTemplate.WebApi;
 
 namespace DM.AbpZeroTemplate.WebApi
 {
@@ -53,6 +55,7 @@ namespace DM.AbpZeroTemplate.WebApi
 
             //设置上传multipart/form-data
             Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.Add(new UploadMultipartMediaTypeFormatter<FileUploadInput>());
+            Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
 
         }
 
@@ -87,6 +90,9 @@ namespace DM.AbpZeroTemplate.WebApi
                     c.IncludeXmlComments(GetXmlCommentsPath());
 
                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+                    //添加过滤
+                    c.OperationFilter<AddFileUploadFilter>();
 
                     //web api key
                     c.ApiKey("apiKey")
@@ -140,6 +146,26 @@ namespace DM.AbpZeroTemplate.WebApi
 
             return commentsFile;
             //return String.Format(@"{0}\bin\SwaggerUi.XML", System.AppDomain.CurrentDomain.BaseDirectory);
+        }
+
+        public class AddFileUploadFilter : IOperationFilter
+        {
+            public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+            {
+                var fileUploadAttribute = apiDescription.GetControllerAndActionAttributes<SwaggerAddFileUploadAttribute>();
+                foreach (var attr in fileUploadAttribute)
+                {
+                    operation.consumes.Add("multipart/form-data");
+                    operation.parameters.Add(new Parameter
+                    {
+                        name = "file",
+                        @in = "formData",
+                        description = "file to upload",
+                        required = attr.Required,
+                        type = "file"
+                    });
+                }
+            }
         }
 
     }

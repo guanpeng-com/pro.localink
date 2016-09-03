@@ -559,6 +559,8 @@
     <text name="DeliveryIsGathered" value="Delivery has been gathered."/>
     <text name="HomeOwerUserIsExists" value="HomeOwner has been Auth."/>
     <text name="CreatedAccessKeyIsExists" value="AccessKey is exists."/>
+    <text name="CreatedAccessKeyIsExistsButIsNotAuth" value="AccessKey has been applyed, but it is Not Auth, please be patient."/>
+    <text name="HomeOwerDoorNotExists" value="HomeOwner dont has this door."/>
     <!--DoorSystem End-->
     
     

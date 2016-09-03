@@ -38,8 +38,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         public virtual async Task<AccessKey> CreateAsync(AccessKey entity)
         {
-            var isExists = (await AccessKeyRepository.CountAsync(a => a.HomeOwerId == entity.HomeOwerId && a.DoorId == entity.DoorId)) > 0;
-            if (!isExists)
+            var existsKey = await AccessKeyRepository.FirstOrDefaultAsync(a => a.HomeOwerId == entity.HomeOwerId && a.DoorId == entity.DoorId);
+            if (existsKey == null)
             {
                 var accessKey = await AccessKeyRepository.InsertAsync(entity);
                 var userId = _abpSession.UserId;
@@ -48,10 +48,15 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     Logger.InfoFormat("Admin {0} Create AccessKey {1}", currentUser.UserName, entity.Id);
                 return accessKey;
             }
-            else
+            else if (existsKey != null && !existsKey.IsAuth)
+            {
+                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExistsButIsNotAuth"));
+            }
+            else if (existsKey != null && existsKey.IsAuth)
             {
                 throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExists"));
             }
+            return null;
         }
 
         /// <summary>

@@ -345,6 +345,14 @@ appModule.config([
                 menu: 'DoorSystem.Messages'
             });
         }
+
+        if (abp.auth.hasPermission('Pages.DoorSystem.KeyHoldings')) {
+            $stateProvider.state('doorSystem.keyHoldings', {
+                url: '/keyHoldings',
+                templateUrl: '~/App/doorSystem/views/keyHoldings/index.cshtml',
+                menu: 'DoorSystem.KeyHoldings'
+            });
+        }
     }
 ]);
 

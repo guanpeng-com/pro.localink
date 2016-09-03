@@ -170,6 +170,8 @@
     <Compile Include="WebApi\AbpZeroTemplateWebApiModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApi\Controllers\AccountController.cs" />
+    <Compile Include="WebApi\Controllers\v1\MessagesController.cs" />
+    <Compile Include="WebApi\Controllers\v1\KeyHoldingsController.cs" />
     <Compile Include="WebApi\Controllers\v1\ReportsController.cs" />
     <Compile Include="WebApi\Controllers\v1\DeliverysController.cs" />
     <Compile Include="WebApi\Controllers\v1\CommunitiesController.cs" />
@@ -183,8 +185,15 @@
     <Compile Include="WebApi\ErrorCode.cs" />
     <Compile Include="WebApi\Controllers\v2\HomeOwersV2Controller.cs" />
     <Compile Include="WebApi\Models\Delivery\GatherDeliveryModel.cs" />
+    <Compile Include="WebApi\Models\HomeOwers\AuthUserValidateCodeModel.cs" />
+    <Compile Include="WebApi\Models\HomeOwers\AuthUserSendCodeModel.cs" />
+    <Compile Include="WebApi\Models\HomeOwers\ApplyAccessKeyModel.cs" />
     <Compile Include="WebApi\Models\LoginModel.cs" />
+    <Compile Include="WebApi\Models\KeyHolding\CreateKeyHoldingModel.cs" />
+    <Compile Include="WebApi\Models\Report\CreateReportModel.cs" />
+    <Compile Include="WebApi\Models\OpenAttemp\CreateOpenAttempModel.cs" />
     <Compile Include="WebApi\SecretVersionedRoute.cs" />
+    <Compile Include="WebApi\SwaggerAddFileUploadAttribute.cs" />
     <Compile Include="WebApi\VersionedRoute.cs" />
   </ItemGroup>
   <ItemGroup>

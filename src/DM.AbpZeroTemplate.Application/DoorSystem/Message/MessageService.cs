@@ -9,6 +9,7 @@ using System.Data.Entity;
 using Abp.Linq.Extensions;
 
 using AutoMapper;
+using DM.AbpZeroTemplate.DoorSystem.Community;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -18,12 +19,15 @@ namespace DM.AbpZeroTemplate.DoorSystem
     {
         private readonly MessageManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
+        private readonly CommunityManager _communityManager;
 
         public MessageService(MessageManager manager,
-            HomeOwerManager homeOwerManager)
+            HomeOwerManager homeOwerManager,
+            CommunityManager communityManager)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
+            _communityManager = communityManager;
         }
 
         public async Task CreateMessage(CreateMessageInput input)
@@ -55,26 +59,37 @@ namespace DM.AbpZeroTemplate.DoorSystem
             {
                 using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
                 {
-                    var query = _manager.FindMessageList(input.Sorting);
-
-                    if (input.IsPublic.HasValue)
-                        query = query.Where(m => m.IsPublic == input.IsPublic.Value);
-
-                    var totalCount = await query.CountAsync();
-                    var items = await query.PageBy(input).ToListAsync();
-                    return new PagedResultOutput<MessageDto>(
-                        totalCount,
-                        items.Select(
-                                item =>
-                                {
-                                    var dto = item.MapTo<MessageDto>();
-                                    dto.HomeOwerName = item.HomeOwer != null ? item.HomeOwer.Name : "公告";
-                                    return dto;
-                                }
-                            ).ToList()
-                        );
+                    return await ProcessGet(input);
                 }
             }
+        }
+
+        public async Task<PagedResultOutput<MessageDto>> GetAllMessages(GetMessagesInput input)
+        {
+            return await ProcessGet(input);
+        }
+
+        private async Task<PagedResultOutput<MessageDto>> ProcessGet(GetMessagesInput input)
+        {
+            var query = _manager.FindMessageList(input.Sorting);
+
+            if (input.HomeOwerId.HasValue)
+            {
+                query = query.Where(r => r.HomeOwerId == input.HomeOwerId.Value);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query.PageBy(input).ToListAsync();
+            return new PagedResultOutput<MessageDto>(
+                totalCount,
+                items.Select(
+                        item =>
+                        {
+                            var dto = item.MapTo<MessageDto>();
+                            return dto;
+                        }
+                    ).ToList()
+                );
         }
 
         public async Task UpdateMessage(UpdateMessageInput input)
@@ -93,6 +108,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
             var entity = await _manager.MessageRepository.GetAsync(input.Id);
             var dto = Mapper.Map<MessageDto>(entity);
             dto.HomeOwerName = entity.HomeOwer != null ? entity.HomeOwer.Name : "公告";
+            var community = await _communityManager.CommunityRepository.GetAsync(entity.CommunityId);
+            dto.CommunityName = community.Name;
             return dto;
         }
 

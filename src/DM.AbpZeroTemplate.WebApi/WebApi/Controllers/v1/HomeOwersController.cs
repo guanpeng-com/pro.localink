@@ -21,6 +21,8 @@ using DM.AbpZeroTemplate.DoorSystem.Community.Dto;
 using Abp.Web.Models;
 using Abp.UI;
 using DM.AbpZeroDoor.DoorSystem.Enums;
+using DM.AbpZeroTemplate.WebApi.Models;
+using System.Collections;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
@@ -86,15 +88,29 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 
                 var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
                             join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
-                            where a.HomeOwerId == homeOwer.Id && a.IsAuth && d.IsAuth
-                            select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name }
+                            where a.HomeOwerId == homeOwer.Id && d.IsAuth
+                            select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name, KeyType = d.DoorType, IsAuth = a.IsAuth }
                             ).ToList();
+
+                var result = new ArrayList();
+                list.ForEach(i =>
+                {
+                    result.Add(new
+                    {
+                        i.KeyId,
+                        i.KeyValidity,
+                        i.CommunityId,
+                        i.KeyName,
+                        KeyType = EDoorTypeUtils.GetEnum(i.KeyType),
+                        i.IsAuth
+                    });
+                });
 
                 return Ok(new
                 {
                     AppKey = _doorSystemSdk.Params["app_key"],
                     UserId = homeOwer.Phone,
-                    AccessKeys = list
+                    AccessKeys = result
                 });
             }
         }
@@ -102,26 +118,27 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 根据钥匙类型申请钥匙 EDoorType doorType, DateTime vilidity, 
         /// </summary>
-        /// <param name="tenantId">公司Id</param>
-        /// <param name="communityId">小区Id</param>
-        /// <param name="id">业主Id</param>
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
-        /// <param name="doorType">钥匙类型(0-社区大门,1-邮箱,2-住户门,3-车库)</param>
-        /// <param name="vilidity">钥匙截止日期</param>
+        /// <param name="applyAccessKeyModel">post参数</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
         [Route("/ApplyAccessKey")]
-        public virtual async Task<IHttpActionResult> ApplyAccessKey(long communityId, long id, string userName, string token, EDoorType doorType, DateTime vilidity, int? tenantId = null)
+        public virtual async Task<IHttpActionResult> ApplyAccessKey(string userName, string token, [FromBody]ApplyAccessKeyModel applyAccessKeyModel)
         {
+            var tenantId = applyAccessKeyModel.TenantId;
+            var homeOwerId = applyAccessKeyModel.HomeOwerId;
+            var communityId = applyAccessKeyModel.CommunityId;
+            var doorType = applyAccessKeyModel.DoorType;
+            var vilidity = applyAccessKeyModel.Vilidity;
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
                 var doors = from d in _doorManager.DoorRepository.GetAll()
                             where d.DoorType == doorType.ToString() && d.IsAuth
                             select d;
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(id);
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
                 var doorIds = (from hd in homeOwer.Doors
                                join d in doors on hd.DoorId equals d.Id
                                select hd.DoorId).ToList();
@@ -138,6 +155,42 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     }
                     return Ok();
                 }
+            }
+        }
+
+        /// <summary>
+        /// 删除用户钥匙
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
+        /// <param name="applyAccessKeyModel">post参数</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [UnitOfWork]
+        [Route("/DeleteAccessKey")]
+        public virtual async Task<IHttpActionResult> DeleteAccessKey(string userName, string token, [FromBody]ApplyAccessKeyModel applyAccessKeyModel)
+        {
+            var tenantId = applyAccessKeyModel.TenantId;
+            var homeOwerId = applyAccessKeyModel.HomeOwerId;
+            var communityId = applyAccessKeyModel.CommunityId;
+            var doorType = applyAccessKeyModel.DoorType;
+            var vilidity = applyAccessKeyModel.Vilidity;
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var doors = from d in _doorManager.DoorRepository.GetAll()
+                            where d.DoorType == doorType.ToString() && d.IsAuth
+                            select d;
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                var doorIds = (from hd in homeOwer.Doors
+                               join d in doors on hd.DoorId equals d.Id
+                               select hd.DoorId).ToList();
+
+                foreach (long doorId in doorIds)
+                {
+                    await _accessKeyManager.AccessKeyRepository.DeleteAsync(a => a.DoorId == doorId);
+                }
+                return Ok();
             }
         }
 
@@ -189,17 +242,18 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 认证用户为业主，第一步，发送验证码
         /// </summary>
-        /// <param name="tenantId">公司Id</param>
         /// <param name="userName">用户名</param>
         /// <param name="token">用户令牌</param>
-        /// <param name="communityId">小区Id</param>
-        /// <param name="phone">业主手机号</param>
+        /// <param name="authUserSendCodeModel">post参数</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
         [Route("/AuthUserSendCode")]
-        public async virtual Task<IHttpActionResult> AuthUserSendCode(string userName, long communityId, string phone, string token, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> AuthUserSendCode(string userName, string token, [FromBody]AuthUserSendCodeModel authUserSendCodeModel)
         {
+            var tenantId = authUserSendCodeModel.TenantId;
+            var communityId = authUserSendCodeModel.CommunityId;
+            var phone = authUserSendCodeModel.Phone;
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
@@ -241,18 +295,19 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// <summary>
         /// 认证用户为业主，第二步，验证验证码，完成验证
         /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="communityId"></param>
-        /// <param name="phone"></param>
-        /// <param name="token"></param>
-        /// <param name="code"></param>
-        /// <param name="tenantId"></param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
+        /// <param name="authUserValidateCodeModel">post参数</param>
         /// <returns></returns>
         [HttpPost]
         [UnitOfWork]
         [Route("/AuthUserValidateCode")]
-        public async virtual Task<IHttpActionResult> AuthUserValidateCode(string userName, long communityId, string phone, string token, string code, int? tenantId = null)
+        public async virtual Task<IHttpActionResult> AuthUserValidateCode(string userName, string token, [FromBody]AuthUserValidateCodeModel authUserValidateCodeModel)
         {
+            var tenantId = authUserValidateCodeModel.TenantId;
+            var phone = authUserValidateCodeModel.Phone;
+            var communityId = authUserValidateCodeModel.CommunityId;
+            var code = authUserValidateCodeModel.Code;
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {

@@ -265,6 +265,12 @@
     <Compile Include="DoorSystem\HomeOwer\HomeOwerService.cs" />
     <Compile Include="DoorSystem\HomeOwer\IHomeOwerUserService.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerUserService.cs" />
+    <Compile Include="DoorSystem\KeyHolding\Dto\CreateKeyHoldingInput.cs" />
+    <Compile Include="DoorSystem\KeyHolding\Dto\GetKeyHoldingsInput.cs" />
+    <Compile Include="DoorSystem\KeyHolding\Dto\KeyHoldingDto.cs" />
+    <Compile Include="DoorSystem\KeyHolding\Dto\UpdateKeyHoldingInput.cs" />
+    <Compile Include="DoorSystem\KeyHolding\IKeyHoldingService.cs" />
+    <Compile Include="DoorSystem\KeyHolding\KeyHoldingService.cs" />
     <Compile Include="DoorSystem\Message\Dto\CreateMessageInput.cs" />
     <Compile Include="DoorSystem\Message\Dto\GetMessagesInput.cs" />
     <Compile Include="DoorSystem\Message\Dto\MessageDto.cs" />

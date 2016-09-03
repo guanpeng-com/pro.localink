@@ -438,6 +438,9 @@
     <Content Include="App\doorSystem\views\homeOwerUsers\createOrEditHomeOwerUserModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\detailModal.js" />
     <Content Include="App\doorSystem\views\homeOwerUsers\index.js" />
+    <Content Include="App\doorSystem\views\keyHoldings\createOrEditKeyHoldingModal.js" />
+    <Content Include="App\doorSystem\views\keyHoldings\detailKeyHolding.js" />
+    <Content Include="App\doorSystem\views\keyHoldings\index.js" />
     <Content Include="App\doorSystem\views\messages\createOrEditMessageModal.js" />
     <Content Include="App\doorSystem\views\messages\detailModal.js" />
     <Content Include="App\doorSystem\views\messages\index.js" />
@@ -2108,6 +2111,9 @@
     <Content Include="App\host\views\areas\index.cshtml" />
     <Content Include="App\host\views\areas\selectAreaModal.cshtml" />
     <Content Include="App\common\views\common\gmapModal.cshtml" />
+    <Content Include="App\doorSystem\views\keyHoldings\createOrEditKeyHoldingModal.cshtml" />
+    <Content Include="App\doorSystem\views\keyHoldings\detailKeyHolding.cshtml" />
+    <Content Include="App\doorSystem\views\keyHoldings\index.cshtml" />
     <None Include="Properties\PublishProfiles\dm.pubxml" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />

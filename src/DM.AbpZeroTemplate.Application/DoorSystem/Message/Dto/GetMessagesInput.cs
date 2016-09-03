@@ -14,6 +14,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     {
         public bool? IsPublic { get; set; }
 
+        public long? HomeOwerId { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrEmpty(Sorting))
