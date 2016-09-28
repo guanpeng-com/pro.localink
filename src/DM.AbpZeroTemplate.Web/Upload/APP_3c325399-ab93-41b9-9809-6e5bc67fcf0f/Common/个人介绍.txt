@@ -1,0 +1,1 @@
+梁健，27岁，毕业于贵州大学，电子信息工程专业。从事软件系统开发多年，参与过大型分布式系统设计部署，对于系统间跨域访问有一定研究。技术主要方向是B/S架构web系统开发，熟悉DDD/TDD开发模式，精通C#,NodeJS,JavaScript等语言，善于利用和拓展现有成熟技术框架和各类型软件组件。喜欢研究各种web开发语言，比如前段语言AngularJS,ReactJS,TypeScript等，后端API提供技术WCF，WebService，WebAPI，OData等。

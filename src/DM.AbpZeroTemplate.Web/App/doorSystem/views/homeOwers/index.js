@@ -4,6 +4,7 @@
         function ($scope, $state, $uibModal, $q, uiGridConstants, homeOwerService, $appSession) {
             var vm = this;
             vm.appSession = $appSession;
+            vm.homeOwerStatus = [];
 
             $scope.$on('$viewContentLoaded', function () {
                 App.initAjax();
@@ -15,14 +16,16 @@
                 editHomeOwers: abp.auth.hasPermission('Pages.DoorSystem.HomeOwers.Edit'),
                 deleteHomeOwers: abp.auth.hasPermission('Pages.DoorSystem.HomeOwers.Delete'),
                 doors: abp.auth.hasPermission('Pages.DoorSystem.Doors'),
-                createAccessKey: abp.auth.hasPermission('Pages.DoorSystem.AccessKeys.Create')
+                createAccessKey: abp.auth.hasPermission('Pages.DoorSystem.AccessKeys.Create'),
+                authHomeOwer: abp.auth.hasPermission('Pages.DoorSystem.HomeOwers.AuthHomeOwer')
             };
 
             vm.requestParams = {
                 id: 0,
                 skipCount: 0,
                 maxResultCount: app.consts.grid.defaultPageSize,
-                sorting: null
+                sorting: null,
+                homeOwerStatus: null
             };
 
             vm.homeOwers = {
@@ -50,6 +53,7 @@
                                 '      <li><a ng-if="grid.appScope.permissions.deleteHomeOwers" ng-click="grid.appScope.homeOwers.remove(row.entity)" >' + app.localize('Delete') + '</a></li>' +
                                 '      <li><a ng-click="grid.appScope.homeOwers.showDetails(row.entity)">' + app.localize('Detail') + '</a></li>' +
                                 '      <li><a ng-if="grid.appScope.permissions.createAccessKey" ng-click="grid.appScope.homeOwers.applyKey(row.entity)">' + app.localize('ApplyKey') + '</a></li>' +
+                                '      <li><a ng-if="grid.appScope.permissions.authHomeOwer" ng-click="grid.appScope.homeOwers.authHomeOwer(row.entity)">' + app.localize('AuthAndApplyKey') + '</a></li>' +
                                 '    </ul>' +
                                 '  </div>' +
                                 '</div>'
@@ -69,6 +73,11 @@
                         {
                             name: app.localize('HomeOwerEmail'),
                             field: 'email',
+                            minWidth: 200
+                        },
+                        {
+                            name: app.localize('HomeOwerStatus'),
+                            field: 'status',
                             minWidth: 200
                         }
                     ],
@@ -140,6 +149,20 @@
                     });
                 },
 
+                //审核业主信息
+                authHomeOwer: function (homeOwer) {
+                    abp.message.confirm(
+                        app.localize('AuthHomeOwerWarningMessage',homeOwer.name),
+                        function (isConfirmed) {
+                            if (isConfirmed) {
+                                homeOwerService.authHomeOwer({ id: homeOwer.id })
+                                .success(function () {
+                                    vm.homeOwers.load();
+                                });
+                            }
+                        });
+                },
+
                 openCreateOrEditHomeOwerModal: function (homeOwer, closeCallback) {
                     var modalInstance = null;
 
@@ -188,6 +211,11 @@
                     if (!vm.permissions.manageHomeOwers) {
                         vm.homeOwers.gridOptions.columnDefs.shift();
                     }
+
+                    homeOwerService.getAllHomeOwerStatus()
+                    .success(function (result) {
+                        vm.homeOwerStatus = result;
+                    });
 
                     vm.homeOwers.load();
                 },

@@ -146,6 +146,7 @@
     <Compile Include="DoorSystem\Door\Door.cs" />
     <Compile Include="DoorSystem\Door\DoorManager.cs" />
     <Compile Include="DoorSystem\Enums\EFileUploadType.cs" />
+    <Compile Include="DoorSystem\Enums\EStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EReportStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EDoorType.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerUser.cs" />

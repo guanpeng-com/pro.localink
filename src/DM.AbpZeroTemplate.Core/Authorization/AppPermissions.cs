@@ -103,6 +103,7 @@
         public const string Pages_DoorSystem_HomeOwers_Create = "Pages.DoorSystem.HomeOwers.Create";
         public const string Pages_DoorSystem_HomeOwers_Edit = "Pages.DoorSystem.HomeOwers.Edit";
         public const string Pages_DoorSystem_HomeOwers_Delete = "Pages.DoorSystem.HomeOwers.Delete";
+        public const string Pages_DoorSystem_HomeOwers_AuthHomeOwer = "Pages.DoorSystem.HomeOwers.AuthHomeOwer";
 
         public const string Pages_DoorSystem_Doors = "Pages.DoorSystem.Doors";
         public const string Pages_DoorSystem_Doors_Create = "Pages.DoorSystem.Doors.Create";

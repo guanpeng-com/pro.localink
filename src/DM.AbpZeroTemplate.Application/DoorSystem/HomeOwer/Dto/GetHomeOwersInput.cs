@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using DM.AbpZeroTemplate.Dto;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     //Create Model Dto Code About HomeOwer
     public class GetHomeOwersInput : PagedAndSortedInputDto, IShouldNormalize
     {
+        public EHomeOwerStatusType? HomeOwerStatus { get; set; }
         public void Normalize()
         {
             if (string.IsNullOrEmpty(Sorting))

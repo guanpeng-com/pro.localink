@@ -50,6 +50,10 @@ namespace DM.AbpZeroTemplate.WebApi
         /// 业主已认证
         /// </summary>
         HomeOwerUserIsExists = 9,
+        /// <summary>
+        /// 业主正在审核中，请耐心等待
+        /// </summary>
+        HomeOwerUserIsAuthing = 10
 
     }
 
@@ -96,6 +100,10 @@ namespace DM.AbpZeroTemplate.WebApi
             else if (type == ErrorCodeType.HomeOwerUserIsExists)
             {
                 return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsExists, L(ErrorCodeType.HomeOwerUserIsExists.ToString()), details);
+            }
+            else if (type == ErrorCodeType.HomeOwerUserIsAuthing)
+            {
+                return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsAuthing, L(ErrorCodeType.HomeOwerUserIsAuthing.ToString()), details);
             }
             else
             {

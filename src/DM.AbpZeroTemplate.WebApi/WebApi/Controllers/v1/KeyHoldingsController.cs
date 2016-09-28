@@ -120,6 +120,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             var visiteStartTime = createKeyHoldingModel.VisiteStartTime;
             var visiteEndTime = createKeyHoldingModel.VisiteEndTime;
             var password = createKeyHoldingModel.Password;
+            var keyTypes = createKeyHoldingModel.KeyTypes;
             base.AuthUser();
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
@@ -128,9 +129,12 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
+                foreach (var keyType in keyTypes)
+                {
+                    var keyHolding = new KeyHolding(tenantId, visitorName, visiteStartTime, visiteEndTime, password, keyType, homeOwerId, communityId);
+                    await _keyHoldingManager.CreateAsync(keyHolding);
+                }
 
-                var keyHolding = new KeyHolding(tenantId, visitorName, visiteStartTime, visiteEndTime, password, homeOwerId, communityId);
-                await _keyHoldingManager.CreateAsync(keyHolding);
                 return Ok();
             }
         }

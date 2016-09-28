@@ -75,11 +75,11 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                         if (!dic.Keys.Contains(c.Address))
                         {
                             dic[c.Address] = new ArrayList();
-                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId, c.Lat, c.Lng });
                         }
                         else
                         {
-                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId, c.Lat, c.Lng });
                         }
                     });
                 }
@@ -127,11 +127,11 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                         if (!dic.Keys.Contains(c.Address))
                         {
                             dic[c.Address] = new ArrayList();
-                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId, c.Lat, c.Lng });
                         }
                         else
                         {
-                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId });
+                            dic[c.Address].Add(new { c.Id, c.Name, c.Address, c.TenantId, c.Lat, c.Lng });
                         }
                     });
                 }

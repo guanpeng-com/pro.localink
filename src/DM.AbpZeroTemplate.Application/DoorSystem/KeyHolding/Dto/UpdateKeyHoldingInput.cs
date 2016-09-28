@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,9 +20,13 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public DateTime VisiteEndTime;
 
-        public DateTime? VisiteTime;
+        public DateTime? CollectionTime;
 
         public string Password;
+
+        public EDoorType KeyType;
+
+        public bool IsCollection;
 
         public long HomeOwerId;
 

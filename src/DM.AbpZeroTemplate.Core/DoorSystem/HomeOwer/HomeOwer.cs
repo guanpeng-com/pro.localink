@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             Phone = phone;
             Email = email;
             Gender = gender;
+            Status = EHomeOwerStatusType.Initial;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -82,5 +84,21 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         [StringLength(MaxDefaultStringLength)]
         public virtual string ValidateCode { get; set; }
+
+        /// <summary>
+        /// 业主状态
+        /// </summary>
+        [Required]
+        public virtual EHomeOwerStatusType Status { get; set; }
+
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        public virtual DateTime? AuthTime { get; set; }
+
+        /// <summary>
+        /// 审核管理员
+        /// </summary>
+        public virtual string AuthAdmin { get; set; }
     }
 }

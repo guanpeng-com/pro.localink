@@ -29,7 +29,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public async Task CreateKeyHolding(CreateKeyHoldingInput input)
         {
-            var entity = new KeyHolding(CurrentUnitOfWork.GetTenantId(), input.VisitorName, input.VisiteStartTime, input.VisiteEndTime, input.Password, input.HomeOwerId, input.CommunityId);
+            var entity = new KeyHolding(CurrentUnitOfWork.GetTenantId(), input.VisitorName, input.VisiteStartTime, input.VisiteEndTime, input.Password, input.KeyType, input.HomeOwerId, input.CommunityId);
             await _manager.CreateAsync(entity);
         }
 
@@ -86,7 +86,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
             entity.VisitorName = input.VisitorName;
             entity.VisiteStartTime = input.VisiteStartTime;
             entity.VisiteEndTime = input.VisiteEndTime;
-            entity.CollectionTime = input.VisiteTime;
+            entity.CollectionTime = input.CollectionTime;
+            entity.Password = input.Password;
+            entity.IsCollection = input.IsCollection;
+            entity.KeyType = input.KeyType;
             entity.HomeOwerId = input.HomeOwerId;
             entity.CommunityId = input.CommunityId;
             await _manager.UpdateAsync(entity);

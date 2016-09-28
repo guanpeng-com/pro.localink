@@ -48,5 +48,17 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         Task<HomeOwerDto> GetHomeOwer(IdInput<long> input);
 
+        /// <summary>
+        /// 获取业主状态
+        /// </summary>
+        /// <returns></returns>
+        List<NameValueDto> GetAllHomeOwerStatus();
+
+        /// <summary>
+        /// 审核业主
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task AuthHomeOwer(IdInput<long> input);
     }
 }

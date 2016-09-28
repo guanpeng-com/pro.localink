@@ -10,6 +10,8 @@ namespace DM.AbpZeroTemplate.WebApi
     {
         protected readonly HomeOwerUserManager _homeOwerUserManager;
 
+        protected HomeOwerUser User;
+
         protected AbpZeroTemplateApiControllerBase()
         {
             LocalizationSourceName = AbpZeroTemplateConsts.LocalizationSourceName;
@@ -26,7 +28,13 @@ namespace DM.AbpZeroTemplate.WebApi
             var userName = HttpContext.Current.Request["userName"];
             var token = HttpContext.Current.Request["token"];
             if (!_homeOwerUserManager.AuthUser(userName, token))
+            {
                 throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.UserAuthError);
+            }
+            else
+            {
+                User = _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefault(u => u.UserName == userName);
+            }
         }
     }
 }

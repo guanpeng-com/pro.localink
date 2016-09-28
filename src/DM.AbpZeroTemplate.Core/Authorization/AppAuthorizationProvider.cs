@@ -109,6 +109,7 @@ namespace DM.AbpZeroTemplate.Authorization
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwers_Create, L("HomeOwersCreate"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwers_Edit, L("HomeOwersEdit"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwers_Delete, L("HomeOwersDelete"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwers_AuthHomeOwer, L("AuthHomeOwer"));
 
 
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Doors, L("Doors"));

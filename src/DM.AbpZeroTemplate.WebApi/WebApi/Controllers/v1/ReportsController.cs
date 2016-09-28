@@ -101,67 +101,92 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             }
         }
 
-        ///// <summary>
-        ///// 业主添加保修单
-        ///// </summary>
-        ///// <param name="userName">用户名</param>
-        ///// <param name="token">令牌</param>
-        ///// <param name="createReportModel">post参数</param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //[UnitOfWork]
-        //[SwaggerAddFileUpload()]
-        //public async virtual Task<IHttpActionResult> CreateReport(string userName, string token, long homeOwerId, long communityId, string title, string content, int? tenantId)
-        //{
+        /// <summary>
+        /// 业主添加保修单
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <param name="createReportModel">post参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        public async virtual Task<IHttpActionResult> CreateReport(string userName, string token, [FromBody]CreateReportModel createReportModel)
+        {
+            base.AuthUser();
 
-        //    //验证是否是 multipart/form-data
-        //    if (!Request.Content.IsMimeMultipartContent())
-        //    {
-        //        throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-        //    }
+            var tenantId = createReportModel.TenantId;
+            var homeOwerId = createReportModel.HomeOwerId;
+            var communityId = createReportModel.CommunityId;
+            var title = createReportModel.Title;
+            var content = createReportModel.Content;
+            var files = createReportModel.Files;
 
-        //    //var tenantId = createReportModel.TenantId;
-        //    //var homeOwerId = createReportModel.HomeOwerId;
-        //    //var communityId = createReportModel.CommunityId;
-        //    //var title = createReportModel.Title;
-        //    //var content = createReportModel.Content;
-        //    base.AuthUser();
-        //    using (CurrentUnitOfWork.SetTenantId(tenantId))
-        //    {
-        //        var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
-        //        if (homeOwer == null)
-        //        {
-        //            throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
-        //        }
-        //        Community community = null;
-        //        App app = null;
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var report = new Report(tenantId, title, content, communityId);
+                report.HomeOwerId = homeOwerId;
+                report.FileArray = files;
+                await _reportManager.CreateAsync(report);
+                return Ok();
+            }
+        }
 
-        //        community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(communityId);
+        /// <summary>
+        /// 上传图片
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <returns>上传文件的路径</returns>
+        [HttpPost]
+        [UnitOfWork]
+        [SwaggerAddFileUpload()]
+        public async virtual Task<IHttpActionResult> UploadFiles(string userName, string token)
+        {
+            base.AuthUser();
+            //验证是否是 multipart/form-data
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+            }
 
-        //        if (app == null && community != null)
-        //        {
-        //            app = await _appManager.AppRepository.FirstOrDefaultAsync(community.AppId);
-        //        }
+            var tenantId = base.User.TenantId;
+            var homeOwerId = base.User.HomeOwerId;
+            var communityId = base.User.CommunityId;
 
-        //        List<string> fileArray = new List<string>();
-        //        var files = HttpContext.Current.Request.Files;
-        //        for (int i = 0; i < files.Count; i++)
-        //        {
-        //            var file = files[i];
-        //            var filePath = EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app);
-        //            var relateFileUrl = PathUtils.Combine(filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty), file.FileName);
-        //            DirectoryUtils.CreateDirectoryIfNotExists(filePath);
-        //            file.SaveAs(filePath);
-        //            fileArray.Add(relateFileUrl);
-        //        }
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                if (homeOwer == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                Community community = null;
+                App app = null;
 
-        //        var report = new Report(tenantId, title, content, communityId);
-        //        report.HomeOwerId = homeOwerId;
-        //        report.FileArray = fileArray;
-        //        await _reportManager.CreateAsync(report);
-        //        return Ok();
-        //    }
-        //}
+                community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(communityId.Value);
+
+                if (app == null && community != null)
+                {
+                    app = await _appManager.AppRepository.FirstOrDefaultAsync(community.AppId);
+                }
+
+                List<string> fileArray = new List<string>();
+                var files = HttpContext.Current.Request.Files;
+                for (int i = 0; i < files.Count; i++)
+                {
+                    var file = files[i];
+                    var fileName = DateTime.Now.Ticks.ToString();
+                    fileName = fileName + Path.GetExtension(file.FileName);
+                    var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), fileName);
+                    var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);
+                    DirectoryUtils.CreateDirectoryIfNotExists(filePath);
+                    file.SaveAs(filePath);
+                    fileArray.Add(relateFileUrl);
+                }
+
+                return Ok(new { BaseUrl = Request.RequestUri.Host, Files = fileArray });
+            }
+        }
 
         #region application/json
         ///// <summary>
@@ -218,37 +243,5 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         //} 
         #endregion
 
-        public class AppFileUpload
-        {
-            public AppFileUpload() { }
-
-            /// <summary>
-            /// 文件名
-            /// </summary>
-            public string FileName { get; set; }
-            /// <summary>
-            /// 文件流，比特数组 byte[]
-            /// </summary>
-            public byte[] Buffer { get; set; }
-
-            public void Save(string path, string fileName = null)
-            {
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                var NewPath = string.Empty;
-                if (string.IsNullOrEmpty(fileName))
-                    NewPath = Path.Combine(path, FileName);
-                else
-                    NewPath = Path.Combine(path, fileName);
-                if (File.Exists(NewPath))
-                {
-                    File.Delete(NewPath);
-                }
-
-                File.WriteAllBytes(NewPath, Buffer);
-            }
-        }
     }
 }

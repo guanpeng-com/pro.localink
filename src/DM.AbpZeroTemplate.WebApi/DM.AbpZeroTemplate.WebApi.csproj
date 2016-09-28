@@ -185,6 +185,7 @@
     <Compile Include="WebApi\ErrorCode.cs" />
     <Compile Include="WebApi\Controllers\v2\HomeOwersV2Controller.cs" />
     <Compile Include="WebApi\Models\Delivery\GatherDeliveryModel.cs" />
+    <Compile Include="WebApi\Models\HomeOwers\SaveUserCommunityIdModel.cs" />
     <Compile Include="WebApi\Models\HomeOwers\AuthUserValidateCodeModel.cs" />
     <Compile Include="WebApi\Models\HomeOwers\AuthUserSendCodeModel.cs" />
     <Compile Include="WebApi\Models\HomeOwers\ApplyAccessKeyModel.cs" />

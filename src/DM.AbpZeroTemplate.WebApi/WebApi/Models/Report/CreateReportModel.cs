@@ -42,7 +42,7 @@ namespace DM.AbpZeroTemplate.WebApi.Models
         /// <summary>
         /// 图片
         /// </summary>
-        //public ICollection<AppFileUpload> Files { get; set; }
+        public List<string> Files { get; set; }
 
     }
 }

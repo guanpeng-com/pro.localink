@@ -21,5 +21,21 @@ namespace DM.DoorSystem.Sdk.Clients
         /// <returns></returns>
         SMSSendResponse Send(string from, string to, string text);
 
+        /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        VerifySendResponse SendVerify(string from, string to);
+
+        /// <summary>
+        /// 验证验证码
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        VerifyResponse Verify(string requestId, string code);
+
     }
 }

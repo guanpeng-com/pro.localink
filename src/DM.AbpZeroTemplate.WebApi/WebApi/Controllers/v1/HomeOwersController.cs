@@ -85,6 +85,87 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
                 }
+                if (homeOwer.Status == EHomeOwerStatusType.Waiting)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsAuthing);
+                }
+                var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
+                            join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
+                            where a.HomeOwerId == homeOwer.Id && d.IsAuth
+                            select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name, KeyType = d.DoorType, IsAuth = a.IsAuth }
+                            ).ToList();
+
+                var result = new ArrayList();
+                list.ForEach(i =>
+                {
+                    result.Add(new
+                    {
+                        i.KeyId,
+                        i.KeyValidity,
+                        i.CommunityId,
+                        i.KeyName,
+                        KeyType = EDoorTypeUtils.GetEnum(i.KeyType),
+                        i.IsAuth
+                    });
+                });
+
+                return Ok(new
+                {
+                    AppKey = _doorSystemSdk.Params["app_key"],
+                    UserId = homeOwer.Phone,
+                    AccessKeys = result
+                });
+            }
+        }
+
+        /// <summary>
+        ///  刷新业主的钥匙
+        /// </summary>
+        /// <param name="tenantId">公司Id</param>
+        /// <param name="id">业主Id</param>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">用户令牌</param>
+        /// <returns></returns>
+        [HttpGet]
+        [UnitOfWork]
+        [Route("/{id:long}/FreshAccessKeys")]
+        public virtual async Task<IHttpActionResult> FreshAccessKeys(long id, string userName, string token, int? tenantId = null)
+        {
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == id);
+                if (homeOwer == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
+                }
+                var homeOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(hu => hu.HomeOwerId == homeOwer.Id);
+                if (homeOwerUser == null)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
+                }
+                if (homeOwer.Status == EHomeOwerStatusType.Waiting)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsAuthing);
+                }
+                //获取业主门禁，判断是否已经添加钥匙，是否已经认证
+                var doorIds = from d in homeOwer.Doors
+                              select d.DoorId;
+                foreach (var doorId in doorIds)
+                {
+                    var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(doorId);
+                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.DoorId == doorId && k.HomeOwerId == homeOwer.Id);
+                    if (key == null)
+                    {
+                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), doorId, homeOwer.Id, DateTime.Now.AddYears(50), homeOwer.CommunityId);
+                        await _accessKeyManager.CreateAsync(key);
+                        key.GetKey(door.PId, homeOwer.Phone, key.Validity);
+                    }
+                    else if (!key.IsAuth)
+                    {
+                        key.GetKey(door.PId, homeOwer.Phone, key.Validity);
+                    }
+                }
 
                 var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
                             join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
@@ -206,10 +287,17 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         [Route("/RegisterUserToHomeOwer")]
         public async virtual Task<IHttpActionResult> RegisterUserToHomeOwer(string userName, string token)
         {
-            var homeOwerUser = new HomeOwerUser(userName, token);
-
-            await _homeOwerUserManager.CreateAsync(homeOwerUser);
-
+            var homeOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(h => h.UserName == userName);
+            if (homeOwerUser == null)
+            {
+                homeOwerUser = new HomeOwerUser(userName, token);
+                await _homeOwerUserManager.CreateAsync(homeOwerUser);
+            }
+            else
+            {
+                homeOwerUser.Token = token;
+                await _homeOwerUserManager.UpdateAsync(homeOwerUser);
+            }
             return Ok();
         }
 
@@ -224,18 +312,41 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         [HttpPost]
         [UnitOfWork]
         [Route("/SendValidateCode")]
-        public async virtual Task<IHttpActionResult> SendValidateCode(string from, string countryCode, string to)
+        public virtual IHttpActionResult SendValidateCode(string from, string countryCode, string to)
         {
             SMSClient smsClient = new SMSClient();
-            var code = smsClient.ValidateCode();
-            var response = smsClient.Send(from, countryCode + to, L("SMSValidateCode", code));
-            if (response.SMSSends.Count > 0 && response.SMSSends[0].Stuats == "0")
+            var response = smsClient.SendVerify(from, countryCode + to);
+            if (response.Status == "0")
             {
-                return Ok(new { code = code });
+                return Ok(new { requestId = response.RequestId });
             }
             else
             {
-                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.SMSSends[0].ErrorText);
+                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.ErrorText);
+            }
+        }
+
+        /// <summary>
+        /// 验证验证码
+        /// </summary>
+        /// <param name="requestId">requestId</param>
+        /// <param name="code">验证码</param>
+        /// <returns></returns>
+        [SecretVersionedRoute]
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/ValidateCode")]
+        public virtual IHttpActionResult ValidateCode(string requestId, string code)
+        {
+            SMSClient smsClient = new SMSClient();
+            var response = smsClient.Verify(requestId, code);
+            if (response.Status == "0")
+            {
+                return Ok();
+            }
+            else
+            {
+                throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.ErrorText);
             }
         }
 
@@ -267,7 +378,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
-                if (homeOwerUser.HomeOwerId != 0)
+                if (homeOwerUser.IsAuth)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsExists);
                 }
@@ -275,18 +386,17 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 {
                     //发送验证码
                     SMSClient smsClient = new SMSClient();
-                    var code = smsClient.ValidateCode();
                     var phoneCountryCode = await SettingManager.GetSettingValueAsync(AppSettings.UserManagement.PhoneCountryCode);
-                    var response = smsClient.Send("Localink", phoneCountryCode + homeOwer.Phone, L("SMSValidateCode", code));
-                    if (response.SMSSends.Count > 0 && response.SMSSends[0].Stuats == "0")
+                    var response = smsClient.SendVerify("Localink", phoneCountryCode + homeOwer.Phone);
+                    if (response.Status == "0")
                     {
-                        homeOwer.ValidateCode = code;
+                        homeOwer.ValidateCode = response.RequestId;
                         await _homeOwerManager.UpdateAsync(homeOwer);
                         return Ok();
                     }
                     else
                     {
-                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.SMSSends[0].ErrorText);
+                        throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.SMSSendCodeError, response.ErrorText);
                     }
                 }
             }
@@ -324,11 +434,14 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 else
                 {
                     //验证验证码是否正确
-                    if (!string.IsNullOrEmpty(homeOwer.ValidateCode) && code == homeOwer.ValidateCode)
+                    SMSClient smsClient = new SMSClient();
+                    var response = smsClient.Verify(homeOwer.ValidateCode, code);
+                    if (response.Status == "0")
                     {
                         homeOwerUser.HomeOwerId = homeOwer.Id;
                         homeOwerUser.TenantId = tenantId;
                         homeOwer.ValidateCode = string.Empty;
+                        homeOwer.Status = EHomeOwerStatusType.Waiting;
                         await _homeOwerUserManager.UpdateAsync(homeOwerUser);
                         await _homeOwerManager.UpdateAsync(homeOwer);
 
@@ -340,6 +453,50 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 保存用户绑定的小区ID
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <param name="saveUserCommunityIdModel">post参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [UnitOfWork]
+        [Route("/SaveUserCommunityId")]
+        public async virtual Task<IHttpActionResult> SaveUserCommunityId(string userName, string token, [FromBody]SaveUserCommunityIdModel saveUserCommunityIdModel)
+        {
+            var tenantId = saveUserCommunityIdModel.TenantId;
+            var communityId = saveUserCommunityIdModel.CommunityId;
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(tenantId))
+            {
+                base.User.CommunityId = communityId;
+                await _homeOwerUserManager.UpdateAsync(base.User);
+                return Ok();
+            }
+        }
+
+        /// <summary>
+        /// 登录之后，获取用户信息
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="token">令牌</param>
+        /// <returns></returns>
+        [HttpGet]
+        [UnitOfWork]
+        [Route("/GetUserInfo")]
+        public virtual IHttpActionResult GetUserInfo(string userName, string token)
+        {
+            base.AuthUser();
+            using (CurrentUnitOfWork.SetTenantId(base.User.TenantId))
+            {
+                var communityId = base.User.CommunityId.HasValue ? base.User.CommunityId.Value : 0;
+                var community = _communityManager.CommunityRepository.FirstOrDefault(c => c.Id == communityId);
+                return Ok(new { base.User.UserName, base.User.TenantId, base.User.CommunityId, base.User.IsAuth, base.User.HomeOwerId, CommunityName = community != null ? community.Name : string.Empty });
+            }
+
         }
     }
 }

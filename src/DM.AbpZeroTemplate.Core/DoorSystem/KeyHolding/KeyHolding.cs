@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,13 +19,14 @@ namespace DM.AbpZeroTemplate.DoorSystem
             IsCollection = false;
         }
 
-        public KeyHolding(int? tenantId, string visitorName, DateTime visiteStartTime, DateTime visiteEndTime, string password, long homeOwerId, long communityId)
+        public KeyHolding(int? tenantId, string visitorName, DateTime visiteStartTime, DateTime visiteEndTime, string password, EDoorType keyType, long homeOwerId, long communityId)
         {
             TenantId = tenantId;
             VisitorName = visitorName;
             VisiteStartTime = visiteStartTime;
             VisiteEndTime = visiteEndTime;
             Password = password;
+            KeyType = keyType;
             CommunityId = communityId;
             HomeOwerId = homeOwerId;
             IsCollection = false;
@@ -75,6 +77,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 业主ID
         /// </summary>
         public virtual long HomeOwerId { get; set; }
+
+        /// <summary>
+        /// 钥匙类型
+        /// </summary>
+        public virtual EDoorType KeyType { get; set; }
 
         [ForeignKey("HomeOwerId")]
         public virtual HomeOwer HomeOwer { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public bool IsCollection;
 
         public string Password;
+
+        public EDoorType KeyType;
 
         public long HomeOwerId;
 

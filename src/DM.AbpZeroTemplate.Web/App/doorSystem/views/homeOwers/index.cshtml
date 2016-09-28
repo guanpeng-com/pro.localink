@@ -1,7 +1,7 @@
 ﻿@using DM.AbpZeroTemplate.Localization
 <div ng-controller="doorSystem.views.homeOwers.index as vm">
     <div class="row margin-bottom-5">
-        <div class="col-xs-12">
+        <div class="col-xs-6">
             <div class="page-head">
                 <div class="page-title">
                     <h1>
@@ -11,24 +11,49 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="portlet light">
-                <div class="portlet-title">
-                    <div class="caption">
+
+    <div class="portlet light">
+        <div class="portlet-body">
+            <div class="form">
+                <form class="horizontal-form">
+                    <div class="form-body" enter-key="vm.homeOwers.load()">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">@L("HomeOwerName")</label>
+                                    <input type="text" class="form-control" name="HomeOwerName" ng-model="vm.requestParams.homeOwerName" />
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">@L("HomeOwerStatus")</label>
+                                    <select id="statusSelectedCombox"
+                                            class="form-control"
+                                            ng-class="{'edited':vm.requestParams.homeOwerStatus}"
+                                            name="Status"
+                                            ng-model="vm.requestParams.homeOwerStatus"
+                                            ng-options="status.value as status.name for status in vm.homeOwerStatus">
+                                        <option value="">全部</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="actions">
-                        <a ng-if="vm.permissions.createHomeOwers" ng-click="vm.homeOwers.addHomeOwer()" class="btn btn-circle btn-default">
-                            <i class="fa fa-plus"></i> @L("AddHomeOwer")
-                        </a>
+
+                    <div class="row margin-bottom-10">
+                        <div class="col-sm-12 text-right">
+                            <button class="btn btn-default" ng-click="vm.homeOwers.load()"><i class=" fa fa-refresh"></i> @L("Refresh")</button>
+                            <button ng-if="vm.permissions.createHomeOwers" ng-click="vm.homeOwers.addHomeOwer()" class="btn btn-primary"><i class=" fa fa-create"></i> @L("AddHomeOwer")</button>
+                        </div>
                     </div>
-                </div>
-                <div class="portlet-body">
-                    <div ng-if="vm.homeOwers.gridOptions.data" ui-grid="vm.homeOwers.gridOptions" ui-grid-pagination ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
-                    <div ng-if="!vm.homeOwers.gridOptions.data" class="text-muted">
-                        @L("NoTenantSelected")
-                    </div>
-                </div>
+
+                </form>
+            </div>
+            <div ng-if="vm.homeOwers.gridOptions.data" ui-grid="vm.homeOwers.gridOptions" ui-grid-pagination ui-grid-resize-columns dir=@(CultureHelper.IsRtl ? "rtl" : "")></div>
+            <div ng-if="!vm.homeOwers.gridOptions.data" class="text-muted">
+                @L("NoTenantSelected")
             </div>
         </div>
     </div>

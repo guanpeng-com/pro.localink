@@ -561,6 +561,7 @@
     <text name="CreatedAccessKeyIsExists" value="AccessKey is exists."/>
     <text name="CreatedAccessKeyIsExistsButIsNotAuth" value="AccessKey has been applyed, but it is Not Auth, please be patient."/>
     <text name="HomeOwerDoorNotExists" value="HomeOwner dont has this door."/>
+    <text name="HomeOwerUserIsAuthing" value="HomeOwner is auditing, please wait patiently."/>
     <!--DoorSystem End-->
     
     

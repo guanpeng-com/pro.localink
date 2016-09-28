@@ -141,6 +141,18 @@
     <Compile Include="Migrations\201609031231403_Added_IsCollection_To_Keyholding.Designer.cs">
       <DependentUpon>201609031231403_Added_IsCollection_To_Keyholding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609041414495_Added_KeyType_To_KeyHolding.cs" />
+    <Compile Include="Migrations\201609041414495_Added_KeyType_To_KeyHolding.Designer.cs">
+      <DependentUpon>201609041414495_Added_KeyType_To_KeyHolding.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609091022352_Added_Status_TO_HomeOwer.cs" />
+    <Compile Include="Migrations\201609091022352_Added_Status_TO_HomeOwer.Designer.cs">
+      <DependentUpon>201609091022352_Added_Status_TO_HomeOwer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609111545486_Added_AuthDate_TO_HomeOwer.cs" />
+    <Compile Include="Migrations\201609111545486_Added_AuthDate_TO_HomeOwer.Designer.cs">
+      <DependentUpon>201609111545486_Added_AuthDate_TO_HomeOwer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -181,6 +193,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609031231403_Added_IsCollection_To_Keyholding.resx">
       <DependentUpon>201609031231403_Added_IsCollection_To_Keyholding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609041414495_Added_KeyType_To_KeyHolding.resx">
+      <DependentUpon>201609041414495_Added_KeyType_To_KeyHolding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609091022352_Added_Status_TO_HomeOwer.resx">
+      <DependentUpon>201609091022352_Added_Status_TO_HomeOwer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609111545486_Added_AuthDate_TO_HomeOwer.resx">
+      <DependentUpon>201609111545486_Added_AuthDate_TO_HomeOwer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

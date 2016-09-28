@@ -42,6 +42,11 @@ namespace DM.AbpZeroTemplate.WebApi.Models
         public DateTime VisiteEndTime { get; set; }
 
         /// <summary>
+        /// 钥匙类型
+        /// </summary>
+        public List<EDoorType> KeyTypes { get; set; }
+
+        /// <summary>
         /// 到访令牌
         /// </summary>
         public string Password { get; set; }

@@ -16,9 +16,9 @@ namespace DM.DoorSystem.Sdk
     {
         public ISdk sdk;
 
-        public HttpWebRequest GetRequest(string path, string method)
+        public HttpWebRequest GetRequest(string path, string method, string apiBaseUrl = null)
         {
-            var request = (HttpWebRequest)WebRequest.Create(sdk.GetApiBaseUrl() + path);
+            var request = (HttpWebRequest)WebRequest.Create((string.IsNullOrEmpty(apiBaseUrl) ? sdk.GetApiBaseUrl() : apiBaseUrl) + path);
 
             request.UserAgent = "DoorSystem C# SDK version" + sdk.Version;
             request.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
@@ -29,7 +29,7 @@ namespace DM.DoorSystem.Sdk
             return request;
         }
 
-        public string DoRequest(string path, string method, Dictionary<string, object> param = null)
+        public string DoRequest(string path, string method, Dictionary<string, object> param = null, string apiBaseUrl = null)
         {
             foreach (string item in sdk.Params.Keys)
             {
@@ -48,7 +48,7 @@ namespace DM.DoorSystem.Sdk
                 {
                     case "GET":
                     case "DELETE":
-                        req = GetRequest(path, method);
+                        req = GetRequest(path, method, apiBaseUrl);
                         using (res = req.GetResponse() as HttpWebResponse)
                         {
                             return res == null ? null : ReadStream(res.GetResponseStream());
@@ -71,7 +71,7 @@ namespace DM.DoorSystem.Sdk
                         //var body = JsonConvert.SerializeObject(param, Formatting.Indented);
                         var body = CreateQuery(param, false);
 
-                        req = GetRequest(path, method);
+                        req = GetRequest(path, method, apiBaseUrl);
                         using (var streamWriter = new StreamWriter(req.GetRequestStream()))
                         {
                             streamWriter.Write(body);
