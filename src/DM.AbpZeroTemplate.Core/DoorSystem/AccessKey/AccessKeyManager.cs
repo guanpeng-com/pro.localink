@@ -50,11 +50,12 @@ namespace DM.AbpZeroTemplate.DoorSystem
             }
             else if (existsKey != null && !existsKey.IsAuth)
             {
-                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExistsButIsNotAuth"));
+                //返回错误信息
+                throw new UserFriendlyException("10", L("CreatedAccessKeyIsExistsButIsNotAuth"));
             }
             else if (existsKey != null && existsKey.IsAuth)
             {
-                throw new UserFriendlyException("CreateError", L("CreatedAccessKeyIsExists"));
+                throw new UserFriendlyException("11", L("CreatedAccessKeyIsExists"));
             }
             return null;
         }

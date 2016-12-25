@@ -30,6 +30,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
             var entity = new Delivery(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, homeOwer.CommunityId);
+            if (!string.IsNullOrEmpty(input.Content))
+            {
+                entity.Content = input.Content;
+            }
             await _manager.CreateAsync(entity);
         }
 
@@ -66,7 +70,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 query = query.Where(d => d.HomeOwer.Name.Contains(input.HomeOwerName));
             }
             var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
+            var items = await query.OrderByDescending(d => d.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<DeliveryDto>(
                 totalCount,
                 items.Select(
@@ -85,6 +89,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             var entity = await _manager.DeliveryRepository.GetAsync(input.Id);
             entity.HomeOwerId = input.HomeOwerId;
+            entity.Content = input.Content;
             await _manager.UpdateAsync(entity);
         }
 

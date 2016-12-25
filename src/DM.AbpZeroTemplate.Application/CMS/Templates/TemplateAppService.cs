@@ -81,7 +81,7 @@ namespace DM.AbpZeroTemplate.CMS.Templates
                             orderby input.Sorting
                             select new { t, a };
                 var totalCount = await query.CountAsync();
-                var items = await query.PageBy(input).ToListAsync();
+                var items = await query.OrderByDescending(t => t.t.CreationTime).PageBy(input).ToListAsync();
                 return new PagedResultOutput<GetAppTemplateDto>(
                     totalCount,
                     items.Select(

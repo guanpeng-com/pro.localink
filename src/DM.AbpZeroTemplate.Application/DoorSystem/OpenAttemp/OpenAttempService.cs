@@ -55,7 +55,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var query = _manager.FindOpenAttempList(input.Sorting);
 
                     var totalCount = await query.CountAsync();
-                    var items = await query.PageBy(input).ToListAsync();
+                    var items = await query.OrderByDescending(o => o.CreationTime).PageBy(input).ToListAsync();
                     return new PagedResultOutput<OpenAttempDto>(
                         totalCount,
                         items.Select(

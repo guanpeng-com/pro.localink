@@ -7,5 +7,7 @@ namespace DM.AbpZeroTemplate.Sessions
     public interface ISessionAppService : IApplicationService
     {
         Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations();
+
+        Task SaveCurrentAppId(int communityId);
     }
 }

@@ -10,6 +10,7 @@ using Abp.Linq.Extensions;
 
 using AutoMapper;
 using DM.AbpZeroTemplate.DoorSystem.Community;
+using System;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -67,17 +68,36 @@ namespace DM.AbpZeroTemplate.DoorSystem
             }
 
             var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
+            var items = await query.OrderByDescending(k => k.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<KeyHoldingDto>(
                 totalCount,
                 items.Select(
                         item =>
                         {
                             var dto = item.MapTo<KeyHoldingDto>();
+                            dto.CollectionTimeString = ProcessCollectionTime(dto.CollectionTime, dto.VisiteEndTime);
+                            var community = _communityManager.CommunityRepository.Get(dto.CommunityId);
+                            dto.CommunityName = community.Name;
                             return dto;
                         }
                     ).ToList()
                 );
+        }
+
+        private string ProcessCollectionTime(DateTime? collectionTime, DateTime end)
+        {
+            if (collectionTime.HasValue)
+            {
+                return collectionTime.Value.ToString();
+            }
+            else if (DateTime.Now > end)
+            {
+                return "Timeout";
+            }
+            else
+            {
+                return "N/A";
+            }
         }
 
         public async Task UpdateKeyHolding(UpdateKeyHoldingInput input)
@@ -92,6 +112,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             entity.KeyType = input.KeyType;
             entity.HomeOwerId = input.HomeOwerId;
             entity.CommunityId = input.CommunityId;
+            entity.IsCollection = input.IsCollection;
             await _manager.UpdateAsync(entity);
         }
 
@@ -103,6 +124,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             dto.HomeOwerName = entity.HomeOwer.Name;
             var community = await _communityManager.CommunityRepository.GetAsync(entity.CommunityId);
             dto.CommunityName = community.Name;
+            dto.CollectionTimeString = ProcessCollectionTime(dto.CollectionTime, dto.VisiteEndTime);
             return dto;
         }
 

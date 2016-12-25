@@ -53,7 +53,15 @@ namespace DM.AbpZeroTemplate.WebApi
         /// <summary>
         /// 业主正在审核中，请耐心等待
         /// </summary>
-        HomeOwerUserIsAuthing = 10
+        HomeOwerUserIsAuthing = 10,
+        /// <summary>
+        /// 业主正在审核中，请耐心等待
+        /// </summary>
+        CreatedAccessKeyIsExistsButIsNotAuth = 11,
+        /// <summary>
+        /// 业主正在审核中，请耐心等待
+        /// </summary>
+        CreatedAccessKeyIsExists = 12
 
     }
 
@@ -104,6 +112,14 @@ namespace DM.AbpZeroTemplate.WebApi
             else if (type == ErrorCodeType.HomeOwerUserIsAuthing)
             {
                 return new UserFriendlyException((int)ErrorCodeType.HomeOwerUserIsAuthing, L(ErrorCodeType.HomeOwerUserIsAuthing.ToString()), details);
+            }
+            else if (type == ErrorCodeType.CreatedAccessKeyIsExistsButIsNotAuth)
+            {
+                return new UserFriendlyException((int)ErrorCodeType.CreatedAccessKeyIsExistsButIsNotAuth, L(ErrorCodeType.CreatedAccessKeyIsExistsButIsNotAuth.ToString()), details);
+            }
+            else if (type == ErrorCodeType.CreatedAccessKeyIsExists)
+            {
+                return new UserFriendlyException((int)ErrorCodeType.CreatedAccessKeyIsExists, L(ErrorCodeType.CreatedAccessKeyIsExists.ToString()), details);
             }
             else
             {

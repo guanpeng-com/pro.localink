@@ -50,7 +50,7 @@
 
         <div class="modal-body">
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
-                <input  auto-focus datetimepicker options="{minView:'day', 'format':'yyyy-mm-dd hh:mm:ss'}" class="form-control date-picker" type="text" name="VisiteStartTime" ng-class="{'edited':vm.keyHolding.visiteStartTime}" ng-model="vm.keyHolding.visiteStartTime" required />
+                <input auto-focus datetimepicker options="{minView:'day', 'format':'yyyy-mm-dd hh:mm:ss'}" class="form-control date-picker" type="text" name="VisiteStartTime" ng-class="{'edited':vm.keyHolding.visiteStartTime}" ng-model="vm.keyHolding.visiteStartTime" required />
                 <label>@L("KeyHoldingVisiteStartTime")</label>
             </div>
         </div>
@@ -59,6 +59,15 @@
             <div class="form-group form-md-line-input form-md-floating-label no-hint">
                 <input auto-focus datetimepicker options="{minView:'day', 'format':'yyyy-mm-dd hh:mm:ss'}" class="form-control date-picker" type="text" name="VisiteEndTime" ng-class="{'edited':vm.keyHolding.visiteEndTime}" ng-model="vm.keyHolding.visiteEndTime" required />
                 <label>@L("KeyHoldingVisiteEndTime")</label>
+            </div>
+        </div>
+
+
+        <div class="modal-body" ng-if="vm.keyHolding.id">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <label>@L("IsCollection")</label>
+                <select id="IsCollection" name="IsCollection" ng-model="vm.keyHolding.isCollection" class="form-control"
+                        ng-options="o.v as o.t for o in [{v:true,t:'@L("True")'},{v:false,t:'@L("False")'}]"></select>
             </div>
         </div>
 

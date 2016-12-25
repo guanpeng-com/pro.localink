@@ -1,11 +1,22 @@
 ﻿(function () {
-    appModule.controller('doorSystem.views.communities.createOrEditCommunityModal', ['$scope', '$uibModalInstance', 'abp.services.app.community', 'community', 'appSession', 'abp.services.app.door', 'selectAreaModal', 'gmapModal',
-    function ($scope, $uibModalInstance, communityService, community, $appSession, doorService, selectAreaModal, gmapModal) {
+    appModule.controller('doorSystem.views.communities.createOrEditCommunityModal', ['$scope', '$uibModalInstance', 'abp.services.app.community', 'community', 'appSession', 'abp.services.app.door', 'selectAreaModal', 'gmapModal', 'fileUploadModal',
+    function ($scope, $uibModalInstance, communityService, community, $appSession, doorService, selectAreaModal, gmapModal, fileUploadModal) {
         var vm = this;
         vm.community = community;
         vm.saving = false;
 
         vm.doorTypes = [];
+
+        vm.fileUpload = function () {
+            fileUploadModal.open({
+                communityId: vm.community.id,
+                homeOwerId: 0,
+                callback: function (result) {
+
+                    vm.community.images = result;
+                }
+            });
+        };
 
         vm.save = function () {
 

@@ -46,7 +46,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var query = _manager.FindHomeOwerUserList(input.Sorting);
                     query.Include("HomeOwer");
                     var totalCount = await query.CountAsync();
-                    var items = await query.PageBy(input).ToListAsync();
+                    var items = await query.OrderByDescending(h => h.CreationTime).PageBy(input).ToListAsync();
                     return new PagedResultOutput<HomeOwerUserDto>(
                         totalCount,
                         items.Select(

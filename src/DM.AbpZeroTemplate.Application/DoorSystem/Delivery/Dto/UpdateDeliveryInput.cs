@@ -15,5 +15,6 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public long HomeOwerId;
 
+        public string Content;
     }
 }

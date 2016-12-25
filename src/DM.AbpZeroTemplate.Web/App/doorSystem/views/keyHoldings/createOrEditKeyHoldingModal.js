@@ -54,9 +54,16 @@
             if (vm.keyHolding.id) {
                 keyHoldingService.getKeyHolding({ id: vm.keyHolding.id })
                 .success(function (result) {
+                    
+                    result.visiteStartTime = formatTime(result.visiteStartTime);
+                    result.visiteEndTime = formatTime(result.visiteEndTime);
                     vm.keyHolding = result;
                 });
             }
+        }
+
+        function formatTime(time) {
+            return time.replace("T", " ").split("+")[0];
         }
 
         init();

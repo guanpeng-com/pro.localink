@@ -98,6 +98,7 @@
         public const string Pages_DoorSystem_Communities_Edit = "Pages.DoorSystem.Communities.Edit";
         public const string Pages_DoorSystem_Communities_Delete = "Pages.DoorSystem.Communities.Delete";
         public const string Pages_DoorSystem_Communities_Auth = "Pages.DoorSystem.Communities.Auth";
+        public const string Pages_DoorSystem_Communities_ManageCms = "Pages.DoorSystem.Communities.ManageCms";
 
         public const string Pages_DoorSystem_HomeOwers = "Pages.DoorSystem.HomeOwers";
         public const string Pages_DoorSystem_HomeOwers_Create = "Pages.DoorSystem.HomeOwers.Create";

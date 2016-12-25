@@ -79,7 +79,7 @@ namespace DM.AbpZeroTemplate.CMS.Contents
                         orderby input.Sorting
                         select new { con, ch, a };
             var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
+            var items = await query.OrderByDescending(g => g.con.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<GetChannelGoodDto>(
                 totalCount,
                 items.Select(

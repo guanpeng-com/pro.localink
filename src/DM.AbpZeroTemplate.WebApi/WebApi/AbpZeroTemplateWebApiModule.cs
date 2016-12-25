@@ -55,7 +55,11 @@ namespace DM.AbpZeroTemplate.WebApi
 
             //设置上传multipart/form-data
             Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.Add(new UploadMultipartMediaTypeFormatter<FileUploadInput>());
-            Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
+            //Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
+
+            //cors
+            //var corsAttr = new EnableCorsAttribute("*", "*", "*");
+            //Configuration.EnableCors(corsAttr);
 
         }
 
@@ -84,6 +88,7 @@ namespace DM.AbpZeroTemplate.WebApi
                     vc.Version("v2", "DM.AbpZeroTemplate.WebApi V2");
                     vc.Version("v1", "DM.AbpZeroTemplate.WebApi V1");
                     vc.Version("secret", "Localink Internal Api");
+                    vc.Version("manage", "Localink Manage Api");
                 });
 
                     //添加说明文档
@@ -93,6 +98,7 @@ namespace DM.AbpZeroTemplate.WebApi
 
                     //添加过滤
                     c.OperationFilter<AddFileUploadFilter>();
+
 
                     //web api key
                     c.ApiKey("apiKey")
@@ -108,7 +114,14 @@ namespace DM.AbpZeroTemplate.WebApi
             var attr = apiDesc.ActionDescriptor.ControllerDescriptor.GetCustomAttributes<VersionedRoute>().FirstOrDefault();
             if (attr == null)
             {
-                return false;
+                if (targetApiVersion == "manage")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
 

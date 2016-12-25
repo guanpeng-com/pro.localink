@@ -20,6 +20,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// <returns></returns>
         Task<PagedResultOutput<CommunityDto>> GetCommunities(GetCommunitiesInput input);
 
+        Task ReCreateCMS(IdInput<long> input);
+
         /// <summary>
         /// 创建小区
         /// </summary>

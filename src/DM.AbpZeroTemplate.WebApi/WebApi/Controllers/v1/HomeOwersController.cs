@@ -158,7 +158,23 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     if (key == null)
                     {
                         key = new AccessKey(CurrentUnitOfWork.GetTenantId(), doorId, homeOwer.Id, DateTime.Now.AddYears(50), homeOwer.CommunityId);
-                        await _accessKeyManager.CreateAsync(key);
+
+                        try
+                        {
+                            await _accessKeyManager.CreateAsync(key);
+
+                        }
+                        catch (UserFriendlyException ex)
+                        {
+                            if (ex.Message == "10")
+                            {
+                                ErrorCodeTypeUtils.ThrowError(ErrorCodeType.CreatedAccessKeyIsExistsButIsNotAuth);
+                            }
+                            else if (ex.Message == "11")
+                            {
+                                ErrorCodeTypeUtils.ThrowError(ErrorCodeType.CreatedAccessKeyIsExists);
+                            }
+                        }
                         key.GetKey(door.PId, homeOwer.Phone, key.Validity);
                     }
                     else if (!key.IsAuth)
@@ -370,15 +386,15 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             {
                 var homeOwerUser = await _homeOwerUserManager.GetHomeOwerUserByUserName(userName);
                 var homeOwer = await _homeOwerManager.GetHomeOwerByNameAndPhoneAndCommunityId(communityId, phone);
-                if (homeOwerUser == null)
-                {
-                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
-                }
+                //if (homeOwerUser == null)
+                //{
+                //    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserNotExists);
+                //}
                 if (homeOwer == null)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
-                if (homeOwerUser.IsAuth)
+                if (homeOwer.Status == EHomeOwerStatusType.Done)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsExists);
                 }
@@ -431,6 +447,10 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);
                 }
+                else if (homeOwer.Status == EHomeOwerStatusType.Done)
+                {
+                    throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsExists);
+                }
                 else
                 {
                     //验证验证码是否正确
@@ -439,6 +459,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     if (response.Status == "0")
                     {
                         homeOwerUser.HomeOwerId = homeOwer.Id;
+                        homeOwerUser.CommunityId = homeOwer.CommunityId;
                         homeOwerUser.TenantId = tenantId;
                         homeOwer.ValidateCode = string.Empty;
                         homeOwer.Status = EHomeOwerStatusType.Waiting;
@@ -473,6 +494,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
                 base.User.CommunityId = communityId;
+                base.User.TenantId = tenantId;
                 await _homeOwerUserManager.UpdateAsync(base.User);
                 return Ok();
             }
@@ -494,7 +516,19 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             {
                 var communityId = base.User.CommunityId.HasValue ? base.User.CommunityId.Value : 0;
                 var community = _communityManager.CommunityRepository.FirstOrDefault(c => c.Id == communityId);
-                return Ok(new { base.User.UserName, base.User.TenantId, base.User.CommunityId, base.User.IsAuth, base.User.HomeOwerId, CommunityName = community != null ? community.Name : string.Empty });
+                var homeOwerId = base.User.HomeOwerId.HasValue ? base.User.HomeOwerId : 0;
+                var homeOwer = _homeOwerManager.HomeOwerRepository.FirstOrDefault(h => h.Id == homeOwerId && h.CommunityId == communityId);
+                return Ok(new
+                {
+                    base.User.UserName,
+                    base.User.TenantId,
+                    base.User.CommunityId,
+                    IsAuth = homeOwer != null ? homeOwer.Status == EHomeOwerStatusType.Done : false,
+                    base.User.HomeOwerId,
+                    CommunityName = community != null ? community.Name : string.Empty,
+                    CommunityAddress = community != null ? community.Address : string.Empty,
+                    communityImages = community != null ? community.Images : string.Empty
+                });
             }
 
         }

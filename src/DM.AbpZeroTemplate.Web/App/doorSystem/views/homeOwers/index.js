@@ -52,7 +52,7 @@
                                 '      <li><a ng-if="grid.appScope.permissions.editHomeOwers" ng-click="grid.appScope.homeOwers.editHomeOwer(row.entity)">' + app.localize('Edit') + '</a></li>' +
                                 '      <li><a ng-if="grid.appScope.permissions.deleteHomeOwers" ng-click="grid.appScope.homeOwers.remove(row.entity)" >' + app.localize('Delete') + '</a></li>' +
                                 '      <li><a ng-click="grid.appScope.homeOwers.showDetails(row.entity)">' + app.localize('Detail') + '</a></li>' +
-                                '      <li><a ng-if="grid.appScope.permissions.createAccessKey" ng-click="grid.appScope.homeOwers.applyKey(row.entity)">' + app.localize('ApplyKey') + '</a></li>' +
+                                //'      <li><a ng-if="grid.appScope.permissions.createAccessKey" ng-click="grid.appScope.homeOwers.applyKey(row.entity)">' + app.localize('ApplyKey') + '</a></li>' +
                                 '      <li><a ng-if="grid.appScope.permissions.authHomeOwer" ng-click="grid.appScope.homeOwers.authHomeOwer(row.entity)">' + app.localize('AuthAndApplyKey') + '</a></li>' +
                                 '    </ul>' +
                                 '  </div>' +

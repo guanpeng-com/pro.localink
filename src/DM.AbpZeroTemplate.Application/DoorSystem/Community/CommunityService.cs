@@ -41,10 +41,19 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
 
         public async Task CreateCommunity(CreateCommunityInput input)
         {
-            var lat = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[0]);
-            var lng = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+
+            double lat = 0;
+            double lng = 0;
+            if (!string.IsNullOrEmpty(input.LatLng))
+            {
+                lat = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                lng = double.Parse(input.LatLng.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+            }
+
             var community = new Community(CurrentUnitOfWork.GetTenantId(), input.Name, input.Address, lat, lng);
             community.DoorTypes = String.Join(",", input.DoorTypes);
+            community.Images = String.Join(",", input.Images);
+
             await _communityManager.CreateAsync(community);
             CurrentUnitOfWork.SaveChanges();
 
@@ -74,6 +83,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             }
         }
 
+        public async Task ReCreateCMS(IdInput<long> input)
+        {
+            await _communityManager.ReCreateCMSAsync(input.Id);
+        }
+
         public async Task DeleteCommunity(IdInput<long> input)
         {
             await _communityManager.DeleteAsync(input.Id);
@@ -89,7 +103,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             }
 
             var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
+            var items = await query.OrderByDescending(c => c.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<CommunityDto>(
                 totalCount,
                 items.Select(
@@ -110,6 +124,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             community.Name = input.Name;
             community.Address = input.Address;
             community.DoorTypes = String.Join(",", input.DoorTypes);
+            community.Images = string.Join(",", input.Images);
             community.Lat = lat;
             community.Lng = lng;
             await _communityManager.UpdateAsync(community);
@@ -141,12 +156,14 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
                 list = await (from c in _communityManager.CommunityRepository.GetAll()
                               where allowIds.Contains(c.Id)
                               select c)
+                              .OrderByDescending(c => c.CreationTime)
                                 .ToListAsync();
             }
             else
             {
                 list = await (from c in _communityManager.CommunityRepository.GetAll()
                               select c)
+                              .OrderByDescending(c => c.CreationTime)
                              .ToListAsync();
             }
 

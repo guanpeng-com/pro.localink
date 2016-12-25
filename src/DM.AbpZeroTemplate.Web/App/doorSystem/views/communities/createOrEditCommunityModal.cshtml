@@ -29,6 +29,14 @@
                 <label>@L("CommunityLatLng")</label>
             </div>
         </div>
+
+        <div class="modal-body">
+            <div class="form-group form-md-line-input form-md-floating-label no-hint">
+                <input auto-focus class="form-control" type="text" name="Files" ng-class="{'edited':vm.community.images}" ng-model="vm.community.images" maxlength="@Community.MaxImagesStringLength" ng-click="vm.fileUpload()" />
+                <label>@L("CommunityImages")</label>
+            </div>
+        </div>
+
         <div class="modal-body">
             <label>@L("DoorType")</label>
             <div class="md-checkbox-list" ng-repeat="type in vm.doorTypes">

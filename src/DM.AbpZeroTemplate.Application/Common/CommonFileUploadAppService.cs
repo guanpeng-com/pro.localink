@@ -80,7 +80,8 @@ namespace DM.AbpZeroTemplate.Common
                 else if (input.Value.HomeOwerId.HasValue)
                 {
                     var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.Value.HomeOwerId.Value);
-                    community = homeOwer.Community;
+                    if (homeOwer != null)
+                        community = homeOwer.Community;
                 }
                 if (app == null && community != null)
                 {

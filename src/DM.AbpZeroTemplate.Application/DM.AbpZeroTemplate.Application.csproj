@@ -185,6 +185,7 @@
     <Compile Include="CMS\Channels\Dto\CreateChannelInput.cs" />
     <Compile Include="CMS\Channels\Dto\ChannelDto.cs" />
     <Compile Include="CMS\Channels\IChannelAppService.cs" />
+    <Compile Include="CMS\Contents\Content\Dto\GetContentsInput.cs" />
     <Compile Include="CMS\Contents\Good\Dto\GoodDto.cs" />
     <Compile Include="CMS\Contents\Good\Dto\CreateGoodInput.cs" />
     <Compile Include="CMS\Contents\Good\Dto\GetChannelGoodDto.cs" />

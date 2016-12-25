@@ -110,8 +110,8 @@
                         },
                        {
                            name: app.localize('CollectionTime'),
-                           field: 'collectionTime',
-                           cellFilter: 'momentFormat: \'YYYY-MM-DD HH:mm:ss\'',
+                           field: 'collectionTimeString',
+                           //cellFilter: 'momentFormat: \'YYYY-MM-DD HH:mm:ss\'',
                            minWidth: 180
                        },
                     ],
@@ -216,7 +216,7 @@
 
                 showDetails: function (keyHolding) {
                     $uibModal.open({
-                        templateUrl: '~/App/doorSystem/views/keyHoldings/detailModal.cshtml',
+                        templateUrl: '~/App/doorSystem/views/keyHoldings/detailKeyHolding.cshtml',
                         controller: 'doorSystem.views.keyHoldings.detailModal as vm',
                         backdrop: 'static',
                         resolve: {

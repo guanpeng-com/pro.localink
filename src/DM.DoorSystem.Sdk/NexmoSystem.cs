@@ -63,8 +63,8 @@ namespace DM.DoorSystem.Sdk
             get
             {
                 Dictionary<string, string> dic = new Dictionary<string, string>();
-                dic.Add("api_key", "249bc9a0");
-                dic.Add("api_secret", "d4e1a410c8e9bdae");
+                dic.Add("api_key", "62523f9e");
+                dic.Add("api_secret", "a62f59dd6eb84ed6");
                 return dic;
             }
         }

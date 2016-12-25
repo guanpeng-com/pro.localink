@@ -33,7 +33,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
 
         public const int MaxDefaultStringLength = 50;
         public const int MaxAddressStringLength = 100;
-
+        public const int MaxImagesStringLength = 1000;
 
         /// <summary>
         /// 租户ID
@@ -78,6 +78,12 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// 纬度
         /// </summary>
         public virtual double Lng { get; set; }
+
+        /// <summary>
+        /// 小区图片
+        /// </summary>
+        [StringLength(MaxImagesStringLength)]
+        public virtual string Images { get; set; }
 
         /// <summary>
         /// 小区cms

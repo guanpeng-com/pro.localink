@@ -25,7 +25,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             Token = token;
             UserName = userName;
-            IsAuth = false;
         }
 
         public const int MaxDefaultStringLength = 50;
@@ -40,7 +39,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 业主Id
         /// </summary>
-        public virtual long HomeOwerId { get; set; }
+        public virtual long? HomeOwerId { get; set; }
 
 
         /// <summary>
@@ -55,11 +54,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         [StringLength(MaxTokenStringLength)]
         public virtual string Token { get; set; }
-
-        /// <summary>
-        /// 是否认证
-        /// </summary>
-        public virtual bool IsAuth { get; set; }
 
         /// <summary>
         /// 绑定的小区ID

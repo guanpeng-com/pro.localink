@@ -68,7 +68,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             }
 
             var totalCount = await query.CountAsync();
-            var items = await query.PageBy(input).ToListAsync();
+            var items = await query.OrderByDescending(r => r.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<ReportDto>(
                 totalCount,
                 items.Select(

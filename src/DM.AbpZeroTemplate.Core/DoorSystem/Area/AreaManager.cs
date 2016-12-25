@@ -145,7 +145,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 query = query.Where(a => a.ParentId == rootAreaId);
             }
             query.Include("Children");
-            var list = await query.ToListAsync();
+            var list = await query.OrderByDescending(a => a.CreationTime).ToListAsync();
             return list;
         }
     }

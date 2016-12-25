@@ -24,6 +24,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community.Dto
         public string[] DoorTypes { get; set; }
 
 
+        public string[] Images { get; set; }
+
         /// <summary>
         /// 经度，纬度
         /// </summary>

@@ -66,7 +66,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     }
 
                     var totalCount = await query.CountAsync();
-                    var items = await query.PageBy(input).ToListAsync();
+                    var items = await query.OrderByDescending(h => h.CreationTime).PageBy(input).ToListAsync();
                     return new PagedResultOutput<HomeOwerDto>(
                         totalCount,
                         items.Select(
@@ -140,9 +140,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 }
 
             }
-            //审核业主
-            homerOwerUser.IsAuth = true;
-            await _homeOwerUserManager.UpdateAsync(homerOwerUser);
 
             homeOwer.Status = EHomeOwerStatusType.Done;
             homeOwer.AuthTime = DateTime.Now;

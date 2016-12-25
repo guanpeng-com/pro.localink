@@ -40,5 +40,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string CommunityName;
 
+        public string CollectionTimeString;
+
     }
 }

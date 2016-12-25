@@ -155,7 +155,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
+                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId.Value);
                 if (homeOwer == null)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerNotExists);

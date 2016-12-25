@@ -1,7 +1,7 @@
 ﻿(function () {
     appModule.controller('doorSystem.views.communities.index', [
-        '$scope', '$uibModal', '$q', 'uiGridConstants', 'abp.services.app.community', 'appSession',
-        function ($scope, $uibModal, $q, uiGridConstants, communityService, $appSession) {
+        '$scope', '$state', '$uibModal', '$q', 'uiGridConstants', 'abp.services.app.community', 'appSession',
+        function ($scope, $state, $uibModal, $q, uiGridConstants, communityService, $appSession) {
             var vm = this;
 
             vm.appSession = $appSession;
@@ -15,7 +15,8 @@
                 createCommunities: abp.auth.hasPermission('Pages.DoorSystem.Communities.Create'),
                 editCommunities: abp.auth.hasPermission('Pages.DoorSystem.Communities.Edit'),
                 deleteCommunities: abp.auth.hasPermission('Pages.DoorSystem.Communities.Delete'),
-                authCommunities: abp.auth.hasPermission('Pages.DoorSystem.Communities.Auth')
+                authCommunities: abp.auth.hasPermission('Pages.DoorSystem.Communities.Auth'),
+                manageCms: abp.auth.hasPermission('Pages.DoorSystem.Communities.ManageCms')
             };
 
             vm.requestParams = {
@@ -49,6 +50,8 @@
                                 '      <li><a ng-if="grid.appScope.permissions.authCommunities" ng-click="grid.appScope.communities.authCommunity(row.entity)">' + app.localize('CommunityAuth') + '</a></li>' +
                                 '      <li><a ng-if="grid.appScope.permissions.deleteCommunities" ng-click="grid.appScope.communities.remove(row.entity)" >' + app.localize('Delete') + '</a></li>' +
                                 '      <li><a ng-click="grid.appScope.communities.showDetails(row.entity)">' + app.localize('Detail') + '</a></li>' +
+                                '      <li><a ng-if="grid.appScope.permissions.manageCms" ng-click="grid.appScope.communities.manageCms(row.entity)">' + app.localize('ManageCMS') + '</a></li>' +
+                                 '      <li><a ng-if="grid.appScope.permissions.manageCms" ng-click="grid.appScope.communities.reCreateCms(row.entity)">' + app.localize('ReCreateCMS') + '</a></li>' +
                                 '    </ul>' +
                                 '  </div>' +
                                 '</div>'
@@ -153,6 +156,19 @@
                         }
                         );
 
+                },
+
+                manageCms: function (community) {
+                    abp.services.app.session.saveCurrentAppId(community.id).done(function (result) {
+                        $state.go('cms.channels');
+                    });
+                },
+
+                reCreateCms: function (community) {
+                    communityService.reCreateCMS({ id: community.id })
+                    .success(function () {
+                        abp.message.success(app.localize("ReCreateCMSSuccess"));
+                    });
                 },
 
                 openCreateOrEditCommunityModal: function (community, closeCallback) {

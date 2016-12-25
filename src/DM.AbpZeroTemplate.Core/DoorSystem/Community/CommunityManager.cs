@@ -1,4 +1,5 @@
 ﻿using Abp.Apps;
+using Abp.Channels;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
@@ -18,13 +19,15 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         private readonly IAbpSession _abpSession;
         private readonly UserManager _userManager;
         private readonly AppManager _appManager;
+        private readonly ChannelManager _channelManager;
 
         public CommunityManager(
             IRepository<Community, long> communityRepository,
             ILogger logger,
             IAbpSession abpSession,
             UserManager userManager,
-            AppManager appManager
+            AppManager appManager,
+            ChannelManager channelManager
             )
         {
             CommunityRepository = communityRepository;
@@ -32,6 +35,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             _abpSession = abpSession;
             _userManager = userManager;
             _appManager = appManager;
+            _channelManager = channelManager;
         }
 
         /// <summary>
@@ -41,11 +45,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// <returns></returns>
         public virtual async Task CreateAsync(Community community)
         {
-            //创建小区之前，需要创建小区的cms
-            App app = new App(community.TenantId, community.Name, community.Name, "APP_" + Guid.NewGuid().ToString());
-            await _appManager.CreateAsync(app);
-            CurrentUnitOfWork.SaveChanges();
-            community.AppId = app.Id;
+            await CreateApp(community);
 
             community.AuthCommunity();
             await CommunityRepository.InsertAsync(community);
@@ -53,6 +53,28 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
             if (currentUser != null)
                 Logger.InfoFormat("Admin {0} Create Community {1}", currentUser.UserName, community.Name);
+        }
+
+        private async Task CreateApp(Community community)
+        {
+            //创建小区之前，需要创建小区的cms
+            App app = new App(community.TenantId, community.Name, community.Name, "APP_" + Guid.NewGuid().ToString());
+            await _appManager.CreateAsync(app);
+            CurrentUnitOfWork.SaveChanges();
+            await _channelManager.CreateDefaultChannel(app.Id);
+            community.AppId = app.Id;
+        }
+
+        public virtual async Task ReCreateCMSAsync(long communityId)
+        {
+            var community = await CommunityRepository.FirstOrDefaultAsync(c => c.Id == communityId);
+            if (community.AppId != 0)
+            {
+                await _appManager.AppRepository.DeleteAsync(community.AppId);
+                CurrentUnitOfWork.SaveChanges();
+            }
+            await CreateApp(community);
+            await CommunityRepository.UpdateAsync(community);
         }
 
         /// <summary>

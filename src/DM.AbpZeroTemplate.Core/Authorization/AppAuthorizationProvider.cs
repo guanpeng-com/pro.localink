@@ -103,6 +103,7 @@ namespace DM.AbpZeroTemplate.Authorization
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Communities_Edit, L("CommunitiesEdit"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Communities_Delete, L("CommunitiesDelete"));
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Communities_Auth, L("CommunitiesAuth"));
+            ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_Communities_ManageCms, L("ManageCms"));
 
 
             ds.CreateChildPermission(AppPermissions.Pages_DoorSystem_HomeOwers, L("HomeOwers"));

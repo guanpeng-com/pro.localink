@@ -45,5 +45,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community.Dto
         /// 纬度
         /// </summary>
         public double Lng { get; set; }
+
+        /// <summary>
+        /// 图片
+        /// </summary>
+        public string Images { get; set; }
     }
 }

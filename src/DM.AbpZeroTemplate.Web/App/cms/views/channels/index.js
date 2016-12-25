@@ -1,7 +1,7 @@
 ﻿(function () {
     appModule.controller('cms.views.channels.index', [
-        '$scope', '$uibModal', '$q', 'uiGridConstants', 'abp.services.app.channel', 'abp.services.app.commonLookup', 'lookupModal', 'appSession',
-    function ($scope, $uiModal, $q, uiGridConstants, channelService, commonLookupService, lookupModal, $appSession) {
+        '$scope', '$state', '$uibModal', '$q', 'uiGridConstants', 'abp.services.app.channel', 'abp.services.app.commonLookup', 'lookupModal', 'appSession',
+    function ($scope, $state, $uiModal, $q, uiGridConstants, channelService, commonLookupService, lookupModal, $appSession) {
         var vm = this;
 
         $scope.$on('$viewContentLoaded', function () {
@@ -179,6 +179,12 @@
             },
 
             init: function () {
+                if (!$appSession.app) {
+                    abp.message.warn("请先选择小区，然后管理小区服务");
+                    $state.go('doorSystem.communities');
+                    return;
+                }
+
                 vm.channelTree.getTreeDataFromServer(function (treeData) {
                     vm.channelTree.setChannelCount(treeData.length);
                     vm.channelTree.$tree = $('#ChannelEditTree');

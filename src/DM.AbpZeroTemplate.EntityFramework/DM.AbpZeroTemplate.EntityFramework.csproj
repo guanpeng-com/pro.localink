@@ -153,6 +153,14 @@
     <Compile Include="Migrations\201609111545486_Added_AuthDate_TO_HomeOwer.Designer.cs">
       <DependentUpon>201609111545486_Added_AuthDate_TO_HomeOwer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610301444357_Added_Images_To_Community.cs" />
+    <Compile Include="Migrations\201610301444357_Added_Images_To_Community.Designer.cs">
+      <DependentUpon>201610301444357_Added_Images_To_Community.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611061127280_Update_RelationShip_With_HomeOner_And_User.cs" />
+    <Compile Include="Migrations\201611061127280_Update_RelationShip_With_HomeOner_And_User.Designer.cs">
+      <DependentUpon>201611061127280_Update_RelationShip_With_HomeOner_And_User.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -202,6 +210,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609111545486_Added_AuthDate_TO_HomeOwer.resx">
       <DependentUpon>201609111545486_Added_AuthDate_TO_HomeOwer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610301444357_Added_Images_To_Community.resx">
+      <DependentUpon>201610301444357_Added_Images_To_Community.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611061127280_Update_RelationShip_With_HomeOner_And_User.resx">
+      <DependentUpon>201611061127280_Update_RelationShip_With_HomeOner_And_User.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
