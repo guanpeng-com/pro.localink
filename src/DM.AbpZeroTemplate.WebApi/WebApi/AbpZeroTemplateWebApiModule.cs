@@ -26,6 +26,7 @@ using DM.AbpZeroTemplate.Common.Dto;
 using DM.AbpZeroTemplate.HttpFormatters;
 using Swashbuckle.Swagger;
 using DM.AbpZeroTemplate.WebApi;
+using System.Web.Http.Cors;
 
 namespace DM.AbpZeroTemplate.WebApi
 {
@@ -58,8 +59,8 @@ namespace DM.AbpZeroTemplate.WebApi
             //Configuration.Modules.AbpWebApi().HttpConfiguration.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("multipart/form-data"));
 
             //cors
-            //var corsAttr = new EnableCorsAttribute("*", "*", "*");
-            //Configuration.EnableCors(corsAttr);
+            var corsAttr = new EnableCorsAttribute("*", "*", "*", "*");
+            Configuration.Modules.AbpWebApi().HttpConfiguration.EnableCors(corsAttr);
 
         }
 
