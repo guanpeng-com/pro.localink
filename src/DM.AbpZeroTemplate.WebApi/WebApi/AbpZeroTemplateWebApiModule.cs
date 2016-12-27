@@ -60,6 +60,7 @@ namespace DM.AbpZeroTemplate.WebApi
 
             //cors
             var corsAttr = new EnableCorsAttribute("*", "*", "*", "*");
+            corsAttr.SupportsCredentials = true;
             Configuration.Modules.AbpWebApi().HttpConfiguration.EnableCors(corsAttr);
 
         }
