@@ -11,9 +11,13 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
+    /// <summary>
+    /// 保修
+    /// </summary>
     [Table("localink_Reports")]
     public class Report : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
+        #region 构造函数
         public Report() { }
 
         public Report(int? tenantId, string title, string content, long communityId)
@@ -24,12 +28,25 @@ namespace DM.AbpZeroTemplate.DoorSystem
             Status = EReportStatusType.ReportSend;
             CommunityId = communityId;
         }
+        #endregion
 
-
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
         public const int MaxContentStringLength = 500;
         public const int MaxFilesStringLength = 1000;
+        #endregion
 
+        #region 外键
+        /// <summary>
+        /// 业主Id
+        /// </summary>
+        public virtual long HomeOwerId { get; set; }
+
+        [ForeignKey("HomeOwerId")]
+        public virtual HomeOwer HomeOwer { get; set; }
+        #endregion
+
+        #region 基本信息
         public virtual int? TenantId { get; set; }
 
         /// <summary>
@@ -44,11 +61,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         [StringLength(MaxContentStringLength)]
         public virtual string Content { get; set; }
-
-        public virtual long HomeOwerId { get; set; }
-
-        [ForeignKey("HomeOwerId")]
-        public virtual HomeOwer HomeOwer { get; set; }
 
         /// <summary>
         /// 附件
@@ -78,6 +90,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         public virtual EReportStatusType Status { get; set; }
 
-        public virtual long CommunityId { get; set; }
+        /// <summary>
+        /// 小区Id, 冗余字段
+        /// </summary>
+        public virtual long CommunityId { get; set; } 
+        #endregion
     }
 }

@@ -11,30 +11,47 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
+    /// <summary>
+    /// 地区
+    /// </summary>
     [MultiTenancySideAttribute(MultiTenancySides.Host)]
     [Table("localink_Areas")]
     public class Area : Entity<long>, IHasCreationTime
     {
-        public const int MaxDefaultStringLength = 50;
-
-        public const string ParentPathSplitString = ",";
-
-        public Area() { }
+        #region 构造函数
+        public Area() {
+            
+        }
 
         public Area(long? parentId, string name)
         {
             ParentId = parentId;
             Name = name;
         }
+        #endregion
 
+        #region 字段属性
+        public const int MaxDefaultStringLength = 50;
+
+        public const string ParentPathSplitString = ",";
+        #endregion
+
+        #region 外键
         /// <summary>
-        /// 父级Id
+        /// 父级Id，M to 1
         /// </summary>
         public virtual long? ParentId { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual Area Parent { get; set; }
 
+        /// <summary>
+        /// 子集
+        /// </summary>
+        public virtual ICollection<Area> Children { get; set; }
+        #endregion
+
+        #region 基本属性
         /// <summary>
         /// 名称
         /// </summary>
@@ -48,10 +65,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual string ParentPath { get; set; }
 
         /// <summary>
-        /// 子集
+        /// 创建时间
         /// </summary>
-        public virtual ICollection<Area> Children { get; set; }
-
         public virtual DateTime CreationTime { get; set; }
+        #endregion
     }
 }

@@ -23,22 +23,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly DoorManager _manager;
         private readonly CommunityManager _communityManager;
         private readonly HomeOwerManager _homeOwerManager;
-        private readonly IRepository<HomeOwerDoor, long> _homeOwerDoorRepository;
 
-        public DoorService(DoorManager manager, CommunityManager communityManager, HomeOwerManager homeOwerManager,
-            IRepository<HomeOwerDoor, long> homeOwerDoorRepository)
+        public DoorService(DoorManager manager, CommunityManager communityManager, HomeOwerManager homeOwerManager)
         {
             _manager = manager;
             _communityManager = communityManager;
             _homeOwerManager = homeOwerManager;
-            _homeOwerDoorRepository = homeOwerDoorRepository;
         }
 
         public async Task CreateDoor(CreateDoorInput input)
         {
             var community = _communityManager.CommunityRepository.FirstOrDefault(input.CommunityId);
-            var entity = new Door(CurrentUnitOfWork.GetTenantId(), input.Name, input.PId, input.DepartId);
-            entity.CommunityId = community.Id;
+            var entity = new Door(CurrentUnitOfWork.GetTenantId(), community.Id, input.Name, input.PId, input.DepartId);
             entity.DepartId = community.DepartId;
             entity.DoorType = input.DoorType;
             await _manager.CreateAsync(entity);
@@ -52,15 +48,16 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task DeleteHomeOwerDoor(DeleteHomeOwerDoorInput input)
         {
             var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
+            var deletedDoor = new Door();
             foreach (var item in homeOwer.Doors)
             {
-                if (item.DoorId == input.DoorId)
+                if (item.Id == input.DoorId)
                 {
-                    await _homeOwerDoorRepository.DeleteAsync(item.Id);
+                    deletedDoor = await _manager.DoorRepository.FirstOrDefaultAsync(item.Id);
                     break;
                 }
-
             }
+            homeOwer.Doors.Remove(deletedDoor);
             CurrentUnitOfWork.SaveChanges();
         }
 
@@ -81,15 +78,15 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     {
                         var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId.Value);
 
-                        var hds = homeOwer.Doors.ToList();
-                        var hdIds = new List<long>();
-                        hds.ForEach(hd =>
+                        var ds = homeOwer.Doors.ToList();
+                        var dIds = new List<long>();
+                        ds.ForEach(d =>
                         {
-                            hdIds.Add(hd.DoorId);
+                            dIds.Add(d.Id);
                         });
 
                         query = from d in query
-                                where hdIds.Contains(d.Id)
+                                where dIds.Contains(d.Id)
                                 select d;
                     }
 
@@ -122,15 +119,15 @@ namespace DM.AbpZeroTemplate.DoorSystem
             {
                 var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId.Value);
 
-                var hds = homeOwer.Doors.ToList();
-                var hdIds = new List<long>();
-                hds.ForEach(hd =>
+                var ds = homeOwer.Doors.ToList();
+                var dIds = new List<long>();
+                ds.ForEach(d =>
                 {
-                    hdIds.Add(hd.DoorId);
+                    dIds.Add(d.Id);
                 });
 
                 query = from d in query
-                        where hdIds.Contains(d.Id)
+                        where dIds.Contains(d.Id)
                         select d;
             }
 
@@ -164,9 +161,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task<DoorDto> AuthDoor(IdInput<long> input)
         {
             var door = await _manager.DoorRepository.GetAsync(input.Id);
+            var community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(door.CommunityId);
             if (string.IsNullOrEmpty(door.DepartId))
             {
-                door.DepartId = door.Community.DepartId;
+                door.DepartId = community.DepartId;
             }
 
             door.AuthDoor();
@@ -206,7 +204,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task AddHomeOwerDoor(AddHomeOwerDoorInput input)
         {
             var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
-            homeOwer.Doors.Add(new HomeOwerDoor(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, input.DoorId));
+            var door = await _manager.DoorRepository.FirstOrDefaultAsync(input.DoorId);
+            homeOwer.Doors.Add(door);
             await _homeOwerManager.UpdateAsync(homeOwer);
         }
     }

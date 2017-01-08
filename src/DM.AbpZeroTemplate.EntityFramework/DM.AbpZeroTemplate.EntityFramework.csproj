@@ -161,6 +161,14 @@
     <Compile Include="Migrations\201611061127280_Update_RelationShip_With_HomeOner_And_User.Designer.cs">
       <DependentUpon>201611061127280_Update_RelationShip_With_HomeOner_And_User.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701081307277_Updated_Model_Relations.cs" />
+    <Compile Include="Migrations\201701081307277_Updated_Model_Relations.Designer.cs">
+      <DependentUpon>201701081307277_Updated_Model_Relations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701081453334_Added_CommunityName_To_Building.cs" />
+    <Compile Include="Migrations\201701081453334_Added_CommunityName_To_Building.Designer.cs">
+      <DependentUpon>201701081453334_Added_CommunityName_To_Building.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -216,6 +224,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611061127280_Update_RelationShip_With_HomeOner_And_User.resx">
       <DependentUpon>201611061127280_Update_RelationShip_With_HomeOner_And_User.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701081307277_Updated_Model_Relations.resx">
+      <DependentUpon>201701081307277_Updated_Model_Relations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701081453334_Added_CommunityName_To_Building.resx">
+      <DependentUpon>201701081453334_Added_CommunityName_To_Building.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

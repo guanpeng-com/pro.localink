@@ -90,8 +90,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsAuthing);
                 }
                 var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
-                            join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
-                            where a.HomeOwerId == homeOwer.Id && d.IsAuth
+                            join d in _doorManager.DoorRepository.GetAll() on a.Door equals d
+                            where a.HomeOwer.Id == homeOwer.Id && d.IsAuth
                             select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name, KeyType = d.DoorType, IsAuth = a.IsAuth }
                             ).ToList();
 
@@ -149,15 +149,12 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerUserIsAuthing);
                 }
                 //获取业主门禁，判断是否已经添加钥匙，是否已经认证
-                var doorIds = from d in homeOwer.Doors
-                              select d.DoorId;
-                foreach (var doorId in doorIds)
+                foreach (var door in homeOwer.Doors)
                 {
-                    var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(doorId);
-                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.DoorId == doorId && k.HomeOwerId == homeOwer.Id);
+                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.Door == door && k.HomeOwer.Id == homeOwer.Id);
                     if (key == null)
                     {
-                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), doorId, homeOwer.Id, DateTime.Now.AddYears(50), homeOwer.CommunityId);
+                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), door, homeOwer, DateTime.Now.AddYears(50), homeOwer.CommunityId);
 
                         try
                         {
@@ -184,8 +181,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                 }
 
                 var list = (from a in _accessKeyManager.AccessKeyRepository.GetAll()
-                            join d in _doorManager.DoorRepository.GetAll() on a.DoorId equals d.Id
-                            where a.HomeOwerId == homeOwer.Id && d.IsAuth
+                            join d in _doorManager.DoorRepository.GetAll() on a.Door equals d
+                            where a.HomeOwer.Id == homeOwer.Id && d.IsAuth
                             select new { KeyId = a.LockId, KeyValidity = a.Validity, CommunityId = d.DepartId, KeyName = d.Name, KeyType = d.DoorType, IsAuth = a.IsAuth }
                             ).ToList();
 
@@ -236,18 +233,15 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                             where d.DoorType == doorType.ToString() && d.IsAuth
                             select d;
                 var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
-                var doorIds = (from hd in homeOwer.Doors
-                               join d in doors on hd.DoorId equals d.Id
-                               select hd.DoorId).ToList();
-                if (doorIds.Count == 0)
+                if (homeOwer.Doors.Count == 0)
                 {
                     throw ErrorCodeTypeUtils.ThrowError(ErrorCodeType.HomeOwerDoorNotExists);
                 }
                 else
                 {
-                    foreach (long doorId in doorIds)
+                    foreach (var door in homeOwer.Doors)
                     {
-                        var accessKey = new AccessKey(tenantId, doorId, homeOwer.Id, vilidity, communityId);
+                        var accessKey = new AccessKey(tenantId, door, homeOwer, vilidity, communityId);
                         await _accessKeyManager.CreateAsync(accessKey);
                     }
                     return Ok();
@@ -279,13 +273,10 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                             where d.DoorType == doorType.ToString() && d.IsAuth
                             select d;
                 var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(homeOwerId);
-                var doorIds = (from hd in homeOwer.Doors
-                               join d in doors on hd.DoorId equals d.Id
-                               select hd.DoorId).ToList();
 
-                foreach (long doorId in doorIds)
+                foreach (var door in homeOwer.Doors)
                 {
-                    await _accessKeyManager.AccessKeyRepository.DeleteAsync(a => a.DoorId == doorId);
+                    await _accessKeyManager.AccessKeyRepository.DeleteAsync(a => a.Door == door);
                 }
                 return Ok();
             }
@@ -466,7 +457,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                         await _homeOwerUserManager.UpdateAsync(homeOwerUser);
                         await _homeOwerManager.UpdateAsync(homeOwer);
 
-                        return Ok(new { HomeOwer = AutoMapper.Mapper.Map<HomeOwerDto>(homeOwer), Community = AutoMapper.Mapper.Map<CommunityDto>(homeOwer.Community) });
+                        return Ok(new { HomeOwer = AutoMapper.Mapper.Map<HomeOwerDto>(homeOwer), Community = AutoMapper.Mapper.Map<CommunityDto>(homeOwer.Buildings.First().Community) });
                     }
                     else
                     {

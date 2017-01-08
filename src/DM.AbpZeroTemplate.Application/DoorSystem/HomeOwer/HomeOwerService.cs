@@ -10,38 +10,41 @@ using Abp.Linq.Extensions;
 using AutoMapper;
 using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
+using DM.AbpZeroTemplate.DoorSystem.Community;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About HomeOwer
     public class HomeOwerService : AbpZeroTemplateAppServiceBase, IHomeOwerService
     {
+        private readonly CommunityManager _communityManager;
         private readonly HomeOwerManager _manager;
-        private readonly HomeOwerUserManager _homeOwerUserManager;
         private readonly DoorManager _doorManager;
         private readonly AccessKeyManager _accessKeyManager;
 
-        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, HomeOwerUserManager homeOwerUserManager)
+        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, CommunityManager communityManager)
         {
             _manager = manager;
             _doorManager = doorManager;
             _accessKeyManager = accessKeyManager;
-            _homeOwerUserManager = homeOwerUserManager;
+            _communityManager
+ = communityManager;
         }
 
         public async Task CreateHomeOwer(CreateHomeOwerInput input)
         {
-            var entity = new HomeOwer(CurrentUnitOfWork.GetTenantId(), input.CommunityId, input.Name, input.Phone, input.Email, input.Gender);
-            entity.CommunityId = input.CommunityId;
+            var community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(input.CommunityId);
+
+            var entity = new HomeOwer(CurrentUnitOfWork.GetTenantId(), input.CommunityId, input.Name, input.Phone, input.Email, input.Gender, community.Name);
 
             //录入业主关联的门禁
-            entity.Doors = new List<HomeOwerDoor>();
+            entity.Doors = new List<Door>();
             //小区大门
             var gates = await _doorManager.DoorRepository.GetAllListAsync(d => d.DoorType == EDoorType.Gate.ToString());
+
             gates.ForEach(door =>
             {
-                HomeOwerDoor hd = new HomeOwerDoor(CurrentUnitOfWork.GetTenantId(), entity.Id, door.Id);
-                entity.Doors.Add(hd);
+                entity.Doors.Add(door);
             });
 
             await _manager.CreateAsync(entity);
@@ -113,19 +116,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task AuthHomeOwer(IdInput<long> input)
         {
             var homeOwer = await _manager.HomeOwerRepository.FirstOrDefaultAsync(input.Id);
-            var homerOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(u => u.HomeOwerId == homeOwer.Id);
             var doorIds = from d in homeOwer.Doors
-                          select d.DoorId;
+                          select d.Id;
             var doors = await _doorManager.DoorRepository.GetAllListAsync(d => doorIds.Contains(d.Id));
             //发放钥匙
             foreach (var door in doors)
             {
                 try
                 {
-                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.HomeOwerId == homeOwer.Id && k.DoorId == door.Id);
+                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.HomeOwer.Id == homeOwer.Id && k.Door == door);
                     if (key == null)
                     {
-                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), door.Id, homeOwer.Id, DateTime.Now.AddYears(50), homeOwer.CommunityId);
+                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), door, homeOwer, DateTime.Now.AddYears(50), homeOwer.CommunityId);
                         await _accessKeyManager.CreateAsync(key);
                         key.GetKey(door.PId, homeOwer.Phone, key.Validity);
                     }

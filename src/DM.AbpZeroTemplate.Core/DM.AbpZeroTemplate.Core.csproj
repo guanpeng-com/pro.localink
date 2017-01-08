@@ -137,6 +137,8 @@
     <Compile Include="DoorSystem\AccessKey\AccessKeyManager.cs" />
     <Compile Include="DoorSystem\Area\Area.cs" />
     <Compile Include="DoorSystem\Area\AreaManager.cs" />
+    <Compile Include="DoorSystem\Building\Building.cs" />
+    <Compile Include="DoorSystem\Building\BuildingManager.cs" />
     <Compile Include="DoorSystem\Community\Community.cs" />
     <Compile Include="DoorSystem\Community\CommunityManager.cs" />
     <Compile Include="DoorSystem\Community\IAdminCommunity.cs" />
@@ -151,7 +153,6 @@
     <Compile Include="DoorSystem\Enums\EDoorType.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerUser.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwer.cs" />
-    <Compile Include="DoorSystem\HomeOwer\HomeOwerDoor.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerManager.cs" />
     <Compile Include="DoorSystem\HomeOwer\HomeOwerUserManager.cs" />
     <Compile Include="DoorSystem\KeyHolding\KeyHolding.cs" />

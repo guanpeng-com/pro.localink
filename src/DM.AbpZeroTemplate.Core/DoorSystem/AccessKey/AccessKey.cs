@@ -14,38 +14,47 @@ namespace DM.AbpZeroTemplate.DoorSystem
     [Table("localink_AccessKeys")]
     public class AccessKey : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
+        #region 构造函数
         public AccessKey()
         {
 
         }
 
-        public AccessKey(int? tenantId, long doorId, long homeOwerId, DateTime validity, long communityId)
+        public AccessKey(int? tenantId, Door door, HomeOwer homeOwer, DateTime validity, long communityId)
         {
             TenantId = tenantId;
-            DoorId = doorId;
-            HomeOwerId = homeOwerId;
+            HomeOwer = homeOwer;
             Validity = validity;
             CommunityId = communityId;
+            Door = door;
         }
+        #endregion
 
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
+        #endregion
 
+        #region 外键
 
+        public virtual long DoorId { get; set; }
+        [ForeignKey("DoorId")]
+        public virtual Door Door { get; set; }
+
+        public virtual long HomeOwerId { get; set; }
+        [ForeignKey("HomeOwerId")]
+        public virtual HomeOwer HomeOwer { get; set; }
+        #endregion
+
+        #region 基本属性
         /// <summary>
-        /// 租户ID
+        /// 租户ID，冗余字段
         /// </summary>
         public virtual int? TenantId { get; set; }
 
         /// <summary>
-        /// 门禁Id
+        /// 小区Id，冗余字段
         /// </summary>
-        [Required]
-        public virtual long DoorId { get; set; }
-
-        /// <summary>
-        /// 业主Id
-        /// </summary>
-        public virtual long HomeOwerId { get; set; }
+        public virtual long CommunityId { get; set; }
 
         /// <summary>
         /// 有效期
@@ -62,11 +71,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 是否认证
         /// </summary>
         public virtual bool IsAuth { get; private set; }
+        #endregion
 
-        [ForeignKey("CommunityId")]
-        public virtual Community.Community Community { get; set; }
-        public virtual long CommunityId { get; set; }
-
+        #region 方法
         /// <summary>
         /// 申请钥匙
         /// </summary>
@@ -96,5 +103,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 this.IsAuth = false;
             }
         }
+        #endregion
     }
 }

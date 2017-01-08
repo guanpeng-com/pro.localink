@@ -13,9 +13,13 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem.Community
 {
+    /// <summary>
+    /// 小区
+    /// </summary>
     [Table("localink_Communities")]
     public class Community : FullAuditedEntity<long>, IMayHaveTenant
     {
+        #region 构造函数
         public Community()
         {
         }
@@ -30,11 +34,34 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             Lat = lat;
             Lng = lng;
         }
+        #endregion
 
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
         public const int MaxAddressStringLength = 100;
         public const int MaxImagesStringLength = 1000;
+        #endregion
 
+        #region 外键
+        /// <summary>
+        /// 小区cms, 1 to 1
+        /// </summary>
+        public virtual long AppId { get; set; }
+        [ForeignKey("AppId")]
+        public virtual App App { get; set; }
+
+        /// <summary>
+        /// 门禁, 1 to M
+        /// </summary>
+        public virtual ICollection<Door> Doors { get; set; }
+
+        /// <summary>
+        /// 单元楼, 1 to M
+        /// </summary>
+        public virtual ICollection<Building> Buildings { get; set; }
+        #endregion
+
+        #region 基本信息
         /// <summary>
         /// 租户ID
         /// </summary>
@@ -84,24 +111,9 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
         /// </summary>
         [StringLength(MaxImagesStringLength)]
         public virtual string Images { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 小区cms
-        /// </summary>
-        public virtual long AppId { get; set; }
-        [ForeignKey("AppId")]
-        public virtual App App { get; set; }
-
-        /// <summary>
-        /// 门禁
-        /// </summary>
-        public virtual ICollection<Door> Doors { get; set; }
-
-        /// <summary>
-        /// 业主
-        /// </summary>
-        public virtual ICollection<HomeOwer> HomeOwers { get; set; }
-
+        #region 方法
         /// <summary>
         /// 验证小区，更新小区信息之前操作
         /// </summary>
@@ -128,6 +140,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             {
                 this.IsAuth = false;
             }
-        }
+        } 
+        #endregion
     }
 }

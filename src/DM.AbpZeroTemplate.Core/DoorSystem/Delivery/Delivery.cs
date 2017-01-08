@@ -14,9 +14,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
     [Table("localink_Deliverys")]
     public class Delivery : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
+        #region 构造函数
         public Delivery() { }
 
-        public Delivery(int? tenantId, long homeOwerId, long communityId)
+        public Delivery(int? tenantId, long homeOwerId, long communityId, string buildingName)
         {
             TenantId = tenantId;
             Title = string.Empty;
@@ -26,12 +27,37 @@ namespace DM.AbpZeroTemplate.DoorSystem
             IsReplace = false;
             Token = GetToken();
             CommunityId = communityId;
+            BuildingName = buildingName;
         }
+        #endregion
 
 
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
         public const int MaxContentStringLength = 500;
+        #endregion
 
+        #region 外键
+        public virtual long HomeOwerId { get; set; }
+
+        /// <summary>
+        /// 所属业主
+        /// </summary>
+        [ForeignKey("HomeOwerId")]
+        public virtual HomeOwer HomeOwer { get; set; }
+
+        /// <summary>
+        /// 待收取业主
+        /// </summary>
+        public virtual long? ReplaceHomeOwerId { get; set; }
+        /// <summary>
+        /// 所属业主
+        /// </summary>
+        [ForeignKey("ReplaceHomeOwerId")]
+        public virtual HomeOwer ReplaceHomeOwer { get; set; }
+        #endregion
+
+        #region 基本属性
         public virtual int? TenantId { get; set; }
 
         [Required]
@@ -42,13 +68,15 @@ namespace DM.AbpZeroTemplate.DoorSystem
         [StringLength(MaxContentStringLength)]
         public virtual string Content { get; set; }
 
-        public virtual long HomeOwerId { get; set; }
-
-        [ForeignKey("HomeOwerId")]
-        public virtual HomeOwer HomeOwer { get; set; }
-
-
+        /// <summary>
+        /// 小区Id, 冗余字段
+        /// </summary>
         public virtual long CommunityId { get; set; }
+
+        /// <summary>
+        /// 单元
+        /// </summary>
+        public virtual string BuildingName { get; set; }
 
         /// <summary>
         /// 是否收取
@@ -66,23 +94,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual bool IsReplace { get; set; }
 
         /// <summary>
-        /// 待收取业主
-        /// </summary>
-        public virtual long? ReplaceHomeOwerId { get; set; }
-
-        [ForeignKey("ReplaceHomeOwerId")]
-        public virtual HomeOwer ReplaceHomeOwer { get; set; }
-
-        /// <summary>
         /// 收取验证码
         /// </summary>
         public virtual string Token { get; set; }
+        #endregion
 
+        #region 方法
         private string GetToken()
         {
             Random r = new Random(Clock.Now.Millisecond);
             return r.Next(1000, 9999).ToString();
         }
+        #endregion
 
     }
 }

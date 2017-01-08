@@ -24,6 +24,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string HomeOwerName;
 
+        public string BuildingName;
+
         public bool IsGather;
 
         public DateTime GatherTime;
