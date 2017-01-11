@@ -169,6 +169,14 @@
     <Compile Include="Migrations\201701081453334_Added_CommunityName_To_Building.Designer.cs">
       <DependentUpon>201701081453334_Added_CommunityName_To_Building.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701111542447_Added_Barcode_To_Delivery.cs" />
+    <Compile Include="Migrations\201701111542447_Added_Barcode_To_Delivery.Designer.cs">
+      <DependentUpon>201701111542447_Added_Barcode_To_Delivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701111630135_Upgrade_M_To_M_Relation.cs" />
+    <Compile Include="Migrations\201701111630135_Upgrade_M_To_M_Relation.Designer.cs">
+      <DependentUpon>201701111630135_Upgrade_M_To_M_Relation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -230,6 +238,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701081453334_Added_CommunityName_To_Building.resx">
       <DependentUpon>201701081453334_Added_CommunityName_To_Building.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701111542447_Added_Barcode_To_Delivery.resx">
+      <DependentUpon>201701111542447_Added_Barcode_To_Delivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701111630135_Upgrade_M_To_M_Relation.resx">
+      <DependentUpon>201701111630135_Upgrade_M_To_M_Relation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

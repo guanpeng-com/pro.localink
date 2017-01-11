@@ -18,17 +18,19 @@ namespace DM.AbpZeroTemplate.DoorSystem
     public class HomeOwerService : AbpZeroTemplateAppServiceBase, IHomeOwerService
     {
         private readonly CommunityManager _communityManager;
+        private readonly BuildingManager _buildingManager;
         private readonly HomeOwerManager _manager;
         private readonly DoorManager _doorManager;
         private readonly AccessKeyManager _accessKeyManager;
 
-        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, CommunityManager communityManager)
+        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, CommunityManager communityManager, BuildingManager buildingManager)
         {
             _manager = manager;
             _doorManager = doorManager;
             _accessKeyManager = accessKeyManager;
             _communityManager
  = communityManager;
+            _buildingManager = buildingManager;
         }
 
         public async Task CreateHomeOwer(CreateHomeOwerInput input)
@@ -61,11 +63,44 @@ namespace DM.AbpZeroTemplate.DoorSystem
             {
                 using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
                 {
-                    var query = _manager.FindHomeOwerList(input.Sorting);
+                    // var query = _manager.FindHomeOwerList(input.Sorting);
 
+                    var query = from h in _manager.HomeOwerRepository.GetAll()
+                                from b in h.Buildings.DefaultIfEmpty()
+                                select new
+                                {
+                                    h.Id,
+                                    h.CommunityName,
+                                    h.CommunityId,
+                                    b.BuildingName,
+                                    BuildingId = b.Id,
+                                    h.FlatNo,
+                                    h.Name,
+                                    h.Status,
+                                    h.Phone,
+                                    h.Email,
+                                    h.Gender,
+                                    h.CreationTime
+                                };
+
+
+                    //业主状态
                     if (input.HomeOwerStatus.HasValue)
                     {
                         query = query.Where(h => h.Status == input.HomeOwerStatus.Value);
+                    }
+                    //单元楼
+                    if (input.BuildingId.HasValue)
+                    {
+                        query = query.Where(h => h.BuildingId == input.BuildingId.Value);
+                    }
+                    //小区，单元楼，业主名称
+                    if (!string.IsNullOrEmpty(input.Keywords))
+                    {
+                        query = query.Where(h =>
+                        h.CommunityName.Contains(input.Keywords)
+                        || h.Name.Contains(input.Keywords)
+                        || h.BuildingName.Contains(input.Keywords));
                     }
 
                     var totalCount = await query.CountAsync();
@@ -75,8 +110,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
                         items.Select(
                                 item =>
                                 {
-                                    var dto = item.MapTo<HomeOwerDto>();
-                                    return dto;
+                                    return Mapper.DynamicMap<HomeOwerDto>(item);
+                                    //var dto = item.MapTo<HomeOwerDto>();
+                                    //return dto;
                                 }
                             ).ToList()
                         );

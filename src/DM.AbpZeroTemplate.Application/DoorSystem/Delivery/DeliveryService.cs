@@ -65,24 +65,49 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         private async Task<PagedResultOutput<DeliveryDto>> ProcessGet(GetDeliverysInput input)
         {
-            var query = _manager.FindDeliveryList(input.Sorting);
+            //var query = _manager.FindDeliveryList(input.Sorting);
+
+            var query = from d in _manager.DeliveryRepository.GetAll()
+                        from b in d.HomeOwer.Buildings.DefaultIfEmpty()
+                        orderby input.Sorting
+                        select new
+                        {
+                            d.Id,
+                            d.CommunityId,
+                            CommunityName = b.Community.Name,
+                            BuildingId = b.Id,
+                            b.BuildingName,
+                            d.HomeOwer,
+                            d.HomeOwerId,
+                            HomeOwerName = d.HomeOwer.Name,
+                            d.Title,
+                            d.Content,
+                            d.IsReplace,
+                            d.Token,
+                            d.CreationTime,
+                            d.IsGather,
+                            d.HomeOwer.FlatNo,
+                            GatherTime = !d.GatherTime.HasValue ? "N/A" : d.GatherTime.ToString(),
+                            ReplaceHomeOwerName = d.ReplaceHomeOwer != null ? d.ReplaceHomeOwer.Name : string.Empty
+                        };
+
             if (input.HomeOwerId.HasValue)
             {
                 //业主ID，用于app端获取数据
-                query = query.Where(d => d.HomeOwerId == input.HomeOwerId.Value);
+                query = query.Where(d => d.HomeOwer.Id == input.HomeOwerId.Value);
             }
             if (!string.IsNullOrEmpty(input.Keywords))
             {
                 //小区 / 业主名称
                 query = query.Where(d => d.HomeOwer.Name.Contains(input.Keywords)
                                                             || d.HomeOwer.CommunityName.Contains(input.Keywords)
+                                                            || d.HomeOwer.Buildings.Any(b => b.BuildingName.Contains(input.Keywords))
                                                             );
             }
             if (input.BuildingId.HasValue)
             {
                 //单元楼
-                var building = await _buildingManager.BuildingRepository.FirstOrDefaultAsync(b => b.Id == input.BuildingId.Value);
-                query = query.Where(d => d.HomeOwer.Buildings.Contains(building));
+                query = query.Where(d => d.HomeOwer.Buildings.Any(b => b.Id == input.BuildingId.Value));
             }
             if (input.StartDate.HasValue)
             {
@@ -107,11 +132,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 items.Select(
                         item =>
                         {
-                            var dto = item.MapTo<DeliveryDto>();
-                            dto.HomeOwerName = item.HomeOwer.Name;
-                            dto.BuildingName = item.BuildingName;
-                            dto.ReplaceHomeOwerName = item.ReplaceHomeOwer != null ? item.ReplaceHomeOwer.Name : string.Empty;
-                            return dto;
+                            return Mapper.DynamicMap<DeliveryDto>(item);
+                            //var dto = item.MapTo<DeliveryDto>();
+                            //return dto;
                         }
                     ).ToList()
                 );

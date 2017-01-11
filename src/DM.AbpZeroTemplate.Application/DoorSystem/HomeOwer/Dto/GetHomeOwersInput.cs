@@ -14,6 +14,17 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     public class GetHomeOwersInput : PagedAndSortedInputDto, IShouldNormalize
     {
         public EHomeOwerStatusType? HomeOwerStatus { get; set; }
+
+        /// <summary>
+        ///  单元楼Id
+        /// </summary>
+        public long? BuildingId{ get; set; }
+
+        /// <summary>
+        /// 关键字（Development / Resident）
+        /// </summary>
+        public string Keywords { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrEmpty(Sorting))

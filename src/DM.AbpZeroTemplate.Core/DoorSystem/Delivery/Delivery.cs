@@ -51,7 +51,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         public virtual long? ReplaceHomeOwerId { get; set; }
         /// <summary>
-        /// 所属业主
+        /// 待收取业主
         /// </summary>
         [ForeignKey("ReplaceHomeOwerId")]
         public virtual HomeOwer ReplaceHomeOwer { get; set; }
@@ -97,6 +97,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 收取验证码
         /// </summary>
         public virtual string Token { get; set; }
+
+        /// <summary>
+        /// 快递条形码
+        /// </summary>
+        public virtual string Barcode { get; set; }
         #endregion
 
         #region 方法

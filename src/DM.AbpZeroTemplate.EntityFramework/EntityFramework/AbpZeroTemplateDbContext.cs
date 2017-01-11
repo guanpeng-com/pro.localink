@@ -135,8 +135,8 @@ namespace DM.AbpZeroTemplate.EntityFramework
                                 .WithMany(h => h.Buildings)
                                 .Map(m=> {
                                     m.ToTable("localink_HomeOwerBuildings");
-                                    m.MapLeftKey("HomeOwerId");
-                                    m.MapRightKey("BuildingId");
+                                    m.MapLeftKey("BuildingId");
+                                    m.MapRightKey("HomeOwerId");
                                 });
 
             //业主，快递，1 to M
@@ -161,8 +161,8 @@ namespace DM.AbpZeroTemplate.EntityFramework
                                 .Map(m =>
                                 {
                                     m.ToTable("localink_HomeOwerDoors");
-                                    m.MapLeftKey("HomeOwerId");
-                                    m.MapRightKey("DoorId");
+                                    m.MapLeftKey("DoorId");
+                                    m.MapRightKey("HomeOwerId");
                                 });
 
             //业主，钥匙，1 to M
