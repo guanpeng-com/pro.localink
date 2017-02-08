@@ -80,6 +80,11 @@ namespace DM.AbpZeroTemplate.EntityFramework
         /// </summary>
         public virtual IDbSet<Building> Buildings { get; set; }
 
+        /// <summary>
+        /// 门牌号
+        /// </summary>
+        public virtual IDbSet<FlatNumber> FlatNumbers { get; set; }
+
         /* Setting "Default" to base class helps us when working migration commands on Package Manager Console.
          * But it may cause problems when working Migrate.exe of EF. ABP works either way.         * 
          */
@@ -129,15 +134,11 @@ namespace DM.AbpZeroTemplate.EntityFramework
                                 .HasMany(c => c.Buildings)
                                 .WithRequired(b => b.Community);
 
-            //单元楼，业主，M to M
+            //单元楼，门牌号， 1 to M
             modelBuilder.Entity<Building>()
-                                .HasMany(b => b.HomeOwers)
-                                .WithMany(h => h.Buildings)
-                                .Map(m=> {
-                                    m.ToTable("localink_HomeOwerBuildings");
-                                    m.MapLeftKey("BuildingId");
-                                    m.MapRightKey("HomeOwerId");
-                                });
+                                .HasMany<FlatNumber>(b => b.FlatNumbers)
+                                .WithRequired(f => f.Building);
+
 
             //业主，快递，1 to M
             modelBuilder.Entity<HomeOwer>()
@@ -169,6 +170,17 @@ namespace DM.AbpZeroTemplate.EntityFramework
             modelBuilder.Entity<HomeOwer>()
                                 .HasMany(h => h.AccessKeys)
                                 .WithRequired(a => a.HomeOwer);
+
+            //业主，门牌号，M to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany<FlatNumber>(h => h.FlatNumbers)
+                                .WithMany(d => d.HomeOwers)
+                                .Map(m =>
+                                {
+                                    m.ToTable("localink_HomeOwerFlatNos");
+                                    m.MapLeftKey("HomeOwerId");
+                                    m.MapRightKey("FlatNoId");
+                                });
         }
     }
 }

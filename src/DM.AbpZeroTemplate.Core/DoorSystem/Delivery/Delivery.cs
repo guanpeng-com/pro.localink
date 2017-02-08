@@ -17,7 +17,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         #region 构造函数
         public Delivery() { }
 
-        public Delivery(int? tenantId, long homeOwerId, long communityId, string buildingName)
+        public Delivery(int? tenantId, long homeOwerId, long communityId, long buildingId, long flatNoId, string communityName, string buildingName, string flatNo, string barcode)
         {
             TenantId = tenantId;
             Title = string.Empty;
@@ -28,6 +28,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
             Token = GetToken();
             CommunityId = communityId;
             BuildingName = buildingName;
+            Barcode = barcode;
+            BuildingId = buildingId;
+            FlatNoId = flatNoId;
+            CommunityName = communityName;
+            FlatNo = flatNo;
         }
         #endregion
 
@@ -74,9 +79,29 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual long CommunityId { get; set; }
 
         /// <summary>
+        ///  单元Id, 冗余字段
+        /// </summary>
+        public virtual long BuildingId { get; set; }
+
+        /// <summary>
+        /// 门牌号Id，冗余字段
+        /// </summary>
+        public virtual long FlatNoId { get; set; }
+
+        /// <summary>
+        /// 小区名称
+        /// </summary>
+        public virtual string CommunityName { get; set; }
+
+        /// <summary>
         /// 单元
         /// </summary>
         public virtual string BuildingName { get; set; }
+
+        /// <summary>
+        /// 门牌号
+        /// </summary>
+        public virtual string FlatNo { get; set; }
 
         /// <summary>
         /// 是否收取

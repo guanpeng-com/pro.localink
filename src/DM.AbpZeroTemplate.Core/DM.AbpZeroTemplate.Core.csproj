@@ -138,7 +138,9 @@
     <Compile Include="DoorSystem\Area\Area.cs" />
     <Compile Include="DoorSystem\Area\AreaManager.cs" />
     <Compile Include="DoorSystem\Building\Building.cs" />
+    <Compile Include="DoorSystem\Building\FlatNumberManager.cs" />
     <Compile Include="DoorSystem\Building\BuildingManager.cs" />
+    <Compile Include="DoorSystem\Building\FlatNumber.cs" />
     <Compile Include="DoorSystem\Community\Community.cs" />
     <Compile Include="DoorSystem\Community\CommunityManager.cs" />
     <Compile Include="DoorSystem\Community\IAdminCommunity.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="DoorSystem\Door\Door.cs" />
     <Compile Include="DoorSystem\Door\DoorManager.cs" />
     <Compile Include="DoorSystem\Enums\EFileUploadType.cs" />
+    <Compile Include="DoorSystem\Enums\EMessageStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EReportStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EDoorType.cs" />

@@ -40,5 +40,8 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string FlatNo;
 
+        public string Barcode;
+
+        public string CreationTimeStr;
     }
 }

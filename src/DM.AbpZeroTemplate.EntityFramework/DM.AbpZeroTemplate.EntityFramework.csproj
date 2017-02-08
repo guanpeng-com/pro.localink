@@ -177,6 +177,30 @@
     <Compile Include="Migrations\201701111630135_Upgrade_M_To_M_Relation.Designer.cs">
       <DependentUpon>201701111630135_Upgrade_M_To_M_Relation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701181539414_Added_FlatNo_HomeOwer_Relationship.cs" />
+    <Compile Include="Migrations\201701181539414_Added_FlatNo_HomeOwer_Relationship.Designer.cs">
+      <DependentUpon>201701181539414_Added_FlatNo_HomeOwer_Relationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701181548368_Update_FlatNumbers_TableName.cs" />
+    <Compile Include="Migrations\201701181548368_Update_FlatNumbers_TableName.Designer.cs">
+      <DependentUpon>201701181548368_Update_FlatNumbers_TableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701181553478_Update_HomeOwer_FlatNo_Relationship.cs" />
+    <Compile Include="Migrations\201701181553478_Update_HomeOwer_FlatNo_Relationship.Designer.cs">
+      <DependentUpon>201701181553478_Update_HomeOwer_FlatNo_Relationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701181616233_Remove_HomeOwer_Building_Relationship.cs" />
+    <Compile Include="Migrations\201701181616233_Remove_HomeOwer_Building_Relationship.Designer.cs">
+      <DependentUpon>201701181616233_Remove_HomeOwer_Building_Relationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701191510550_Added_More_Prop_To_Delivery_Message.cs" />
+    <Compile Include="Migrations\201701191510550_Added_More_Prop_To_Delivery_Message.Designer.cs">
+      <DependentUpon>201701191510550_Added_More_Prop_To_Delivery_Message.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701211512286_Added_Status_To_Message.cs" />
+    <Compile Include="Migrations\201701211512286_Added_Status_To_Message.Designer.cs">
+      <DependentUpon>201701211512286_Added_Status_To_Message.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -244,6 +268,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701111630135_Upgrade_M_To_M_Relation.resx">
       <DependentUpon>201701111630135_Upgrade_M_To_M_Relation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701181539414_Added_FlatNo_HomeOwer_Relationship.resx">
+      <DependentUpon>201701181539414_Added_FlatNo_HomeOwer_Relationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701181548368_Update_FlatNumbers_TableName.resx">
+      <DependentUpon>201701181548368_Update_FlatNumbers_TableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701181553478_Update_HomeOwer_FlatNo_Relationship.resx">
+      <DependentUpon>201701181553478_Update_HomeOwer_FlatNo_Relationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701181616233_Remove_HomeOwer_Building_Relationship.resx">
+      <DependentUpon>201701181616233_Remove_HomeOwer_Building_Relationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701191510550_Added_More_Prop_To_Delivery_Message.resx">
+      <DependentUpon>201701191510550_Added_More_Prop_To_Delivery_Message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701211512286_Added_Status_To_Message.resx">
+      <DependentUpon>201701211512286_Added_Status_To_Message.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

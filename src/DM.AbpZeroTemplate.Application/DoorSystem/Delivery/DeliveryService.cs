@@ -20,26 +20,35 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly DeliveryManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
         private readonly BuildingManager _buildingManager;
+        private readonly FlatNumberManager _flatNoManager;
 
         public DeliveryService(DeliveryManager manager,
             HomeOwerManager homeOwerManager,
-            BuildingManager buildingManager)
+            BuildingManager buildingManager,
+            FlatNumberManager flatNumberManager)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
             _buildingManager = buildingManager;
+            _flatNoManager = flatNumberManager;
         }
 
-        public async Task CreateDelivery(CreateDeliveryInput input)
+        /// <summary>
+        /// 添加快递信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<DeliveryDto> CreateDelivery(CreateDeliveryInput input)
         {
-            var building = await _buildingManager.BuildingRepository.FirstOrDefaultAsync(input.BuildingId);
+            var flatNumber = await _flatNoManager.FlatNumberRepository.FirstOrDefaultAsync(input.FlatNoId);
             var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
-            var entity = new Delivery(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, homeOwer.CommunityId, building.BuildingName);
+            var entity = new Delivery(CurrentUnitOfWork.GetTenantId(), input.HomeOwerId, homeOwer.CommunityId, input.BuildingId, input.FlatNoId, flatNumber.Building.Community.Name, flatNumber.Building.BuildingName, flatNumber.FlatNo, input.Barcode);
             if (!string.IsNullOrEmpty(input.Content))
             {
                 entity.Content = input.Content;
             }
             await _manager.CreateAsync(entity);
+            return Mapper.Map<DeliveryDto>(entity);
         }
 
         public async Task DeleteDelivery(IdInput<long> input)
@@ -68,15 +77,14 @@ namespace DM.AbpZeroTemplate.DoorSystem
             //var query = _manager.FindDeliveryList(input.Sorting);
 
             var query = from d in _manager.DeliveryRepository.GetAll()
-                        from b in d.HomeOwer.Buildings.DefaultIfEmpty()
                         orderby input.Sorting
                         select new
                         {
                             d.Id,
                             d.CommunityId,
-                            CommunityName = b.Community.Name,
-                            BuildingId = b.Id,
-                            b.BuildingName,
+                            CommunityName = d.CommunityName,
+                            BuildingId = d.BuildingId,
+                            d.BuildingName,
                             d.HomeOwer,
                             d.HomeOwerId,
                             HomeOwerName = d.HomeOwer.Name,
@@ -86,9 +94,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
                             d.Token,
                             d.CreationTime,
                             d.IsGather,
-                            d.HomeOwer.FlatNo,
+                            d.FlatNo,
                             GatherTime = !d.GatherTime.HasValue ? "N/A" : d.GatherTime.ToString(),
-                            ReplaceHomeOwerName = d.ReplaceHomeOwer != null ? d.ReplaceHomeOwer.Name : string.Empty
+                            ReplaceHomeOwerName = d.ReplaceHomeOwer != null ? d.ReplaceHomeOwer.Name : string.Empty,
+                            CreationTimeStr = d.CreationTime.ToString(),
+                            d.Barcode
                         };
 
             if (input.HomeOwerId.HasValue)
@@ -96,18 +106,24 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 //业主ID，用于app端获取数据
                 query = query.Where(d => d.HomeOwer.Id == input.HomeOwerId.Value);
             }
+            if (input.CommunityId.HasValue)
+            {
+                query = query.Where(d => d.CommunityId == input.CommunityId.Value);
+            }
             if (!string.IsNullOrEmpty(input.Keywords))
             {
                 //小区 / 业主名称
                 query = query.Where(d => d.HomeOwer.Name.Contains(input.Keywords)
                                                             || d.HomeOwer.CommunityName.Contains(input.Keywords)
-                                                            || d.HomeOwer.Buildings.Any(b => b.BuildingName.Contains(input.Keywords))
+                                                            || d.BuildingName.Contains(input.Keywords)
+                                                            || d.FlatNo.Contains(input.Keywords)
+                                                            //|| d.HomeOwer.Buildings.Any(b => b.BuildingName.Contains(input.Keywords))
                                                             );
             }
             if (input.BuildingId.HasValue)
             {
                 //单元楼
-                query = query.Where(d => d.HomeOwer.Buildings.Any(b => b.Id == input.BuildingId.Value));
+                query = query.Where(d => d.BuildingId == input.BuildingId.Value);
             }
             if (input.StartDate.HasValue)
             {
@@ -155,6 +171,27 @@ namespace DM.AbpZeroTemplate.DoorSystem
             dto.HomeOwerName = entity.HomeOwer.Name;
             dto.ReplaceHomeOwerName = entity.ReplaceHomeOwer != null ? entity.ReplaceHomeOwer.Name : string.Empty;
             return dto;
+        }
+
+        /// <summary>
+        /// 领取快递
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<bool> GatherDelivery(GatherDeliveryInput input)
+        {
+            var delivery = await _manager.DeliveryRepository.FirstOrDefaultAsync(input.Id);
+            if (delivery != null)
+            {
+                delivery.IsGather = true;
+                delivery.GatherTime = DateTime.Now;
+                if (input.Type == "2")
+                {
+                    delivery.IsReplace = true;
+                }
+                await _manager.UpdateAsync(delivery);
+            }
+            return true;
         }
 
     }

@@ -20,19 +20,23 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly MessageManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
         private readonly CommunityManager _communityManager;
+        private readonly FlatNumberManager _flatNoManager;
 
         public MessageService(MessageManager manager,
             HomeOwerManager homeOwerManager,
-            CommunityManager communityManager)
+            CommunityManager communityManager,
+            FlatNumberManager flatNoManager)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
             _communityManager = communityManager;
+            _flatNoManager = flatNoManager;
         }
 
         public async Task CreateMessage(CreateMessageInput input)
         {
-            var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.CommunityId);
+            var flatNo = await _flatNoManager.FlatNumberRepository.FirstOrDefaultAsync(input.FlatNoId);
+            var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, flatNo.CommunityId, flatNo.BuildingId, flatNo.Id, flatNo.Building.Community.Name, flatNo.Building.BuildingName, flatNo.FlatNo);
             if (!input.IsPublic)
             {
                 var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);

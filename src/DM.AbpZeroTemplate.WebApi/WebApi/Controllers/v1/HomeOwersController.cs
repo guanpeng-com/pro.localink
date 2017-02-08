@@ -457,7 +457,7 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
                         await _homeOwerUserManager.UpdateAsync(homeOwerUser);
                         await _homeOwerManager.UpdateAsync(homeOwer);
 
-                        return Ok(new { HomeOwer = AutoMapper.Mapper.Map<HomeOwerDto>(homeOwer), Community = AutoMapper.Mapper.Map<CommunityDto>(homeOwer.Buildings.First().Community) });
+                        return Ok(new { HomeOwer = AutoMapper.Mapper.Map<HomeOwerDto>(homeOwer), Community = AutoMapper.Mapper.Map<CommunityDto>(homeOwer.FlatNumbers.First().Building.Community) });
                     }
                     else
                     {

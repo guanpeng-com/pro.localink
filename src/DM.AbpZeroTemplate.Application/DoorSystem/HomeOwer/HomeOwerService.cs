@@ -66,15 +66,16 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     // var query = _manager.FindHomeOwerList(input.Sorting);
 
                     var query = from h in _manager.HomeOwerRepository.GetAll()
-                                from b in h.Buildings.DefaultIfEmpty()
+                                from f in h.FlatNumbers.DefaultIfEmpty()
                                 select new
                                 {
                                     h.Id,
                                     h.CommunityName,
                                     h.CommunityId,
-                                    b.BuildingName,
-                                    BuildingId = b.Id,
-                                    h.FlatNo,
+                                    f.Building.BuildingName,
+                                    BuildingId = f.BuildingId,
+                                    FlatNoId = f.Id,
+                                    f.FlatNo,
                                     h.Name,
                                     h.Status,
                                     h.Phone,

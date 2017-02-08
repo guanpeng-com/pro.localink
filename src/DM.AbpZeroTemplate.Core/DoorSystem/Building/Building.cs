@@ -17,6 +17,13 @@ namespace DM.AbpZeroTemplate.DoorSystem
     {
         #region 构造函数
         public Building() { }
+
+        public Building(int? tenantId, long communityId, string buildingName)
+        {
+            this.TenantId = tenantId;
+            this.CommunityId = communityId;
+            this.BuildingName = buildingName;
+        }
         #endregion
 
         #region 外键
@@ -28,9 +35,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual Community.Community Community { get; set; }
 
         /// <summary>
-        /// 业主集合, M to M
+        /// 门牌号集合, 1 to M
         /// </summary>
-        public virtual ICollection<HomeOwer> HomeOwers { get; set; }
+        public virtual ICollection<FlatNumber> FlatNumbers { get; set; }
         #endregion
 
         #region 基本属性
@@ -39,8 +46,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 单元楼名称
         /// </summary>
-        public string BuildingName { get; set; } 
+        public string BuildingName { get; set; }
         #endregion
-        
+
     }
 }

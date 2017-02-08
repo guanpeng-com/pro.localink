@@ -29,5 +29,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public long BuildingId;
 
         public string FlatNo;
+
+        public long FlatNoId;
     }
 }

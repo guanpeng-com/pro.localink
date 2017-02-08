@@ -44,11 +44,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         #region 外键
         /// <summary>
-        /// 单元楼, M to M
-        /// </summary>
-        public virtual ICollection<Building> Buildings { get; set; }
-
-        /// <summary>
         /// 门禁集合
         /// </summary>
         public virtual ICollection<Door> Doors { get; set; }
@@ -69,6 +64,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 保修集合
         /// </summary>
         public virtual ICollection<Report> Reports { get; set; }
+        /// <summary>
+        /// 门牌号集合
+        /// </summary>
+        public virtual ICollection<FlatNumber> FlatNumbers { get; set; }
         #endregion
 
         #region 基本属性
@@ -134,11 +133,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 审核管理员
         /// </summary>
         public virtual string AuthAdmin { get; set; }
-
-        /// <summary>
-        /// 门牌号
-        /// </summary>
-        public virtual string FlatNo { get; set; }
+        
         #endregion
     }
 }
