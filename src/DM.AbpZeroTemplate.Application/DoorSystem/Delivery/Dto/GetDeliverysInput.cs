@@ -18,7 +18,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public long? HomeOwerId { get; set; }
 
         /// <summary>
-        /// 关键字：Development/Resident(HomeOwer)
+        /// 关键字：BuildingName/FlatNo/Resident(HomeOwer)
         /// </summary>
         public string Keywords { get; set; }
 

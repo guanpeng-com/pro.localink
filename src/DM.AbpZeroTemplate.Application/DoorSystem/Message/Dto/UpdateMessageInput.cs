@@ -17,13 +17,9 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string Content;
 
-        public long HomeOwerId;
+        public List<string> Files;
 
-        public long CommunityId;
-
-        public bool IsRead;
-
-        public bool IsPublic;
+        public string Status;
 
     }
 }

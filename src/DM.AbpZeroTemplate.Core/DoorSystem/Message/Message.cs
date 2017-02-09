@@ -19,18 +19,42 @@ namespace DM.AbpZeroTemplate.DoorSystem
         #region 构造函数
         public Message() { }
 
-        public Message(int? tenantId, string title, string content, long communityId, long buildingId, long flatNoId, string communityName, string buildingName, string flatNo)
+        /// <summary>
+        /// 初始化消息，针对业主
+        /// </summary>
+        public Message(int? tenantId, string title, string content, List<string> files, string Status, long communityId, long buildingId, long flatNoId, long homeOwerId, string communityName, string buildingName, string flatNo)
         {
             TenantId = tenantId;
             Title = title;
             Content = content;
+            FileArray = files;
             IsRead = false;
+            IsPublic = false;
             CommunityId = communityId;
             BuildingId = buildingId;
             FlatNoId = flatNoId;
+            HomeOwerId = homeOwerId;
             CommunityName = communityName;
             BuildingName = buildingName;
             FlatNo = flatNo;
+        }
+
+        /// <summary>
+        /// 初始化公告，针对单元楼
+        /// </summary>
+        public Message(int? tenantId, string title, string content, List<string> files, string Status, long communityId, long buildingId)
+
+        {
+            TenantId = tenantId;
+            Title = title;
+            Content = content;
+            FileArray = files;
+            IsRead = null;
+            IsPublic = true;
+            CommunityId = communityId;
+            BuildingId = buildingId;
+            FlatNo = null;
+            HomeOwerId = null;
         }
         #endregion
 
@@ -89,7 +113,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 是否已读，只针对私信
         /// </summary>
-        public virtual bool IsRead { get; set; }
+        public virtual bool? IsRead { get; set; }
 
         /// <summary>
         /// 是否是公告，公告针对Building；私信针对HomeOwer
@@ -97,7 +121,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual bool IsPublic { get; set; }
 
         /// <summary>
-        /// 消息状态：草稿/已发送
+        /// 消息状态：Draft/Sent
         /// </summary>
         public virtual string Status { get; set; }
 
@@ -114,7 +138,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 门牌号Id，冗余字段
         /// </summary>
-        public virtual long FlatNoId { get; set; }
+        public virtual long? FlatNoId { get; set; }
 
         /// <summary>
         /// 小区名称

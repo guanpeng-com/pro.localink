@@ -10,6 +10,7 @@ using Abp.Linq.Extensions;
 
 using AutoMapper;
 using DM.AbpZeroTemplate.DoorSystem.Community;
+using System;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -20,41 +21,91 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly MessageManager _manager;
         private readonly HomeOwerManager _homeOwerManager;
         private readonly CommunityManager _communityManager;
+        private readonly BuildingManager _buildingManager;
         private readonly FlatNumberManager _flatNoManager;
 
         public MessageService(MessageManager manager,
             HomeOwerManager homeOwerManager,
             CommunityManager communityManager,
+            BuildingManager buildingManager,
             FlatNumberManager flatNoManager)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
             _communityManager = communityManager;
+            _buildingManager = buildingManager;
             _flatNoManager = flatNoManager;
         }
 
+        /// <summary>
+        /// 添加信息
+        /// ================================
+        /// 业主通知：选择具体业主然后添加信息
+        /// 1. 记录CommunityId, BuildingId, FlatNoId, HomeOwerId
+        /// 2. IsPublic = false
+        /// 3. IsRead = false
+        /// ================================
+        /// 公告：选择单元楼然后添加信息
+        /// 1. 记录CommunityId, BuildingId
+        /// 2. FlatNoId, HomeOwerId为Null
+        /// 3. IsPublic = true
+        /// 4. IsRead = null
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task CreateMessage(CreateMessageInput input)
         {
-            var flatNo = await _flatNoManager.FlatNumberRepository.FirstOrDefaultAsync(input.FlatNoId);
-            var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, flatNo.CommunityId, flatNo.BuildingId, flatNo.Id, flatNo.Building.Community.Name, flatNo.Building.BuildingName, flatNo.FlatNo);
-            if (!input.IsPublic)
+            #region 公告
+            if (input.BuildingIds != null)
             {
-                var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
-                entity.HomeOwerId = input.HomeOwerId;
+                foreach (long buildingId in input.BuildingIds)
+                {
+                    var building = await _buildingManager.BuildingRepository.GetAsync(buildingId);
+                    if (building != null)
+                    {
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, building.CommunityId, buildingId);
+                        await _manager.CreateAsync(entity);
+                    }
+                }
             }
-            else
+            #endregion
+
+            #region 消息
+            if (input.BuildingIds != null)
             {
-                entity.HomeOwer = null;
-                entity.HomeOwerId = null;
+                foreach (var homeOwerDto in input.HomeOwerIds)
+                {
+                    var community = await _communityManager.CommunityRepository.GetAsync(homeOwerDto.CommunityId);
+                    var building = await _buildingManager.BuildingRepository.GetAsync(homeOwerDto.BuildingId);
+                    var flatNo = await _flatNoManager.FlatNumberRepository.GetAsync(homeOwerDto.FlatNoId);
+                    if (community != null && building != null && flatNo != null)
+                    {
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, homeOwerDto.CommunityId, homeOwerDto.BuildingId, homeOwerDto.FlatNoId, homeOwerDto.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
+                        await _manager.CreateAsync(entity);
+                    }
+                }
             }
-            entity.IsRead = input.IsRead;
-            entity.IsPublic = input.IsPublic;
-            await _manager.CreateAsync(entity);
+            #endregion
         }
 
-        public async Task DeleteMessage(IdInput<long> input)
+        /// <summary>
+        /// 删除消息，此接口管只能删除消息，不能删除公告
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task DeletePersonalMessage(IdInput<long> input)
         {
-            await _manager.DeleteAsync(input.Id);
+            await _manager.DeletePersonalAsync(input.Id);
+        }
+
+        /// <summary>
+        /// 删除公告，此接口只对管理端使用，用户端不能删除公告
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task DeletePublicMessage(IdInput<long> input)
+        {
+            await _manager.DeletePublicAsync(input.Id);
         }
 
         public async Task<PagedResultOutput<MessageDto>> GetMessages(GetMessagesInput input)
@@ -75,11 +126,68 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         private async Task<PagedResultOutput<MessageDto>> ProcessGet(GetMessagesInput input)
         {
-            var query = _manager.FindMessageList(input.Sorting);
+            //var query = _manager.FindMessageList(input.Sorting);
+
+            var query = from m in _manager.MessageRepository.GetAll()
+                        orderby input.Sorting
+                        select new
+                        {
+                            To = m.IsPublic ? m.BuildingName : m.HomeOwer.Name,
+                            m.Id,
+                            m.Title,
+                            m.Content,
+                            m.IsPublic,
+                            m.IsRead,
+                            m.CreationTime,
+                            m.HomeOwer,
+                            HomeOwerName = m.HomeOwer.Name,
+                            m.CommunityName,
+                            m.BuildingName,
+                            m.FlatNo,
+                            m.HomeOwerId,
+                            m.Status,
+                            m.CommunityId,
+                            m.BuildingId,
+                            m.FlatNoId,
+                            CreationTimeStr = m.CreationTime.ToString()
+                        };
 
             if (input.HomeOwerId.HasValue)
             {
+                //业主ID，用于app端获取数据
                 query = query.Where(r => r.HomeOwerId == input.HomeOwerId.Value);
+            }
+
+            if (input.CommunityId.HasValue)
+            {
+                query = query.Where(m => m.CommunityId == input.CommunityId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(input.Keywords))
+            {
+                //单元楼 / 门牌号 / 业主名称
+                query = query.Where(m => m.HomeOwer.Name.Contains(input.Keywords)
+                                                            || m.HomeOwer.CommunityName.Contains(input.Keywords)
+                                                            || m.BuildingName.Contains(input.Keywords)
+                                                            || m.FlatNo.Contains(input.Keywords)
+                                                            //|| d.HomeOwer.Buildings.Any(b => b.BuildingName.Contains(input.Keywords))
+                                                            );
+            }
+            if (input.StartDate.HasValue)
+            {
+                //开始时间
+                query = query.Where(m => m.CreationTime >= input.StartDate.Value);
+            }
+            if (input.EndDate.HasValue)
+            {
+                input.EndDate = input.EndDate.Value.AddDays(1).AddSeconds(-1);
+                //结束时间
+                query = query.Where(m => m.CreationTime <= input.EndDate.Value);
+            }
+            if (!string.IsNullOrEmpty(input.Status))
+            {
+                //状态
+                query = query.Where(m => m.Status == input.Status);
             }
 
             var totalCount = await query.CountAsync();
@@ -96,14 +204,24 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 );
         }
 
+        /// <summary>
+        /// 修改消息
+        /// ================================
+        /// 公告
+        /// 1. 可以修改的字段有：标题，内容，附件, 状态
+        /// ================================
+        /// 消息
+        /// 2. 可以修改的字段有：标题，内容，附件, 状态
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task UpdateMessage(UpdateMessageInput input)
         {
             var entity = await _manager.MessageRepository.GetAsync(input.Id);
             entity.Title = input.Title;
             entity.Content = input.Content;
-            entity.HomeOwerId = input.HomeOwerId;
-            entity.IsRead = input.IsRead;
-            entity.IsPublic = input.IsPublic;
+            entity.FileArray = input.Files;
+            entity.Status = input.Status;
             await _manager.UpdateAsync(entity);
         }
 
@@ -111,11 +229,22 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
             var entity = await _manager.MessageRepository.GetAsync(input.Id);
             var dto = Mapper.Map<MessageDto>(entity);
-            dto.HomeOwerName = entity.HomeOwer != null ? entity.HomeOwer.Name : "公告";
-            var community = await _communityManager.CommunityRepository.GetAsync(entity.CommunityId);
-            dto.CommunityName = community.Name;
             return dto;
         }
 
+        /// <summary>
+        /// 设置业主消息已读
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> SetIsRead(IdInput<long> input)
+        {
+            var entity = await _manager.MessageRepository.GetAsync(input.Id);
+            if (!entity.IsPublic)
+            {
+                entity.IsRead = true;
+                await _manager.UpdateAsync(entity);
+            }
+            return true;
+        }
     }
 }

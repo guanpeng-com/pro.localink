@@ -15,8 +15,20 @@ namespace DM.AbpZeroTemplate.DoorSystem
     public interface IMessageService : IApplicationService
     {
         /// <summary>
-        /// 获取
+        /// 添加信息
+        /// ================================
+        /// 业主通知：选择具体业主然后添加信息
+        /// 1. 记录CommunityId, BuildingId, FlatNoId, HomeOwerId
+        /// 2. IsPublic = false
+        /// 3. IsRead = false
+        /// ================================
+        /// 公告：选择单元楼然后添加信息
+        /// 1. 记录CommunityId, BuildingId
+        /// 2. FlatNoId, HomeOwerId为Null
+        /// 3. IsPublic = true
+        /// 4. IsRead = null
         /// </summary>
+        /// <param name="input"></param>
         /// <returns></returns>
         Task<PagedResultOutput<MessageDto>> GetMessages(GetMessagesInput input);
 
@@ -37,18 +49,37 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
 
         /// <summary>
-        /// 更新
+        /// 修改消息
+        /// ================================
+        /// 公告
+        /// 1. 可以修改的字段有：标题，内容，附件, 状态
+        /// ================================
+        /// 消息
+        /// 2. 可以修改的字段有：标题，内容，附件, 状态
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateMessage(UpdateMessageInput input);
 
         /// <summary>
-        /// 删除
+        /// 设置业主消息已读
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> SetIsRead(IdInput<long> input);
+
+        /// <summary>
+        /// 删除消息，此接口管只能删除消息，不能删除公告
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteMessage(IdInput<long> input);
+        Task DeletePersonalMessage(IdInput<long> input);
+
+        /// <summary>
+        /// 删除公告，此接口只对管理端使用，用户端不能删除公告
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task DeletePublicMessage(IdInput<long> input);
 
         /// <summary>
         /// 根据Id获取详情

@@ -11,21 +11,35 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     //Create Model Dto Code About Message
     public class CreateMessageInput : IInputDto
     {
+        /// <summary>
+        /// 标题
+        /// </summary>
         public string Title;
 
+        /// <summary>
+        /// 正文
+        /// </summary>
         public string Content;
 
-        public long HomeOwerId;
+        /// <summary>
+        /// 附件集合
+        /// </summary>
+        public List<string> FileArray;
 
-        public long CommunityId;
+        /// <summary>
+        /// 消息状态：Draft/Sent
+        /// </summary>
+        public string Status;
 
-        public long BuildingId;
+        /// <summary>
+        /// 单元楼Id集合，公告
+        /// </summary>
+        public List<long> BuildingIds;
 
-        public long FlatNoId;
-
-        public bool IsRead;
-
-        public bool IsPublic;
+        /// <summary>
+        /// 业主Id集合，消息
+        /// </summary>
+        public List<HomeOwerSelectedInput> HomeOwerIds;
 
     }
 }

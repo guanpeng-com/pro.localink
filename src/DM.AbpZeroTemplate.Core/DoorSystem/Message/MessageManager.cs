@@ -59,18 +59,39 @@ namespace DM.AbpZeroTemplate.DoorSystem
         }
 
         /// <summary>
-        /// 删除
+        /// 删除消息
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(long id)
+        public virtual async Task DeletePersonalAsync(long id)
         {
-            await MessageRepository.DeleteAsync(id);
             var entity = await MessageRepository.GetAsync(id);
-            var userId = _abpSession.UserId;
-            var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
-            if (currentUser != null)
-                Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            if (!entity.IsPublic)
+            {
+                await MessageRepository.DeleteAsync(id);
+                var userId = _abpSession.UserId;
+                var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
+                if (currentUser != null)
+                    Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            }
+        }
+
+        /// <summary>
+        /// 删除公告
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <returns></returns>
+        public virtual async Task DeletePublicAsync(long id)
+        {
+            var entity = await MessageRepository.GetAsync(id);
+            if (entity.IsPublic)
+            {
+                await MessageRepository.DeleteAsync(id);
+                var userId = _abpSession.UserId;
+                var currentUser = _userManager.Users.FirstOrDefault(user => user.Id == userId);
+                if (currentUser != null)
+                    Logger.InfoFormat("Admin {0} Create Message {1}", currentUser.UserName, entity.Title);
+            }
         }
 
         /// <summary>
