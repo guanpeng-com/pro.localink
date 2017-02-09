@@ -24,9 +24,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string HomeOwerName;
 
+        public string BuildingName;
+
         public bool IsGather;
 
-        public DateTime GatherTime;
+        public string GatherTime;
 
         public bool IsReplace;
 
@@ -36,5 +38,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string Token;
 
+        public string FlatNo;
+
+        public string Barcode;
+
+        public string CreationTimeStr;
     }
 }

@@ -10,38 +10,43 @@ using Abp.Linq.Extensions;
 using AutoMapper;
 using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
+using DM.AbpZeroTemplate.DoorSystem.Community;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
     //Domain Service Code About HomeOwer
     public class HomeOwerService : AbpZeroTemplateAppServiceBase, IHomeOwerService
     {
+        private readonly CommunityManager _communityManager;
+        private readonly BuildingManager _buildingManager;
         private readonly HomeOwerManager _manager;
-        private readonly HomeOwerUserManager _homeOwerUserManager;
         private readonly DoorManager _doorManager;
         private readonly AccessKeyManager _accessKeyManager;
 
-        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, HomeOwerUserManager homeOwerUserManager)
+        public HomeOwerService(HomeOwerManager manager, DoorManager doorManager, AccessKeyManager accessKeyManager, CommunityManager communityManager, BuildingManager buildingManager)
         {
             _manager = manager;
             _doorManager = doorManager;
             _accessKeyManager = accessKeyManager;
-            _homeOwerUserManager = homeOwerUserManager;
+            _communityManager
+ = communityManager;
+            _buildingManager = buildingManager;
         }
 
         public async Task CreateHomeOwer(CreateHomeOwerInput input)
         {
-            var entity = new HomeOwer(CurrentUnitOfWork.GetTenantId(), input.CommunityId, input.Name, input.Phone, input.Email, input.Gender);
-            entity.CommunityId = input.CommunityId;
+            var community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(input.CommunityId);
+
+            var entity = new HomeOwer(CurrentUnitOfWork.GetTenantId(), input.CommunityId, input.Name, input.Phone, input.Email, input.Gender, community.Name);
 
             //录入业主关联的门禁
-            entity.Doors = new List<HomeOwerDoor>();
+            entity.Doors = new List<Door>();
             //小区大门
             var gates = await _doorManager.DoorRepository.GetAllListAsync(d => d.DoorType == EDoorType.Gate.ToString());
+
             gates.ForEach(door =>
             {
-                HomeOwerDoor hd = new HomeOwerDoor(CurrentUnitOfWork.GetTenantId(), entity.Id, door.Id);
-                entity.Doors.Add(hd);
+                entity.Doors.Add(door);
             });
 
             await _manager.CreateAsync(entity);
@@ -58,11 +63,45 @@ namespace DM.AbpZeroTemplate.DoorSystem
             {
                 using (CurrentUnitOfWork.SetFilterParameter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, AbpZeroTemplateConsts.AdminCommunityFilterClass.ParameterName, await GetAdminCommunityIdList()))
                 {
-                    var query = _manager.FindHomeOwerList(input.Sorting);
+                    // var query = _manager.FindHomeOwerList(input.Sorting);
 
+                    var query = from h in _manager.HomeOwerRepository.GetAll()
+                                from f in h.FlatNumbers.DefaultIfEmpty()
+                                select new
+                                {
+                                    h.Id,
+                                    h.CommunityName,
+                                    h.CommunityId,
+                                    f.Building.BuildingName,
+                                    BuildingId = f.BuildingId,
+                                    FlatNoId = f.Id,
+                                    f.FlatNo,
+                                    h.Name,
+                                    h.Status,
+                                    h.Phone,
+                                    h.Email,
+                                    h.Gender,
+                                    h.CreationTime
+                                };
+
+
+                    //业主状态
                     if (input.HomeOwerStatus.HasValue)
                     {
                         query = query.Where(h => h.Status == input.HomeOwerStatus.Value);
+                    }
+                    //单元楼
+                    if (input.BuildingId.HasValue)
+                    {
+                        query = query.Where(h => h.BuildingId == input.BuildingId.Value);
+                    }
+                    //小区，单元楼，业主名称
+                    if (!string.IsNullOrEmpty(input.Keywords))
+                    {
+                        query = query.Where(h =>
+                        h.CommunityName.Contains(input.Keywords)
+                        || h.Name.Contains(input.Keywords)
+                        || h.BuildingName.Contains(input.Keywords));
                     }
 
                     var totalCount = await query.CountAsync();
@@ -72,8 +111,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
                         items.Select(
                                 item =>
                                 {
-                                    var dto = item.MapTo<HomeOwerDto>();
-                                    return dto;
+                                    return Mapper.DynamicMap<HomeOwerDto>(item);
+                                    //var dto = item.MapTo<HomeOwerDto>();
+                                    //return dto;
                                 }
                             ).ToList()
                         );
@@ -113,19 +153,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task AuthHomeOwer(IdInput<long> input)
         {
             var homeOwer = await _manager.HomeOwerRepository.FirstOrDefaultAsync(input.Id);
-            var homerOwerUser = await _homeOwerUserManager.HomeOwerUserRepository.FirstOrDefaultAsync(u => u.HomeOwerId == homeOwer.Id);
             var doorIds = from d in homeOwer.Doors
-                          select d.DoorId;
+                          select d.Id;
             var doors = await _doorManager.DoorRepository.GetAllListAsync(d => doorIds.Contains(d.Id));
             //发放钥匙
             foreach (var door in doors)
             {
                 try
                 {
-                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.HomeOwerId == homeOwer.Id && k.DoorId == door.Id);
+                    var key = await _accessKeyManager.AccessKeyRepository.FirstOrDefaultAsync(k => k.HomeOwer.Id == homeOwer.Id && k.Door == door);
                     if (key == null)
                     {
-                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), door.Id, homeOwer.Id, DateTime.Now.AddYears(50), homeOwer.CommunityId);
+                        key = new AccessKey(CurrentUnitOfWork.GetTenantId(), door, homeOwer, DateTime.Now.AddYears(50), homeOwer.CommunityId);
                         await _accessKeyManager.CreateAsync(key);
                         key.GetKey(door.PId, homeOwer.Phone, key.Validity);
                     }

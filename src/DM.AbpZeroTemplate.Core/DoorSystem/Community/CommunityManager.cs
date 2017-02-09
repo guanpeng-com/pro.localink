@@ -61,7 +61,7 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             App app = new App(community.TenantId, community.Name, community.Name, "APP_" + Guid.NewGuid().ToString());
             await _appManager.CreateAsync(app);
             CurrentUnitOfWork.SaveChanges();
-            await _channelManager.CreateDefaultChannel(app.Id);
+            await _channelManager.CreateDefaultChannel(app);
             community.AppId = app.Id;
         }
 

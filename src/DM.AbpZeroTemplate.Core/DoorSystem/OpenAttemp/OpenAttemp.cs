@@ -54,8 +54,18 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
         public virtual int? TenantId { get; set; }
 
-        [ForeignKey("CommunityId")]
-        public virtual Community.Community Community { get; set; }
+        /// <summary>
+        /// 门禁Id
+        /// </summary>
+        public virtual long DoorId { get; set; }
+
+        /// <summary>
+        ///  门禁
+        /// </summary>
+        [ForeignKey("DoorId")]
+        public virtual Door Door { get; set; }
+
+
         public virtual long CommunityId { get; set; }
     }
 }

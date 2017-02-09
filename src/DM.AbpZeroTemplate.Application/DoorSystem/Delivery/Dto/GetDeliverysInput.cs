@@ -12,9 +12,40 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     //Create Model Dto Code About Delivery
     public class GetDeliverysInput : PagedAndSortedInputDto, IShouldNormalize
     {
-        public long? HomeOwerId;
+        /// <summary>
+        /// 业主ID
+        /// </summary>
+        public long? HomeOwerId { get; set; }
 
-        public string HomeOwerName;
+        /// <summary>
+        /// 关键字：Development/Resident(HomeOwer)
+        /// </summary>
+        public string Keywords { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// 状态：Uncollected  Collected
+        /// </summary>
+        public bool? IsGather { get; set; }
+
+        /// <summary>
+        /// 单元楼Id
+        /// </summary>
+        public long? BuildingId { get; set; }
+
+        /// <summary>
+        /// 小区Id
+        /// </summary>
+        public long? CommunityId { get; set; }
 
         public void Normalize()
         {

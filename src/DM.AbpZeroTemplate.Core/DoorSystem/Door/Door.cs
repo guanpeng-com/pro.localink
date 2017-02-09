@@ -11,41 +11,57 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
+    /// <summary>
+    /// 小区门禁
+    /// </summary>
     [Table("localink_Doors")]
     public class Door : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
+        #region 构造函数
         public Door()
         {
 
         }
 
-        public Door(int? tenantId, string name, string pId, string departId)
+        public Door(int? tenantId, long communityId, string name, string pId, string departId)
         {
             TenantId = tenantId;
             Name = name;
             PId = pId;
             IsAuth = false;
             DepartId = departId;
+            CommunityId = communityId;
         }
+        #endregion
 
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
+        #endregion
 
+        #region 外键
+        /// <summary>
+        /// 钥匙集合，1 to M
+        /// </summary>
+        public virtual ICollection<AccessKey> AccessKeys { get; set; }
 
         /// <summary>
-        /// 租户ID
+        /// 业主集合，M to M
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual ICollection<HomeOwer> HomeOwers { get; set; }
 
         /// <summary>
         /// 小区Id
         /// </summary>
         public virtual long CommunityId { get; set; }
-
-        /// <summary>
-        /// 小区
-        /// </summary>
         [ForeignKey("CommunityId")]
         public virtual Community.Community Community { get; set; }
+        #endregion
+
+        #region 基本信息
+        /// <summary>
+        /// 租户ID
+        /// </summary>
+        public virtual int? TenantId { get; set; }
 
         /// <summary>
         /// 门禁名称
@@ -76,7 +92,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 是否认证
         /// </summary>
         public virtual bool IsAuth { get; private set; }
+        #endregion
 
+        #region 方法
         /// <summary>
         /// 验证门禁，更新小区信息之前操作
         /// </summary>
@@ -102,5 +120,6 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 this.IsAuth = false;
             }
         }
+        #endregion
     }
 }

@@ -55,7 +55,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 await DeliveryRepository.InsertAsync(entity);
 
                 //添加消息通知
-                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name), homeOwer.CommunityId);
+                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name), homeOwer.CommunityId, entity.BuildingId, entity.FlatNoId, entity.CommunityName, entity.BuildingName, entity.FlatNo);
                 message.HomeOwerId = entity.HomeOwerId;
                 await _messageManager.CreateAsync(message);
 

@@ -36,11 +36,6 @@ namespace DM.AbpZeroTemplate.EntityFramework
         public virtual IDbSet<Door> Doors { get; set; }
 
         /// <summary>
-        /// 业主门禁
-        /// </summary>
-        public virtual IDbSet<HomeOwerDoor> HomeOwerDoors { get; set; }
-
-        /// <summary>
         /// 钥匙
         /// </summary>
         public virtual IDbSet<AccessKey> AccessKeys { get; set; }
@@ -80,6 +75,16 @@ namespace DM.AbpZeroTemplate.EntityFramework
         /// </summary>
         public virtual IDbSet<KeyHolding> KeyHoldings { get; set; }
 
+        /// <summary>
+        /// 单元楼
+        /// </summary>
+        public virtual IDbSet<Building> Buildings { get; set; }
+
+        /// <summary>
+        /// 门牌号
+        /// </summary>
+        public virtual IDbSet<FlatNumber> FlatNumbers { get; set; }
+
         /* Setting "Default" to base class helps us when working migration commands on Package Manager Console.
          * But it may cause problems when working Migrate.exe of EF. ABP works either way.         * 
          */
@@ -113,10 +118,69 @@ namespace DM.AbpZeroTemplate.EntityFramework
             //AbpCMSDbContext.InitDbSet(modelBuilder);
             modelBuilder.Filter(AbpZeroTemplateConsts.AdminCommunityFilterClass.Name, (IAdminCommunity entity, ICollection<long> communityIds) => communityIds.Contains(entity.CommunityId), new List<long>());
 
+            //自关联
             modelBuilder.Entity<Area>()
                                 .HasMany(a => a.Children)
                                 .WithOptional(a => a.Parent)
                                 .HasForeignKey(a => a.ParentId);
+
+            //门禁，钥匙，1 to M
+            modelBuilder.Entity<Door>()
+                                .HasMany<AccessKey>(d => d.AccessKeys)
+                                .WithRequired(a => a.Door);
+
+            //小区，单元楼，1 to M
+            modelBuilder.Entity<Community>()
+                                .HasMany(c => c.Buildings)
+                                .WithRequired(b => b.Community);
+
+            //单元楼，门牌号， 1 to M
+            modelBuilder.Entity<Building>()
+                                .HasMany<FlatNumber>(b => b.FlatNumbers)
+                                .WithRequired(f => f.Building);
+
+
+            //业主，快递，1 to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany(h => h.Deliverys)
+                                .WithRequired(d => d.HomeOwer);
+
+            //业主，信息，1 to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany(h => h.Messages)
+                                .WithRequired(d => d.HomeOwer);
+
+            //业主，保修，1 to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany(h => h.Reports)
+                                .WithRequired(d => d.HomeOwer);
+
+            //业主，门禁，M to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany<Door>(h => h.Doors)
+                                .WithMany(d => d.HomeOwers)
+                                .Map(m =>
+                                {
+                                    m.ToTable("localink_HomeOwerDoors");
+                                    m.MapLeftKey("DoorId");
+                                    m.MapRightKey("HomeOwerId");
+                                });
+
+            //业主，钥匙，1 to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany(h => h.AccessKeys)
+                                .WithRequired(a => a.HomeOwer);
+
+            //业主，门牌号，M to M
+            modelBuilder.Entity<HomeOwer>()
+                                .HasMany<FlatNumber>(h => h.FlatNumbers)
+                                .WithMany(d => d.HomeOwers)
+                                .Map(m =>
+                                {
+                                    m.ToTable("localink_HomeOwerFlatNos");
+                                    m.MapLeftKey("HomeOwerId");
+                                    m.MapRightKey("FlatNoId");
+                                });
         }
     }
 }

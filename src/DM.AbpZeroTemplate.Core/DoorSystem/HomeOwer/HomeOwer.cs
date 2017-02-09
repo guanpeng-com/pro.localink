@@ -11,14 +11,18 @@ using System.Threading.Tasks;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
+    /// <summary>
+    /// 小区业主
+    /// </summary>
     [Table("localink_HomeOwers")]
     public class HomeOwer : FullAuditedEntity<long>, IMayHaveTenant, IAdminCommunity
     {
+        #region 构造函数
         public HomeOwer()
         {
         }
 
-        public HomeOwer(int? tenantId, long communityId, string name, string phone, string email, string gender)
+        public HomeOwer(int? tenantId, long communityId, string name, string phone, string email, string gender, string communityName)
         {
             TenantId = tenantId;
             CommunityId = communityId;
@@ -26,32 +30,61 @@ namespace DM.AbpZeroTemplate.DoorSystem
             Phone = phone;
             Email = email;
             Gender = gender;
+            CommunityName = communityName;
             Status = EHomeOwerStatusType.Initial;
+            Deliverys = new List<Delivery>();
+            Messages = new List<Message>();
+            Reports = new List<Report>();
         }
+        #endregion
 
+        #region 字段属性
         public const int MaxDefaultStringLength = 50;
+        #endregion
 
+        #region 外键
+        /// <summary>
+        /// 门禁集合
+        /// </summary>
+        public virtual ICollection<Door> Doors { get; set; }
+
+        /// <summary>
+        /// 钥匙
+        /// </summary>
+        public virtual ICollection<AccessKey> AccessKeys { get; set; }
+        /// <summary>
+        /// 快递集合
+        /// </summary>
+        public virtual ICollection<Delivery> Deliverys { get; set; }
+        /// <summary>
+        /// 信息集合
+        /// </summary>
+        public virtual ICollection<Message> Messages { get; set; }
+        /// <summary>
+        /// 保修集合
+        /// </summary>
+        public virtual ICollection<Report> Reports { get; set; }
+        /// <summary>
+        /// 门牌号集合
+        /// </summary>
+        public virtual ICollection<FlatNumber> FlatNumbers { get; set; }
+        #endregion
+
+        #region 基本属性
+        /// <summary>
+        /// 小区Id，冗余字段，localink_Building.CommunityId
+        /// </summary>
+        public virtual long CommunityId { get; set; }
+
+        /// <summary>
+        /// 小区名称，冗余字段
+        /// </summary>
+        public virtual string CommunityName { get; set; }
 
         /// <summary>
         /// 租户ID
         /// </summary>
         public virtual int? TenantId { get; set; }
-
-        /// <summary>
-        /// 小区Id
-        /// </summary>
-        public virtual long CommunityId { get; set; }
-
-        /// <summary>
-        /// 小区
-        /// </summary>
-        [ForeignKey("CommunityId")]
-        public virtual Community.Community Community { get; set; }
-
-        /// <summary>
-        /// 门禁集合
-        /// </summary>
-        public virtual ICollection<HomeOwerDoor> Doors { get; set; }
 
         /// <summary>
         /// 姓名
@@ -100,5 +133,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 审核管理员
         /// </summary>
         public virtual string AuthAdmin { get; set; }
+        
+        #endregion
     }
 }

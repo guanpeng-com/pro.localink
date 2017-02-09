@@ -240,9 +240,16 @@
     <Compile Include="DoorSystem\Community\Dto\CreateCommunityInput.cs" />
     <Compile Include="DoorSystem\Community\Dto\GetCommunitiesInput.cs" />
     <Compile Include="DoorSystem\Community\ICommunityService.cs" />
+    <Compile Include="DoorSystem\Building\BuildingService.cs" />
+    <Compile Include="DoorSystem\Building\Dto\CreateBuildingInput.cs" />
+    <Compile Include="DoorSystem\Building\Dto\BuildingDto.cs" />
+    <Compile Include="DoorSystem\Building\Dto\GetBuildingsInput.cs" />
+    <Compile Include="DoorSystem\Building\Dto\UpdateBuildingInput.cs" />
+    <Compile Include="DoorSystem\Building\IBuildingService.cs" />
     <Compile Include="DoorSystem\Delivery\Dto\CreateDeliveryInput.cs" />
     <Compile Include="DoorSystem\Delivery\Dto\GetDeliverysInput.cs" />
     <Compile Include="DoorSystem\Delivery\Dto\DeliveryDto.cs" />
+    <Compile Include="DoorSystem\Delivery\Dto\GatherDeliveryInput.cs" />
     <Compile Include="DoorSystem\Delivery\Dto\UpdateDeliveryInput.cs" />
     <Compile Include="DoorSystem\Delivery\IDeliveryService.cs" />
     <Compile Include="DoorSystem\Delivery\DeliveryService.cs" />

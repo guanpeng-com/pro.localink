@@ -36,11 +36,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task CreateAccessKey(CreateAccessKeyInput input)
         {
             var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
-
-            var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), input.DoorId, input.HomeOwerId, input.Validity, homeOwer.CommunityId);
+            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(input.DoorId);
+            var entity = new AccessKey(CurrentUnitOfWork.GetTenantId(), door, homeOwer, input.Validity, homeOwer.CommunityId);
             var accessKey = await _manager.CreateAsync(entity);
 
-            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(accessKey.DoorId);
+
             accessKey.GetKey(door.PId, homeOwer.Phone, accessKey.Validity);
         }
 
@@ -65,10 +65,10 @@ namespace DM.AbpZeroTemplate.DoorSystem
 
                     items.ForEach(i =>
                     {
-                        if (!homeOwerDic.Keys.Contains(i.HomeOwerId))
-                            homeOwerDic.Add(i.HomeOwerId, string.Empty);
-                        if (!doorDic.Keys.Contains(i.DoorId))
-                            doorDic.Add(i.DoorId, string.Empty);
+                        if (!homeOwerDic.Keys.Contains(i.HomeOwer.Id))
+                            homeOwerDic.Add(i.HomeOwer.Id, string.Empty);
+                        if (!doorDic.Keys.Contains(i.Door.Id))
+                            doorDic.Add(i.Door.Id, string.Empty);
                     });
 
                     var homeOwerNames = from h in _homeOwerManager.HomeOwerRepository.GetAll()
@@ -94,8 +94,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
                                 item =>
                                 {
                                     var dto = item.MapTo<AccessKeyDto>();
-                                    dto.HomeOwerName = homeOwerDic[item.HomeOwerId];
-                                    dto.DoorName = doorDic[item.DoorId];
+                                    dto.HomeOwerName = homeOwerDic[item.HomeOwer.Id];
+                                    dto.DoorName = doorDic[item.Door.Id];
                                     return dto;
                                 }
                             ).ToList()
@@ -107,11 +107,12 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task UpdateAccessKey(UpdateAccessKeyInput input)
         {
             var entity = await _manager.AccessKeyRepository.GetAsync(input.Id);
-
+            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(input.DoorId);
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(input.HomeOwerId);
             if (!entity.IsAuth)
             {
-                entity.DoorId = input.DoorId;
-                entity.HomeOwerId = input.HomeOwerId;
+                entity.Door = door;
+                entity.HomeOwer = homeOwer;
             }
             entity.Validity = input.Validity;
             await _manager.UpdateAsync(entity);
@@ -125,8 +126,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public async Task<AccessKeyDto> AuthAccessKey(IdInput<long> input)
         {
             var accessKey = await _manager.AccessKeyRepository.FirstOrDefaultAsync(input.Id);
-            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(accessKey.DoorId);
-            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(accessKey.HomeOwerId);
+            var door = await _doorManager.DoorRepository.FirstOrDefaultAsync(accessKey.Door.Id);
+            var homeOwer = await _homeOwerManager.HomeOwerRepository.FirstOrDefaultAsync(accessKey.HomeOwer.Id);
 
             accessKey.GetKey(door.PId, homeOwer.Phone, accessKey.Validity);
             await _manager.UpdateAsync(accessKey);

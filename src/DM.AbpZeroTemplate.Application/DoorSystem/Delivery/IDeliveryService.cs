@@ -25,7 +25,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateDelivery(CreateDeliveryInput input);
+        Task<DeliveryDto> CreateDelivery(CreateDeliveryInput input);
 
         /// <summary>
         /// 更新
@@ -48,5 +48,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         Task<DeliveryDto> GetDelivery(IdInput<long> input);
 
+
+        Task<bool> GatherDelivery(GatherDeliveryInput input);
     }
 }
