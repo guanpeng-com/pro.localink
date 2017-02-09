@@ -5,7 +5,7 @@ namespace DM.AbpZeroTemplate.Migrations
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class Init : DbMigration
     {
         public override void Up()
         {
@@ -50,6 +50,9 @@ namespace DM.AbpZeroTemplate.Migrations
                         IsAuth = c.Boolean(nullable: false),
                         DepartId = c.String(maxLength: 50),
                         DoorTypes = c.String(),
+                        Lat = c.Double(nullable: false),
+                        Lng = c.Double(nullable: false),
+                        Images = c.String(maxLength: 1000),
                         AppId = c.Long(nullable: false),
                         IsDeleted = c.Boolean(nullable: false),
                         DeleterUserId = c.Long(),
@@ -135,6 +138,9 @@ namespace DM.AbpZeroTemplate.Migrations
                         Email = c.String(maxLength: 50),
                         Gender = c.String(maxLength: 50),
                         ValidateCode = c.String(maxLength: 50),
+                        Status = c.Byte(nullable: false),
+                        AuthTime = c.DateTime(),
+                        AuthAdmin = c.String(),
                         IsDeleted = c.Boolean(nullable: false),
                         DeleterUserId = c.Long(),
                         DeletionTime = c.DateTime(),
@@ -536,9 +542,10 @@ namespace DM.AbpZeroTemplate.Migrations
                     {
                         Id = c.Long(nullable: false, identity: true),
                         TenantId = c.Int(),
-                        HomeOwerId = c.Long(nullable: false),
+                        HomeOwerId = c.Long(),
                         UserName = c.String(nullable: false, maxLength: 50),
                         Token = c.String(maxLength: 2000),
+                        CommunityId = c.Long(),
                         IsDeleted = c.Boolean(nullable: false),
                         DeleterUserId = c.Long(),
                         DeletionTime = c.DateTime(),
@@ -552,6 +559,39 @@ namespace DM.AbpZeroTemplate.Migrations
                     { "DynamicFilter_HomeOwerUser_SoftDelete", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
                 })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.localink_KeyHoldings",
+                c => new
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        TenantId = c.Int(),
+                        VisitorName = c.String(nullable: false, maxLength: 50),
+                        Password = c.String(maxLength: 255),
+                        VisiteStartTime = c.DateTime(nullable: false),
+                        VisiteEndTime = c.DateTime(nullable: false),
+                        CollectionTime = c.DateTime(),
+                        IsCollection = c.Boolean(nullable: false),
+                        HomeOwerId = c.Long(nullable: false),
+                        KeyType = c.Int(nullable: false),
+                        CommunityId = c.Long(nullable: false),
+                        IsDeleted = c.Boolean(nullable: false),
+                        DeleterUserId = c.Long(),
+                        DeletionTime = c.DateTime(),
+                        LastModificationTime = c.DateTime(),
+                        LastModifierUserId = c.Long(),
+                        CreationTime = c.DateTime(nullable: false),
+                        CreatorUserId = c.Long(),
+                    },
+                annotations: new Dictionary<string, object>
+                {
+                    { "DynamicFilter_KeyHolding_AdminCommunityFilter", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                    { "DynamicFilter_KeyHolding_MayHaveTenant", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                    { "DynamicFilter_KeyHolding_SoftDelete", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.localink_HomeOwers", t => t.HomeOwerId, cascadeDelete: true)
+                .Index(t => t.HomeOwerId);
             
             CreateTable(
                 "dbo.AbpLanguages",
@@ -1099,6 +1139,7 @@ namespace DM.AbpZeroTemplate.Migrations
             DropForeignKey("dbo.AbpOrganizationUnits", "ParentId", "dbo.AbpOrganizationUnits");
             DropForeignKey("dbo.localink_OpenAttemps", "CommunityId", "dbo.localink_Communities");
             DropForeignKey("dbo.localink_Messages", "HomeOwerId", "dbo.localink_HomeOwers");
+            DropForeignKey("dbo.localink_KeyHoldings", "HomeOwerId", "dbo.localink_HomeOwers");
             DropForeignKey("dbo.cms_Goods", "ChannelId", "dbo.cms_Channels");
             DropForeignKey("dbo.cms_Goods", "AppId", "dbo.cms_Apps");
             DropForeignKey("dbo.AbpFeatures", "EditionId", "dbo.AbpEditions");
@@ -1138,6 +1179,7 @@ namespace DM.AbpZeroTemplate.Migrations
             DropIndex("dbo.localink_OpenAttemps", new[] { "CommunityId" });
             DropIndex("dbo.AbpNotificationSubscriptions", new[] { "NotificationName", "EntityTypeName", "EntityId", "UserId" });
             DropIndex("dbo.localink_Messages", new[] { "HomeOwerId" });
+            DropIndex("dbo.localink_KeyHoldings", new[] { "HomeOwerId" });
             DropIndex("dbo.cms_Goods", new[] { "ChannelId" });
             DropIndex("dbo.cms_Goods", new[] { "AppId" });
             DropIndex("dbo.AbpFeatures", new[] { "EditionId" });
@@ -1266,6 +1308,13 @@ namespace DM.AbpZeroTemplate.Migrations
                 {
                     { "DynamicFilter_ApplicationLanguage_MayHaveTenant", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
                     { "DynamicFilter_ApplicationLanguage_SoftDelete", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                });
+            DropTable("dbo.localink_KeyHoldings",
+                removedAnnotations: new Dictionary<string, object>
+                {
+                    { "DynamicFilter_KeyHolding_AdminCommunityFilter", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                    { "DynamicFilter_KeyHolding_MayHaveTenant", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
+                    { "DynamicFilter_KeyHolding_SoftDelete", "EntityFramework.DynamicFilters.DynamicFilterDefinition" },
                 });
             DropTable("dbo.localink_HomeOwerUsers",
                 removedAnnotations: new Dictionary<string, object>

@@ -7,13 +7,13 @@ namespace DM.AbpZeroTemplate.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Update_VisiteTime_To_CollectionTime_IN_KeyHolding : IMigrationMetadata
+    public sealed partial class Init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Update_VisiteTime_To_CollectionTime_IN_KeyHolding));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201609031227279_Update_VisiteTime_To_CollectionTime_IN_KeyHolding"; }
+            get { return "201612290539234_Init"; }
         }
         
         string IMigrationMetadata.Source
