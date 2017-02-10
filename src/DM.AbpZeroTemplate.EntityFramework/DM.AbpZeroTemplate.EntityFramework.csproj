@@ -161,6 +161,10 @@
     <Compile Include="Migrations\201701211512286_Added_Status_To_Message.Designer.cs">
       <DependentUpon>201701211512286_Added_Status_To_Message.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702100728167_Update_Message.cs" />
+    <Compile Include="Migrations\201702100728167_Update_Message.Designer.cs">
+      <DependentUpon>201702100728167_Update_Message.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -216,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701211512286_Added_Status_To_Message.resx">
       <DependentUpon>201701211512286_Added_Status_To_Message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702100728167_Update_Message.resx">
+      <DependentUpon>201702100728167_Update_Message.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -27,6 +27,8 @@ using DM.AbpZeroTemplate.HttpFormatters;
 using Swashbuckle.Swagger;
 using DM.AbpZeroTemplate.WebApi;
 using System.Web.Http.Cors;
+using System.Web.Http.Controllers;
+using DM.AbpZeroTemplate.Core;
 
 namespace DM.AbpZeroTemplate.WebApi
 {
@@ -163,22 +165,30 @@ namespace DM.AbpZeroTemplate.WebApi
             //return String.Format(@"{0}\bin\SwaggerUi.XML", System.AppDomain.CurrentDomain.BaseDirectory);
         }
 
+        /// <summary>
+        /// swagger file upload parameter filter
+        /// </summary>
         public class AddFileUploadFilter : IOperationFilter
         {
             public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
             {
-                var fileUploadAttribute = apiDescription.GetControllerAndActionAttributes<SwaggerAddFileUploadAttribute>();
-                foreach (var attr in fileUploadAttribute)
+                var parameters = apiDescription.ActionDescriptor.GetParameters();
+                foreach (HttpParameterDescriptor parameterDesc in parameters)
                 {
-                    operation.consumes.Add("multipart/form-data");
-                    operation.parameters.Add(new Parameter
+                    var fileUploadAttr = parameterDesc.GetCustomAttributes<SwaggerFileUploadAttribute>().FirstOrDefault();
+                    if (fileUploadAttr != null)
                     {
-                        name = "file",
-                        @in = "formData",
-                        description = "file to upload",
-                        required = attr.Required,
-                        type = "file"
-                    });
+                        operation.consumes.Add("multipart/form-data");
+
+                        operation.parameters.Add(new Parameter
+                        {
+                            name = parameterDesc.ParameterName + "_file",
+                            @in = "formData",
+                            description = "file to upload",
+                            required = fileUploadAttr.Required,
+                            type = "file"
+                        });
+                    }
                 }
             }
         }

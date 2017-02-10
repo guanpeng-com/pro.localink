@@ -31,6 +31,7 @@ using Abp.Core.IO;
 using DM.AbpZeroTemplate.WebApi.Models;
 using System.Net;
 using System.Net.Http.Formatting;
+using DM.AbpZeroTemplate.Core;
 
 namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 {
@@ -136,11 +137,11 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         /// </summary>
         /// <param name="userName">用户名</param>
         /// <param name="token">令牌</param>
+        /// <param name="reportFile">上传文件名称，可空</param>
         /// <returns>上传文件的路径</returns>
         [HttpPost]
         [UnitOfWork]
-        [SwaggerAddFileUpload()]
-        public async virtual Task<IHttpActionResult> UploadFiles(string userName, string token)
+        public async virtual Task<IHttpActionResult> UploadFiles(string userName, string token, [SwaggerFileUpload]string reportFile = null)
         {
             base.AuthUser();
             //验证是否是 multipart/form-data
@@ -172,10 +173,26 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
 
                 List<string> fileArray = new List<string>();
                 var files = HttpContext.Current.Request.Files;
+
+
+                //保存reportFile, key = reportFile_file
+                //var file = files["reportFile_file"];
+                //var fileName = reportFile;
+                //if (string.IsNullOrEmpty(fileName))
+                //    reportFile = DateTime.Now.Ticks.ToString();
+                //fileName = fileName + Path.GetExtension(file.FileName);
+                //var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), fileName);
+                //var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);
+                //DirectoryUtils.CreateDirectoryIfNotExists(filePath);
+                //file.SaveAs(filePath);
+                //fileArray.Add(relateFileUrl);
+
                 for (int i = 0; i < files.Count; i++)
                 {
                     var file = files[i];
-                    var fileName = DateTime.Now.Ticks.ToString();
+                    var fileName = reportFile;
+                    if (string.IsNullOrEmpty(fileName))
+                        fileName = DateTime.Now.Ticks.ToString();
                     fileName = fileName + Path.GetExtension(file.FileName);
                     var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), fileName);
                     var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);

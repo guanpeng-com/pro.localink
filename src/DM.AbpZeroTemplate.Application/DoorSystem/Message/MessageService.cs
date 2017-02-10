@@ -11,6 +11,13 @@ using Abp.Linq.Extensions;
 using AutoMapper;
 using DM.AbpZeroTemplate.DoorSystem.Community;
 using System;
+using DM.AbpZeroTemplate.Core;
+using System.Web;
+using Abp.Core.Utils;
+using System.IO;
+using DM.AbpZeroDoor.DoorSystem.Enums;
+using Abp.Apps;
+using Abp.Core.IO;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -23,18 +30,24 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly CommunityManager _communityManager;
         private readonly BuildingManager _buildingManager;
         private readonly FlatNumberManager _flatNoManager;
+        private readonly AppManager _appManager;
+        private readonly IAppFolders _appFolders;
 
         public MessageService(MessageManager manager,
             HomeOwerManager homeOwerManager,
             CommunityManager communityManager,
             BuildingManager buildingManager,
-            FlatNumberManager flatNoManager)
+            FlatNumberManager flatNoManager,
+            AppManager appManager,
+            IAppFolders appFolders)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
             _communityManager = communityManager;
             _buildingManager = buildingManager;
             _flatNoManager = flatNoManager;
+            _appManager = appManager;
+            _appFolders = appFolders;
         }
 
         /// <summary>
@@ -245,6 +258,43 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 await _manager.UpdateAsync(entity);
             }
             return true;
+        }
+
+        /// <summary>
+        /// 上传信息附件
+        /// </summary>
+        /// <returns></returns>
+        public async Task<object> UploadFiles(long communityId, [SwaggerFileUpload]string messageFile)
+        {
+
+            Community.Community community = null;
+            App app = null;
+
+            community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(communityId);
+
+            if (app == null && community != null)
+            {
+                app = await _appManager.AppRepository.FirstOrDefaultAsync(community.AppId);
+            }
+
+            List<string> fileArray = new List<string>();
+            var files = HttpContext.Current.Request.Files;
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                var file = files[i];
+                var fileName = messageFile;
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = DateTime.Now.Ticks.ToString();
+                fileName = fileName + Path.GetExtension(file.FileName);
+                var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), fileName);
+                var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);
+                DirectoryUtils.CreateDirectoryIfNotExists(filePath);
+                file.SaveAs(filePath);
+                fileArray.Add(relateFileUrl);
+            }
+
+            return new { BaseUrl = HttpContext.Current.Request.Url.Host, Files = fileArray };
         }
     }
 }
