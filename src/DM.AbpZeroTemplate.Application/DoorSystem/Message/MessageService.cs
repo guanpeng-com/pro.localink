@@ -153,6 +153,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                             m.IsRead,
                             m.CreationTime,
                             m.HomeOwer,
+                            m.Files,
                             HomeOwerName = m.HomeOwer.Name,
                             m.CommunityName,
                             m.BuildingName,
@@ -210,8 +211,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 items.Select(
                         item =>
                         {
-                            var dto = item.MapTo<MessageDto>();
-                            return dto;
+                            return Mapper.DynamicMap<MessageDto>(item);
                         }
                     ).ToList()
                 );
