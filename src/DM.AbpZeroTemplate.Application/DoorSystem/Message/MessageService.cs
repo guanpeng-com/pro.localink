@@ -76,7 +76,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var building = await _buildingManager.BuildingRepository.GetAsync(buildingId);
                     if (building != null)
                     {
-                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, building.CommunityId, buildingId);
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, EMessageStatusTypeUtils.GetValue(input.Status), building.CommunityId, buildingId);
                         await _manager.CreateAsync(entity);
                     }
                 }
@@ -93,7 +93,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var flatNo = await _flatNoManager.FlatNumberRepository.GetAsync(homeOwerDto.FlatNoId);
                     if (community != null && building != null && flatNo != null)
                     {
-                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, homeOwerDto.CommunityId, homeOwerDto.BuildingId, homeOwerDto.FlatNoId, homeOwerDto.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, EMessageStatusTypeUtils.GetValue(input.Status), homeOwerDto.CommunityId, homeOwerDto.BuildingId, homeOwerDto.FlatNoId, homeOwerDto.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
                         await _manager.CreateAsync(entity);
                     }
                 }
@@ -180,7 +180,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
             if (!string.IsNullOrEmpty(input.Keywords))
             {
                 //单元楼 / 门牌号 / 业主名称
-                query = query.Where(m => m.HomeOwer.Name.Contains(input.Keywords)
+                query = query.Where(m => m.HomeOwer.Forename.Contains(input.Keywords)
+                                                            || m.HomeOwer.Surname.Contains(input.Keywords)
                                                             || m.HomeOwer.CommunityName.Contains(input.Keywords)
                                                             || m.BuildingName.Contains(input.Keywords)
                                                             || m.FlatNo.Contains(input.Keywords)
@@ -201,7 +202,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             if (!string.IsNullOrEmpty(input.Status))
             {
                 //状态
-                query = query.Where(m => m.Status == input.Status);
+                query = query.Where(m => m.Status.ToString() == input.Status);
             }
 
             var totalCount = await query.CountAsync();
@@ -234,7 +235,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             entity.Title = input.Title;
             entity.Content = input.Content;
             entity.FileArray = input.Files;
-            entity.Status = input.Status;
+            entity.Status = EMessageStatusTypeUtils.GetValue(input.Status);
             await _manager.UpdateAsync(entity);
         }
 
@@ -287,7 +288,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 if (string.IsNullOrEmpty(fileName))
                     fileName = DateTime.Now.Ticks.ToString();
                 fileName = fileName + Path.GetExtension(file.FileName);
-                var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), fileName);
+                var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), "Message", fileName);
                 var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);
                 DirectoryUtils.CreateDirectoryIfNotExists(filePath);
                 file.SaveAs(filePath);

@@ -17,18 +17,24 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public long CommunityId;
 
-        public string Name;
+        public string Forename;
+
+        public string Surname;
 
         public string Phone;
 
         public string Email;
 
-        public string Gender;
+        public string Title;
 
-        public long GarageId;
+        public string AltContact;
 
-        public long MailboxId;
+        public string AltMobile;
 
-        public long MaindoorId;
+        //public long GarageId;
+
+        //public long MailboxId;
+
+        //public long MaindoorId;
     }
 }

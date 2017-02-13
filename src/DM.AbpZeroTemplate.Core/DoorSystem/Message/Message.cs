@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 初始化消息，针对业主
         /// </summary>
-        public Message(int? tenantId, string title, string content, List<string> files, string Status, long communityId, long buildingId, long flatNoId, long homeOwerId, string communityName, string buildingName, string flatNo)
+        public Message(int? tenantId, string title, string content, List<string> files, EMessageStatusType Status, long communityId, long buildingId, long flatNoId, long homeOwerId, string communityName, string buildingName, string flatNo)
         {
             TenantId = tenantId;
             Title = title;
@@ -42,7 +43,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 初始化公告，针对单元楼
         /// </summary>
-        public Message(int? tenantId, string title, string content, List<string> files, string Status, long communityId, long buildingId)
+        public Message(int? tenantId, string title, string content, List<string> files, EMessageStatusType Status, long communityId, long buildingId)
 
         {
             TenantId = tenantId;
@@ -123,7 +124,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 消息状态：Draft/Sent
         /// </summary>
-        public virtual string Status { get; set; }
+        public virtual EMessageStatusType Status { get; set; }
 
         /// <summary>
         /// 小区Id, 冗余字段

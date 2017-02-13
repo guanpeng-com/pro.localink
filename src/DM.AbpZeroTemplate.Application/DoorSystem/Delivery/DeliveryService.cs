@@ -87,7 +87,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                             d.BuildingName,
                             d.HomeOwer,
                             d.HomeOwerId,
-                            HomeOwerName = d.HomeOwer.Name,
+                            HomeOwerName = d.HomeOwer.Forename + "" + d.HomeOwer.Surname,
                             d.Title,
                             d.Content,
                             d.IsReplace,
@@ -96,7 +96,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                             d.IsGather,
                             d.FlatNo,
                             GatherTime = !d.GatherTime.HasValue ? "N/A" : d.GatherTime.ToString(),
-                            ReplaceHomeOwerName = d.ReplaceHomeOwer != null ? d.ReplaceHomeOwer.Name : string.Empty,
+                            ReplaceHomeOwerName = d.ReplaceHomeOwer != null ? (d.HomeOwer.Forename + "" + d.HomeOwer.Surname) : string.Empty,
                             CreationTimeStr = d.CreationTime.ToString(),
                             d.Barcode
                         };
@@ -113,7 +113,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
             if (!string.IsNullOrEmpty(input.Keywords))
             {
                 //小区 / 业主名称
-                query = query.Where(d => d.HomeOwer.Name.Contains(input.Keywords)
+                query = query.Where(d => d.HomeOwer.Forename.Contains(input.Keywords)
+                                                            || d.HomeOwer.Surname.Contains(input.Keywords)
                                                             || d.HomeOwer.CommunityName.Contains(input.Keywords)
                                                             || d.BuildingName.Contains(input.Keywords)
                                                             || d.FlatNo.Contains(input.Keywords)

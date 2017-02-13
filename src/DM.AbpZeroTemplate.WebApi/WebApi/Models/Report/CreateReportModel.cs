@@ -16,13 +16,25 @@ namespace DM.AbpZeroTemplate.WebApi.Models
         public long CommunityId { get; set; }
 
         /// <summary>
+        /// 单元Id
+        /// </summary>
+        [Required]
+        public long BuildingId { get; set; }
+
+        /// <summary>
+        /// 门牌号Id
+        /// </summary>
+        [Required]
+        public long FlatNoId { get; set; }
+
+        /// <summary>
         /// 业主Id
         /// </summary>
         [Required]
         public long HomeOwerId { get; set; }
 
         /// <summary>
-        /// 题目
+        /// 标题
         /// </summary>
         [Required]
         public string Title { get; set; }

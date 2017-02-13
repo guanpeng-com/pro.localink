@@ -89,6 +89,12 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 query = query.Where(d => d.CommunityId == input.CommunityId.Value);
             }
 
+            if (!string.IsNullOrEmpty(input.BuildingName))
+            {
+                //单元名
+                query = query.Where(d => d.BuildingName.Contains(input.BuildingName));
+            }
+
             var totalCount = await query.CountAsync();
             var items = await query.OrderByDescending(d => d.CreationTime).PageBy(input).ToListAsync();
             return new PagedResultOutput<BuildingDto>(

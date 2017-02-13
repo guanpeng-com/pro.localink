@@ -46,6 +46,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
         private readonly HomeOwerManager _homeOwerManager;
         private readonly TenantManager _tenantManager;
         private readonly IAppFolders _appFolders;
+        private readonly BuildingManager _buildingManager;
+        private readonly FlatNumberManager _flatNoManager;
 
         private readonly ReportService _reportService;
 
@@ -56,6 +58,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             ReportService reportService,
             HomeOwerManager homeOwerManager,
             CommunityManager communityManager,
+            BuildingManager buildingManager,
+            FlatNumberManager flatNoManager,
             AppManager appManager,
             IAppFolders appFolders)
             : base(homeOwerUserManager)
@@ -65,6 +69,8 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             _reportService = reportService;
             _homeOwerManager = homeOwerManager;
             _communityManager = communityManager;
+            _buildingManager = buildingManager;
+            _flatNoManager = flatNoManager;
             _appManager = appManager;
             _appFolders = appFolders;
         }
@@ -122,11 +128,14 @@ namespace DM.AbpZeroTemplate.WebApi.Controllers.v1
             var content = createReportModel.Content;
             var files = createReportModel.Files;
 
+            var community = await _communityManager.CommunityRepository.GetAsync(createReportModel.CommunityId);
+            var building = await _buildingManager.BuildingRepository.GetAsync(createReportModel.BuildingId);
+            var flatNo = await _flatNoManager.FlatNumberRepository.GetAsync(createReportModel.FlatNoId);
+
             using (CurrentUnitOfWork.SetTenantId(tenantId))
             {
-                var report = new Report(tenantId, title, content, communityId);
-                report.HomeOwerId = homeOwerId;
-                report.FileArray = files;
+                var report = new Report(tenantId, title, content, files, createReportModel.CommunityId, createReportModel.BuildingId, createReportModel.FlatNoId, createReportModel.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
+
                 await _reportManager.CreateAsync(report);
                 return Ok();
             }

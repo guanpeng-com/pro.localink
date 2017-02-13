@@ -165,6 +165,14 @@
     <Compile Include="Migrations\201702100728167_Update_Message.Designer.cs">
       <DependentUpon>201702100728167_Update_Message.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702130748353_Update_HomeOwer_Props.cs" />
+    <Compile Include="Migrations\201702130748353_Update_HomeOwer_Props.Designer.cs">
+      <DependentUpon>201702130748353_Update_HomeOwer_Props.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702130813371_Add_HomeOwer_Name.cs" />
+    <Compile Include="Migrations\201702130813371_Add_HomeOwer_Name.Designer.cs">
+      <DependentUpon>201702130813371_Add_HomeOwer_Name.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AbpZeroDbMigrator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AbpZeroTemplateDataModule.cs" />
@@ -223,6 +231,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702100728167_Update_Message.resx">
       <DependentUpon>201702100728167_Update_Message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702130748353_Update_HomeOwer_Props.resx">
+      <DependentUpon>201702130748353_Update_HomeOwer_Props.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702130813371_Add_HomeOwer_Name.resx">
+      <DependentUpon>201702130813371_Add_HomeOwer_Name.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

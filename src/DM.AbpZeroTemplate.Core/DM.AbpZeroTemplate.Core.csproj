@@ -152,6 +152,8 @@
     <Compile Include="DoorSystem\Door\DoorManager.cs" />
     <Compile Include="DoorSystem\Enums\EFileUploadType.cs" />
     <Compile Include="DoorSystem\Enums\EMessageStatusType.cs" />
+    <Compile Include="DoorSystem\Enums\EHomeOwerTitleType.cs" />
+    <Compile Include="DoorSystem\Enums\EHomeOwerGroupType.cs" />
     <Compile Include="DoorSystem\Enums\EStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EReportStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EDoorType.cs" />

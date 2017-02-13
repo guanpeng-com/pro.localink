@@ -22,19 +22,24 @@ namespace DM.AbpZeroTemplate.DoorSystem
         {
         }
 
-        public HomeOwer(int? tenantId, long communityId, string name, string phone, string email, string gender, string communityName)
+        public HomeOwer(int? tenantId, long communityId, string forename, string surname, string phone, string email, EHomeOwerTitleType title, EHomeOwerGroupType type, string communityName, string altContact = null, string altMobile = null)
         {
             TenantId = tenantId;
             CommunityId = communityId;
-            Name = name;
+            Forename = forename;
+            Surname = surname;
             Phone = phone;
             Email = email;
-            Gender = gender;
+            Title = title;
             CommunityName = communityName;
             Status = EHomeOwerStatusType.Initial;
             Deliverys = new List<Delivery>();
             Messages = new List<Message>();
             Reports = new List<Report>();
+            AltMobile = altContact;
+            AltMobile = altMobile;
+            IsLock = false;
+            UserGroup = type;
         }
         #endregion
 
@@ -87,11 +92,37 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual int? TenantId { get; set; }
 
         /// <summary>
-        /// 姓名
+        /// 用户名
+        /// </summary>
+        public virtual string Name
+        {
+            get
+            {
+                return this.Forename + " " + this.Surname;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.Forename = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    this.Surname = value.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
+                }
+            }
+        }
+
+        /// <summary>
+        /// 名
         /// </summary>
         [Required]
         [StringLength(MaxDefaultStringLength)]
-        public virtual string Name { get; set; }
+        public virtual string Forename { get; set; }
+
+        /// <summary>
+        /// 姓
+        /// </summary>
+        [Required]
+        [StringLength(MaxDefaultStringLength)]
+        public virtual string Surname { get; set; }
 
         /// <summary>
         /// 手机号
@@ -107,10 +138,9 @@ namespace DM.AbpZeroTemplate.DoorSystem
         public virtual string Email { get; set; }
 
         /// <summary>
-        /// 性别
+        /// 称谓：Mr/Mrs/Miss
         /// </summary>
-        [StringLength(MaxDefaultStringLength)]
-        public virtual string Gender { get; set; }
+        public virtual EHomeOwerTitleType Title { get; set; }
 
         /// <summary>
         /// 验证码
@@ -133,7 +163,27 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// 审核管理员
         /// </summary>
         public virtual string AuthAdmin { get; set; }
-        
+
+        /// <summary>
+        /// 紧急联系人
+        /// </summary>
+        public virtual string AltContact { get; set; }
+
+        /// <summary>
+        /// 紧急联系电话
+        /// </summary>
+        public virtual string AltMobile { get; set; }
+
+        /// <summary>
+        /// 是否锁定
+        /// </summary>
+        public virtual bool IsLock { get; set; }
+
+        /// <summary>
+        /// 业主类型：ManagingAgent/Owner/OwnerOccupier/Tenant
+        /// </summary>
+        public virtual EHomeOwerGroupType UserGroup { get; set; }
+
         #endregion
     }
 }

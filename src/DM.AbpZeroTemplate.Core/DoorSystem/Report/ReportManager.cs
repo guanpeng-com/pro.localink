@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using DM.AbpZeroTemplate.Authorization.Users;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,7 +58,11 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         public virtual async Task DeleteAsync(long id)
         {
-            await ReportRepository.DeleteAsync(id);
+            var report = await ReportRepository.FirstOrDefaultAsync(id);
+            if (report != null && report.Status == EReportStatusType.ReportSend)
+            {
+                await ReportRepository.DeleteAsync(id);
+            }
         }
 
         /// <summary>
