@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
+using DM.AbpZeroDoor.DoorSystem.Enums;
 using DM.AbpZeroTemplate.Authorization.Users;
 using System.Globalization;
 using System.Linq;
@@ -55,8 +56,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 await DeliveryRepository.InsertAsync(entity);
 
                 //添加消息通知
-                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name), homeOwer.CommunityId, entity.BuildingId, entity.FlatNoId, entity.CommunityName, entity.BuildingName, entity.FlatNo);
-                message.HomeOwerId = entity.HomeOwerId;
+                var message = new Message(CurrentUnitOfWork.GetTenantId(), L("DeliveryTitleMessage", CultureInfo.CurrentUICulture, homeOwer.Name), L("DeliveryContentMessage", CultureInfo.CurrentUICulture, homeOwer.Name), null, EMessageStatusTypeUtils.GetValue("Sent"), homeOwer.CommunityId, entity.BuildingId, entity.FlatNoId, entity.HomeOwerId, entity.CommunityName, entity.BuildingName, entity.FlatNo);
                 await _messageManager.CreateAsync(message);
 
                 var userId = _abpSession.UserId;

@@ -51,8 +51,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Community
             }
 
             var community = new Community(CurrentUnitOfWork.GetTenantId(), input.Name, input.Address, lat, lng);
-            community.DoorTypes = String.Join(",", input.DoorTypes);
-            community.Images = String.Join(",", input.Images);
+            if (input.DoorTypes != null)
+                community.DoorTypes = String.Join(",", input.DoorTypes);
+            if (input.Images != null)
+                community.Images = String.Join(",", input.Images);
 
             await _communityManager.CreateAsync(community);
             CurrentUnitOfWork.SaveChanges();

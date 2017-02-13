@@ -16,13 +16,17 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string CommunityName;
 
-        public string Name;
+        public string HomeOwerName;
+
+        public string Forename;
+
+        public string Surname;
 
         public string Phone;
 
         public string Email;
 
-        public string Gender;
+        public string Title;
 
         public string BuildingName;
 
@@ -31,5 +35,14 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public string FlatNo;
 
         public long FlatNoId;
+
+        public string AltContact;
+
+        public string AltMobile;
+
+        public string CreationTimeStr;
+        public string AccessStatus;
+        public string UserGroup;
+        public string Status;
     }
 }

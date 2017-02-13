@@ -265,6 +265,7 @@
     <Compile Include="DoorSystem\HomeOwer\Dto\CreateHomeOwerUserInput.cs" />
     <Compile Include="DoorSystem\HomeOwer\Dto\GetHomeOwersInput.cs" />
     <Compile Include="DoorSystem\HomeOwer\Dto\GetHomeOwerUsersInput.cs" />
+    <Compile Include="DoorSystem\HomeOwer\Dto\HomeOwerSelectedInput.cs" />
     <Compile Include="DoorSystem\HomeOwer\Dto\HomeOwerDto.cs" />
     <Compile Include="DoorSystem\HomeOwer\Dto\HomeOwerUserDto.cs" />
     <Compile Include="DoorSystem\HomeOwer\Dto\UpdateHomeOwerInput.cs" />

@@ -17,6 +17,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         /// </summary>
         public long? CommunityId { get; set; }
 
+        /// <summary>
+        /// 单元名称
+        /// </summary>
+        public string BuildingName { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrEmpty(Sorting))

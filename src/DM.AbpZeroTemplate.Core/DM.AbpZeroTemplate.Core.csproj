@@ -132,6 +132,7 @@
     <Compile Include="CMS\DMUsers\IDMUserEmailer.cs" />
     <Compile Include="Configuration\AppSettingProvider.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
+    <Compile Include="Core\Swagger\SwaggerFileUploadAttribute.cs" />
     <Compile Include="Debugging\DebugHelper.cs" />
     <Compile Include="DoorSystem\AccessKey\AccessKey.cs" />
     <Compile Include="DoorSystem\AccessKey\AccessKeyManager.cs" />
@@ -151,6 +152,8 @@
     <Compile Include="DoorSystem\Door\DoorManager.cs" />
     <Compile Include="DoorSystem\Enums\EFileUploadType.cs" />
     <Compile Include="DoorSystem\Enums\EMessageStatusType.cs" />
+    <Compile Include="DoorSystem\Enums\EHomeOwerTitleType.cs" />
+    <Compile Include="DoorSystem\Enums\EHomeOwerGroupType.cs" />
     <Compile Include="DoorSystem\Enums\EStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EReportStatusType.cs" />
     <Compile Include="DoorSystem\Enums\EDoorType.cs" />

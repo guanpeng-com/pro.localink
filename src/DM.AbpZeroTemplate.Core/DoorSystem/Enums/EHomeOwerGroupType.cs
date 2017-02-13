@@ -14,48 +14,52 @@ using System.Threading.Tasks;
 namespace DM.AbpZeroDoor.DoorSystem.Enums
 {
     /// <summary>
-    /// 报修状态枚举
+    /// 业主类型枚举
     /// </summary>
-    public enum EReportStatusType : byte
+    public enum EHomeOwerGroupType : byte
     {
         /// <summary>
-        /// 提交
+        /// 管理员
         /// </summary>
-        ReportSend = 1,
+        ManagingAgent = 1,
         /// <summary>
-        /// 处理中
+        /// 房屋所有者，但是不住
         /// </summary>
-        ReportProcessing = 2,
+        Owner = 2,
         /// <summary>
-        /// 已完成
+        /// 房屋所有者，住
         /// </summary>
-        ReportFinished = 3
+        OwnerOccupier = 3,
+        /// <summary>
+        /// 租户
+        /// </summary>
+        Tenant = 4
     }
 
-    public class EReportStatusTypeUtils
+    public class EHomeOwerGroupTypeUtils
     {
         public static List<NameValueDto> GetItemCollection()
         {
             List<NameValueDto> list = new List<NameValueDto>();
-            list.Add(new NameValueDto(EReportStatusType.ReportSend.ToString(), EReportStatusType.ReportSend.ToString()));
-            list.Add(new NameValueDto(EReportStatusType.ReportProcessing.ToString(), EReportStatusType.ReportProcessing.ToString()));
-            list.Add(new NameValueDto(EReportStatusType.ReportFinished.ToString(), EReportStatusType.ReportFinished.ToString()));
+            list.Add(new NameValueDto(EHomeOwerGroupType.ManagingAgent.ToString(), EHomeOwerGroupType.ManagingAgent.ToString()));
+            list.Add(new NameValueDto(EHomeOwerGroupType.Owner.ToString(), EHomeOwerGroupType.Owner.ToString()));
+            list.Add(new NameValueDto(EHomeOwerGroupType.OwnerOccupier.ToString(), EHomeOwerGroupType.OwnerOccupier.ToString()));
             return list;
         }
 
-        public static EReportStatusType GetValue(string status)
+        public static EHomeOwerGroupType GetValue(string status)
         {
             if (status == "ReportSend")
             {
-                return EReportStatusType.ReportSend;
+                return EHomeOwerGroupType.ManagingAgent;
             }
             else if (status == "ReportProcessing")
             {
-                return EReportStatusType.ReportProcessing;
+                return EHomeOwerGroupType.Owner;
             }
             else if (status == "ReportFinished")
             {
-                return EReportStatusType.ReportFinished;
+                return EHomeOwerGroupType.OwnerOccupier;
             }
             else
             {

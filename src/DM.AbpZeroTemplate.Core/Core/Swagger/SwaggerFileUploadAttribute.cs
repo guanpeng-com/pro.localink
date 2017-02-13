@@ -5,17 +5,16 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DM.AbpZeroTemplate.WebApi
+namespace DM.AbpZeroTemplate.Core
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public class SwaggerAddFileUploadAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class SwaggerFileUploadAttribute : Attribute
     {
         public bool Required { get; private set; }
 
-        public SwaggerAddFileUploadAttribute(bool Required = true)
+        public SwaggerFileUploadAttribute(bool Required = true)
         {
             this.Required = Required;
-
         }
     }
 }

@@ -11,21 +11,57 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
     //Create Model Dto Code About HomeOwer
     public class CreateHomeOwerInput : IInputDto
     {
+        /// <summary>
+        /// 小区Id
+        /// </summary>
         public long CommunityId;
 
-        public string Name;
+        /// <summary>
+        /// 名
+        /// </summary>
+        public string Forename;
 
+        /// <summary>
+        /// 姓
+        /// </summary>
+        public string Surname;
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
         public string Phone;
 
+        /// <summary>
+        /// 邮箱
+        /// </summary>
         public string Email;
 
-        public string Gender;
+        /// <summary>
+        /// 称谓
+        /// </summary>
+        public string Title;
 
-        public long GarageId;
+        /// <summary>
+        /// 紧急联系人
+        /// </summary>
+        public string AltContace;
 
-        public long MailboxId;
+        /// <summary>
+        /// 紧急联系电话
+        /// </summary>
+        public string AltMobile;
 
-        public long MaindoorId;
+        /// <summary>
+        /// 业主类型：ManagingAgent/Owner/OwnerOccupier/Tenant
+        /// </summary>
+        public string UserGroup;
+
+
+        //public long GarageId;
+
+        //public long MailboxId;
+
+        //public long MaindoorId;
 
     }
 }

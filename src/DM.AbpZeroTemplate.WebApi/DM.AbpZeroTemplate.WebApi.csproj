@@ -212,7 +212,6 @@
     <Compile Include="WebApi\Models\Report\CreateReportModel.cs" />
     <Compile Include="WebApi\Models\OpenAttemp\CreateOpenAttempModel.cs" />
     <Compile Include="WebApi\SecretVersionedRoute.cs" />
-    <Compile Include="WebApi\SwaggerAddFileUploadAttribute.cs" />
     <Compile Include="WebApi\VersionedRoute.cs" />
   </ItemGroup>
   <ItemGroup>

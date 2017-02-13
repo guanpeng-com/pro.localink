@@ -20,13 +20,21 @@ namespace DM.AbpZeroTemplate.DoorSystem
         #region 构造函数
         public Report() { }
 
-        public Report(int? tenantId, string title, string content, long communityId)
+        public Report(int? tenantId, string title, string content, List<string> files, long communityId, long buildingId, long flatNoId, long homeOwerId, string communityName, string buildingName, string flatNo)
         {
             TenantId = tenantId;
             Title = title;
             Content = content;
+            FileArray = files;
             Status = EReportStatusType.ReportSend;
             CommunityId = communityId;
+            BuildingId = buildingId;
+            FlatNoId = flatNoId;
+            CommunityName = communityName;
+            BuildingName = buildingName;
+            FlatNo = flatNo;
+            CompleteTime = null;
+            HandyMan = string.Empty;
         }
         #endregion
 
@@ -93,7 +101,42 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <summary>
         /// 小区Id, 冗余字段
         /// </summary>
-        public virtual long CommunityId { get; set; } 
+        public virtual long CommunityId { get; set; }
+
+        /// <summary>
+        /// 单元Id
+        /// </summary>
+        public virtual long BuildingId { get; set; }
+
+        /// <summary>
+        /// 门牌号Id
+        /// </summary>
+        public virtual long FlatNoId { get; set; }
+
+        /// <summary>
+        /// 小区名称
+        /// </summary>
+        public virtual string CommunityName { get; set; }
+
+        /// <summary>
+        /// 单元
+        /// </summary>
+        public virtual string BuildingName { get; set; }
+
+        /// <summary>
+        /// 门牌号
+        /// </summary>
+        public virtual string FlatNo { get; set; }
+
+        /// <summary>
+        /// 处理人员
+        /// </summary>
+        public virtual string HandyMan { get; set; }
+
+        /// <summary>
+        /// 完成时间
+        /// </summary>
+        public virtual DateTime? CompleteTime { get; set; }
         #endregion
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.AutoMapper;
+using DM.AbpZeroTemplate.Core;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -88,5 +89,12 @@ namespace DM.AbpZeroTemplate.DoorSystem
         /// <returns></returns>
         Task<MessageDto> GetMessage(IdInput<long> input);
 
+        /// <summary>
+        /// 上传信息附件
+        /// </summary>
+        /// <param name="communityId"></param>
+        /// <param name="messageFile"></param>
+        /// <returns></returns>
+        Task<object> UploadFiles(long communityId, [SwaggerFileUpload]string messageFile);
     }
 }

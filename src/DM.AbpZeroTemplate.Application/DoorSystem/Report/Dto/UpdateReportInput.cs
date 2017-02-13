@@ -17,11 +17,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
 
         public string Content;
 
-        public long HomeOwerId;
-
         public List<string> FileArray;
 
         public string Status;
+
+        public string HandyMan;
 
     }
 }

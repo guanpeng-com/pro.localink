@@ -21,21 +21,26 @@ namespace DM.AbpZeroTemplate.DoorSystem
         Task<PagedResultOutput<HomeOwerDto>> GetHomeOwers(GetHomeOwersInput input);
 
         /// <summary>
-        /// 创建
+        /// 添加业主信息
+        /// ================================
+        /// 1. 业主录入初始状态：Initial
+        /// 2. 业主录入，默认自带小区大门的门禁
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         Task CreateHomeOwer(CreateHomeOwerInput input);
 
         /// <summary>
-        /// 更新
+        /// 修改业主消息
+        /// ================================
+        /// 1. 可以维护的字段：Forename, Surname, Phone, Email, Title, AltContact, AltMobile
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateHomeOwer(UpdateHomeOwerInput input);
 
         /// <summary>
-        /// 删除
+        /// 删除业主
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -55,10 +60,25 @@ namespace DM.AbpZeroTemplate.DoorSystem
         List<NameValueDto> GetAllHomeOwerStatus();
 
         /// <summary>
-        /// 审核业主
+        /// 业主审核，同时发放钥匙
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         Task AuthHomeOwer(IdInput<long> input);
+
+        /// <summary>
+        /// 锁定业主
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<bool> LockHomeOwer(IdInput<long> input);
+
+        /// <summary>
+        /// 解锁业主
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<bool> UnLockHomeOwer(IdInput<long> input);
+
     }
 }

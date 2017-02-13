@@ -11,6 +11,13 @@ using Abp.Linq.Extensions;
 using AutoMapper;
 using DM.AbpZeroTemplate.DoorSystem.Community;
 using System;
+using DM.AbpZeroTemplate.Core;
+using System.Web;
+using Abp.Core.Utils;
+using System.IO;
+using DM.AbpZeroDoor.DoorSystem.Enums;
+using Abp.Apps;
+using Abp.Core.IO;
 
 namespace DM.AbpZeroTemplate.DoorSystem
 {
@@ -23,18 +30,24 @@ namespace DM.AbpZeroTemplate.DoorSystem
         private readonly CommunityManager _communityManager;
         private readonly BuildingManager _buildingManager;
         private readonly FlatNumberManager _flatNoManager;
+        private readonly AppManager _appManager;
+        private readonly IAppFolders _appFolders;
 
         public MessageService(MessageManager manager,
             HomeOwerManager homeOwerManager,
             CommunityManager communityManager,
             BuildingManager buildingManager,
-            FlatNumberManager flatNoManager)
+            FlatNumberManager flatNoManager,
+            AppManager appManager,
+            IAppFolders appFolders)
         {
             _manager = manager;
             _homeOwerManager = homeOwerManager;
             _communityManager = communityManager;
             _buildingManager = buildingManager;
             _flatNoManager = flatNoManager;
+            _appManager = appManager;
+            _appFolders = appFolders;
         }
 
         /// <summary>
@@ -63,7 +76,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var building = await _buildingManager.BuildingRepository.GetAsync(buildingId);
                     if (building != null)
                     {
-                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, building.CommunityId, buildingId);
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, EMessageStatusTypeUtils.GetValue(input.Status), building.CommunityId, buildingId);
                         await _manager.CreateAsync(entity);
                     }
                 }
@@ -80,7 +93,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                     var flatNo = await _flatNoManager.FlatNumberRepository.GetAsync(homeOwerDto.FlatNoId);
                     if (community != null && building != null && flatNo != null)
                     {
-                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, input.Status, homeOwerDto.CommunityId, homeOwerDto.BuildingId, homeOwerDto.FlatNoId, homeOwerDto.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
+                        var entity = new Message(CurrentUnitOfWork.GetTenantId(), input.Title, input.Content, input.FileArray, EMessageStatusTypeUtils.GetValue(input.Status), homeOwerDto.CommunityId, homeOwerDto.BuildingId, homeOwerDto.FlatNoId, homeOwerDto.HomeOwerId, community.Name, building.BuildingName, flatNo.FlatNo);
                         await _manager.CreateAsync(entity);
                     }
                 }
@@ -140,6 +153,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                             m.IsRead,
                             m.CreationTime,
                             m.HomeOwer,
+                            m.Files,
                             HomeOwerName = m.HomeOwer.Name,
                             m.CommunityName,
                             m.BuildingName,
@@ -166,7 +180,8 @@ namespace DM.AbpZeroTemplate.DoorSystem
             if (!string.IsNullOrEmpty(input.Keywords))
             {
                 //单元楼 / 门牌号 / 业主名称
-                query = query.Where(m => m.HomeOwer.Name.Contains(input.Keywords)
+                query = query.Where(m => m.HomeOwer.Forename.Contains(input.Keywords)
+                                                            || m.HomeOwer.Surname.Contains(input.Keywords)
                                                             || m.HomeOwer.CommunityName.Contains(input.Keywords)
                                                             || m.BuildingName.Contains(input.Keywords)
                                                             || m.FlatNo.Contains(input.Keywords)
@@ -187,7 +202,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             if (!string.IsNullOrEmpty(input.Status))
             {
                 //状态
-                query = query.Where(m => m.Status == input.Status);
+                query = query.Where(m => m.Status.ToString() == input.Status);
             }
 
             var totalCount = await query.CountAsync();
@@ -197,8 +212,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 items.Select(
                         item =>
                         {
-                            var dto = item.MapTo<MessageDto>();
-                            return dto;
+                            return Mapper.DynamicMap<MessageDto>(item);
                         }
                     ).ToList()
                 );
@@ -221,7 +235,7 @@ namespace DM.AbpZeroTemplate.DoorSystem
             entity.Title = input.Title;
             entity.Content = input.Content;
             entity.FileArray = input.Files;
-            entity.Status = input.Status;
+            entity.Status = EMessageStatusTypeUtils.GetValue(input.Status);
             await _manager.UpdateAsync(entity);
         }
 
@@ -245,6 +259,43 @@ namespace DM.AbpZeroTemplate.DoorSystem
                 await _manager.UpdateAsync(entity);
             }
             return true;
+        }
+
+        /// <summary>
+        /// 上传信息附件
+        /// </summary>
+        /// <returns></returns>
+        public async Task<object> UploadFiles(long communityId, [SwaggerFileUpload]string messageFile)
+        {
+
+            Community.Community community = null;
+            App app = null;
+
+            community = await _communityManager.CommunityRepository.FirstOrDefaultAsync(communityId);
+
+            if (app == null && community != null)
+            {
+                app = await _appManager.AppRepository.FirstOrDefaultAsync(community.AppId);
+            }
+
+            List<string> fileArray = new List<string>();
+            var files = HttpContext.Current.Request.Files;
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                var file = files[i];
+                var fileName = messageFile;
+                if (string.IsNullOrEmpty(fileName))
+                    fileName = DateTime.Now.Ticks.ToString();
+                fileName = fileName + Path.GetExtension(file.FileName);
+                var filePath = PathUtils.Combine(EFileUploadTypeUtils.GetFileUploadPath(EFileUploadType.AppCommon.ToString(), _appFolders, app), "Message", fileName);
+                var relateFileUrl = filePath.Replace(System.AppDomain.CurrentDomain.BaseDirectory.TrimEnd(new char[] { '\\' }), string.Empty);
+                DirectoryUtils.CreateDirectoryIfNotExists(filePath);
+                file.SaveAs(filePath);
+                fileArray.Add(relateFileUrl);
+            }
+
+            return new { BaseUrl = HttpContext.Current.Request.Url.Host, Files = fileArray };
         }
     }
 }

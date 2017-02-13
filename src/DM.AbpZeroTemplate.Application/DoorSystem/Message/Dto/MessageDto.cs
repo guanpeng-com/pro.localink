@@ -29,6 +29,11 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         public string FlatNo;
 
         /// <summary>
+        /// 收信方：单元楼/业主
+        /// </summary>
+        public string To;
+
+        /// <summary>
         /// 是否已读，只针对私信
         /// </summary>
         public bool IsRead;
@@ -48,6 +53,10 @@ namespace DM.AbpZeroTemplate.DoorSystem.Dto
         /// </summary>
         public string Status;
 
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public string CreationTimeStr;
 
     }
 }
